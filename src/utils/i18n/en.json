@@ -627,5 +627,23 @@
   },
   "Name": {
     "One": "Name"
+  },
+  "MonitorScope": {
+    "One": "Monitor Scope"
+  },
+  "AllDevices": {
+    "One": "All Devices"
+  },
+  "SelectTargets": {
+    "One": "Select Groups & Devices"
+  },
+  "Scope": {
+    "One": "Scope"
+  },
+  "LoadDevices": {
+    "One": "Load Devices"
+  },
+  "NoCollections": {
+    "One": "No groups available. Please add in Address Book first."
   }
 }

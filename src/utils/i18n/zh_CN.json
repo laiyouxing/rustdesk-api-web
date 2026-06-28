@@ -643,5 +643,23 @@
   },
   "Name": {
     "One": "名称"
+  },
+  "MonitorScope": {
+    "One": "监控范围"
+  },
+  "AllDevices": {
+    "One": "全部设备"
+  },
+  "SelectTargets": {
+    "One": "指定分组和设备"
+  },
+  "Scope": {
+    "One": "监控范围"
+  },
+  "LoadDevices": {
+    "One": "加载设备"
+  },
+  "NoCollections": {
+    "One": "暂无可用分组，请先在地址簿中添加"
   }
 }
