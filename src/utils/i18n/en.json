@@ -582,5 +582,50 @@
   },
   "Time": {
     "One": "Time"
+  },
+  "AlertConfig": {
+    "One": "Alert Config"
+  },
+  "Channel": {
+    "One": "Channel"
+  },
+  "WebhookUrl": {
+    "One": "Webhook URL"
+  },
+  "SmtpHost": {
+    "One": "SMTP Host"
+  },
+  "SmtpPort": {
+    "One": "SMTP Port"
+  },
+  "SmtpUser": {
+    "One": "SMTP User"
+  },
+  "SmtpPass": {
+    "One": "SMTP Password"
+  },
+  "SmtpTo": {
+    "One": "Recipients"
+  },
+  "OfflineMin": {
+    "One": "Offline Threshold"
+  },
+  "StationMessages": {
+    "One": "Station Messages"
+  },
+  "MarkAllRead": {
+    "One": "Mark All Read"
+  },
+  "MarkRead": {
+    "One": "Mark Read"
+  },
+  "Unread": {
+    "One": "Unread"
+  },
+  "Read": {
+    "One": "Read"
+  },
+  "Name": {
+    "One": "Name"
   }
 }

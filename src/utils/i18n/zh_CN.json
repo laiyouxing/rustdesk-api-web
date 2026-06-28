@@ -598,5 +598,50 @@
   },
   "Time": {
     "One": "时间"
+  },
+  "AlertConfig": {
+    "One": "告警配置"
+  },
+  "Channel": {
+    "One": "推送通道"
+  },
+  "WebhookUrl": {
+    "One": "Webhook 地址"
+  },
+  "SmtpHost": {
+    "One": "SMTP 服务器"
+  },
+  "SmtpPort": {
+    "One": "SMTP 端口"
+  },
+  "SmtpUser": {
+    "One": "SMTP 账号"
+  },
+  "SmtpPass": {
+    "One": "SMTP 授权码"
+  },
+  "SmtpTo": {
+    "One": "收件人"
+  },
+  "OfflineMin": {
+    "One": "离线阈值"
+  },
+  "StationMessages": {
+    "One": "站内消息"
+  },
+  "MarkAllRead": {
+    "One": "全部已读"
+  },
+  "MarkRead": {
+    "One": "标记已读"
+  },
+  "Unread": {
+    "One": "未读"
+  },
+  "Read": {
+    "One": "已读"
+  },
+  "Name": {
+    "One": "名称"
   }
 }

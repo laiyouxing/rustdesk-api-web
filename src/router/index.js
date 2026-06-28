@@ -208,6 +208,18 @@ export const asyncRoutes = [
         meta: { title: 'VersionRelease', icon: 'Upload' /*keepAlive: true*/ },
         component: () => import('@/views/rustdesk/version_release.vue'),
       },
+      {
+        path: '/alertConfig',
+        name: 'AlertConfig',
+        meta: { title: 'AlertConfig', icon: 'Bell' /*keepAlive: true*/ },
+        component: () => import('@/views/rustdesk/alert_config.vue'),
+      },
+      {
+        path: '/stationMessages',
+        name: 'StationMessages',
+        meta: { title: 'StationMessages', icon: 'Message' /*keepAlive: true*/ },
+        component: () => import('@/views/rustdesk/station_messages.vue'),
+      },
     ],
   },
 ]
