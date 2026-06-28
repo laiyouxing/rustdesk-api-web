@@ -555,5 +555,32 @@
   },
   "Actions": {
     "One": "Actions"
+  },
+  "TotalDevices": {
+    "One": "Total Devices"
+  },
+  "Online": {
+    "One": "Online"
+  },
+  "Offline": {
+    "One": "Offline"
+  },
+  "TodayConnections": {
+    "One": "Today's Connections"
+  },
+  "RecentDevices": {
+    "One": "Recent Active Devices"
+  },
+  "RecentConnections": {
+    "One": "Recent Connections"
+  },
+  "Hostname": {
+    "One": "Hostname"
+  },
+  "LastOnline": {
+    "One": "Last Online"
+  },
+  "Time": {
+    "One": "Time"
   }
 }

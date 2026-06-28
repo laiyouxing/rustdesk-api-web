@@ -571,5 +571,32 @@
   },
   "Actions": {
     "One": "操作"
+  },
+  "TotalDevices": {
+    "One": "总设备数"
+  },
+  "Online": {
+    "One": "在线"
+  },
+  "Offline": {
+    "One": "离线"
+  },
+  "TodayConnections": {
+    "One": "今日连接"
+  },
+  "RecentDevices": {
+    "One": "最近活跃设备"
+  },
+  "RecentConnections": {
+    "One": "最近连接记录"
+  },
+  "Hostname": {
+    "One": "主机名"
+  },
+  "LastOnline": {
+    "One": "最后在线"
+  },
+  "Time": {
+    "One": "时间"
   }
 }
