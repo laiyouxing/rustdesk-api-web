@@ -202,6 +202,12 @@ export const asyncRoutes = [
         meta: { title: 'ServerCmd', icon: 'Tools' /*keepAlive: true*/ },
         component: () => import('@/views/rustdesk/control.vue'),
       },
+      {
+        path: '/versionRelease',
+        name: 'VersionRelease',
+        meta: { title: 'VersionRelease', icon: 'Upload' /*keepAlive: true*/ },
+        component: () => import('@/views/rustdesk/version_release.vue'),
+      },
     ],
   },
 ]

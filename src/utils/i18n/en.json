@@ -531,5 +531,29 @@
   },
   "Remark": {
     "One": "Remark"
+  },
+  "VersionRelease": {
+    "One": "Version Release"
+  },
+  "PublishNewVersion": {
+    "One": "Publish New Version"
+  },
+  "Publish": {
+    "One": "Publish"
+  },
+  "DownloadUrl": {
+    "One": "Download URL"
+  },
+  "ReleaseNotes": {
+    "One": "Release Notes"
+  },
+  "ReleaseNotesPlaceholder": {
+    "One": "What's new in this version..."
+  },
+  "CreatedAt": {
+    "One": "Created At"
+  },
+  "Actions": {
+    "One": "Actions"
   }
 }

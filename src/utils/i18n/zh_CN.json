@@ -547,5 +547,29 @@
   },
   "Remark": {
     "One": "备注"
+  },
+  "VersionRelease": {
+    "One": "版本发布"
+  },
+  "PublishNewVersion": {
+    "One": "发布新版本"
+  },
+  "Publish": {
+    "One": "发布"
+  },
+  "DownloadUrl": {
+    "One": "下载地址"
+  },
+  "ReleaseNotes": {
+    "One": "更新说明"
+  },
+  "ReleaseNotesPlaceholder": {
+    "One": "修复了哪些问题..."
+  },
+  "CreatedAt": {
+    "One": "发布时间"
+  },
+  "Actions": {
+    "One": "操作"
   }
 }
