@@ -49,9 +49,24 @@ export const asyncRoutes = [
   //   ],
   // },
   {
+    path: '/',
+    name: 'Home',
+    redirect: '/home',
+    meta: { title: 'Home', icon: 'HomeFilled' },
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/home',
+        name: 'HomePage',
+        meta: { title: 'Home', icon: 'HomeFilled' },
+        component: () => import('@/views/home/index.vue'),
+      },
+    ],
+  },
+  {
     path: '/my',
     name: 'My',
-    redirect: '/',
+    redirect: '/my/info',
     meta: { title: 'My', icon: 'UserFilled' },
     component: () => import('@/layout/index.vue'),
     children: [

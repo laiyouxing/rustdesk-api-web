@@ -645,5 +645,8 @@
   },
   "NoCollections": {
     "One": "No groups available. Please add in Address Book first."
+  },
+  "Home": {
+    "One": "Home"
   }
 }
