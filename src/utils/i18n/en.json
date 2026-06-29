@@ -657,5 +657,11 @@
   },
   "Receiver": {
     "One": "Receiver"
+  },
+  "StunConfig": {
+    "One": "STUN Config"
+  },
+  "Priority": {
+    "One": "Priority"
   }
 }

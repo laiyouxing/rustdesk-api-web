@@ -235,6 +235,12 @@ export const asyncRoutes = [
         meta: { title: 'StationMessages', icon: 'Message' /*keepAlive: true*/ },
         component: () => import('@/views/rustdesk/station_messages.vue'),
       },
+      {
+        path: '/stunConfig',
+        name: 'StunConfig',
+        meta: { title: 'StunConfig', icon: 'Connection' /*keepAlive: true*/ },
+        component: () => import('@/views/rustdesk/stun_config.vue'),
+      },
     ],
   },
 ]
