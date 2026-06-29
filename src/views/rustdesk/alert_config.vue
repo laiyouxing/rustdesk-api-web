@@ -16,7 +16,7 @@
         <el-table-column prop="name" :label="T('Name')" min-width="120"></el-table-column>
         <el-table-column :label="T('Scope')" min-width="180">
           <template #default="{row}">
-            <span v-if="row.monitor_all === 1">{{ T('AllDevices') }}</span>
+            <span v-if="row.monitor_all === 1">全部设备（整个平台）</span>
             <span v-else>
               <el-tag size="small" type="info" style="margin-right: 4px;" v-for="t in (row.targets||[])" :key="t.row_id">
                 {{ t.target_name || t.target_id }}
@@ -76,7 +76,7 @@
         </el-form-item>
         <el-form-item :label="T('MonitorScope')">
           <el-radio-group v-model="form.monitor_all">
-            <el-radio :value="1">{{ T('AllDevices') }}</el-radio>
+            <el-radio :value="1">{{ T('AllDevices') }}（整个平台）</el-radio>
             <el-radio :value="2">{{ T('SelectTargets') }}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -184,13 +184,28 @@ const loadPeers = async (col) => {
 
 const onCollectionToggle = (col) => {
   if (selectedCollections.value.includes(col.id)) {
+    // Collection checked: expand, load peers, auto-select all peers
     expandedCollections[col.id] = true
     if (!col.peersLoaded) {
-      loadPeers(col)
+      loadPeers(col).then(() => {
+        // After peers are loaded, add all to selectedPeers
+        for (const p of (col.peers || [])) {
+          if (!selectedPeers.value.includes(p.peer_id)) {
+            selectedPeers.value.push(p.peer_id)
+          }
+        }
+      })
+    } else {
+      // Peers already loaded, add all
+      for (const p of (col.peers || [])) {
+        if (!selectedPeers.value.includes(p.peer_id)) {
+          selectedPeers.value.push(p.peer_id)
+        }
+      }
     }
   } else {
     expandedCollections[col.id] = false
-    // Also remove peers belonging to this collection
+    // Remove all peers belonging to this collection
     if (col.peers) {
       for (const p of col.peers) {
         const idx = selectedPeers.value.indexOf(p.peer_id)
