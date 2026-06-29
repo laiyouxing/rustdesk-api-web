@@ -673,11 +673,5 @@
   },
   "Receiver": {
     "One": "接收人"
-  },
-  "StunConfig": {
-    "One": "STUN 配置"
-  },
-  "Priority": {
-    "One": "优先级"
   }
 }
