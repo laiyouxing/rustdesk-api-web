@@ -16,7 +16,7 @@
         <el-table-column prop="name" :label="T('Name')" min-width="120"></el-table-column>
         <el-table-column :label="T('Scope')" min-width="180">
           <template #default="{row}">
-            <span v-if="row.monitor_all === 1">全部设备（整个平台）</span>
+            <span v-if="row.monitor_all === 1">个人全部设备</span>
             <span v-else>
               <el-tag size="small" type="info" style="margin-right: 4px;" v-for="t in (row.targets||[])" :key="t.row_id">
                 {{ t.target_name || t.target_id }}
@@ -76,7 +76,7 @@
         </el-form-item>
         <el-form-item :label="T('MonitorScope')">
           <el-radio-group v-model="form.monitor_all">
-            <el-radio :value="1">{{ T('AllDevices') }}（整个平台）</el-radio>
+            <el-radio :value="1">{{ T('AllDevices') }}（个人全部设备）</el-radio>
             <el-radio :value="2">{{ T('SelectTargets') }}</el-radio>
           </el-radio-group>
         </el-form-item>

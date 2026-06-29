@@ -4,13 +4,33 @@
       <template #header>
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <span>{{ T('StationMessages') }} ({{ total }})</span>
-          <el-button size="small" @click="markAllRead">{{ T('MarkAllRead') }}</el-button>
+          <div>
+            <el-button size="small" type="primary" @click="showSendDialog">{{ T('SendMessage') }}</el-button>
+            <el-button v-if="isAdmin" size="small" type="danger" @click="showBroadcastDialog">{{ T('Broadcast') }}</el-button>
+            <el-dropdown v-if="isAdmin" trigger="click" @command="cleanup">
+              <el-button size="small" type="warning">清理旧消息</el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="1">清理超过1年的消息</el-dropdown-item>
+                  <el-dropdown-item command="3">清理超过3年的消息</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <el-button size="small" @click="markAllRead">{{ T('MarkAllRead') }}</el-button>
+          </div>
         </div>
       </template>
       <el-table :data="messages" v-loading="loading" border>
-        <el-table-column prop="title" :label="T('Title')" min-width="160">
+        <el-table-column prop="sender_name" :label="T('Sender')" width="120">
           <template #default="{row}">
-            <span :style="row.is_read === 0 ? 'font-weight: bold' : ''">{{ row.title }}</span>
+            <span v-if="row.sender_name">{{ row.sender_name }}</span>
+            <span v-else style="color: #909399;">系统</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" :label="T('Title')" min-width="140">
+          <template #default="{row}">
+            <span :style="row.is_read === 0 ? 'font-weight: bold' : ''">{{ row.title || '-' }}</span>
+            <el-tag v-if="row.type === 'broadcast'" type="danger" size="small" style="margin-left: 4px;">{{ T('Broadcast') }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="content" :label="T('Content')" min-width="240">
@@ -18,7 +38,6 @@
             <el-text truncated>{{ row.content }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column prop="peer_id" label="Peer ID" width="140"></el-table-column>
         <el-table-column prop="created_at" :label="T('Time')" width="170">
           <template #default="{row}">
             {{ formatTime(row.created_at) }}
@@ -37,18 +56,53 @@
         </el-table-column>
       </el-table>
     </el-card>
+
+    <!-- Send message dialog -->
+    <el-dialog v-model="sendVisible" :title="isBroadcast ? T('Broadcast') : T('SendMessage')" width="500px">
+      <el-form label-width="80px">
+        <el-form-item v-if="!isBroadcast" :label="T('Receiver')">
+          <el-select v-model="sendForm.receiver_id" filterable remote :remote-method="searchUsers" :loading="userLoading" style="width: 100%" placeholder="搜索用户名">
+            <el-option v-for="u in userList" :key="u.id" :label="u.username" :value="u.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="isBroadcast" label="推送对象">
+          <el-tag type="danger">全体用户</el-tag>
+        </el-form-item>
+        <el-form-item :label="T('Title')">
+          <el-input v-model="sendForm.title" placeholder="消息标题（可选）"></el-input>
+        </el-form-item>
+        <el-form-item :label="T('Content')">
+          <el-input v-model="sendForm.content" type="textarea" :rows="4" placeholder="请输入消息内容"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="doSend">{{ T('Submit') }}</el-button>
+          <el-button @click="sendVisible = false">{{ T('Cancel') }}</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
 import { T } from '@/utils/i18n'
-import { ElMessage } from 'element-plus'
-import { list as getMessages, markRead as markMsgRead, unreadCount } from '@/api/message'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { list as getMessages, markRead as markMsgRead, unreadCount, send, broadcast, cleanup as apiCleanup } from '@/api/message'
+import request from '@/utils/request'
+import { useUserStore } from '@/store/user'
+
+const userStore = useUserStore()
 
 const messages = ref([])
 const total = ref(0)
 const loading = ref(false)
+const isAdmin = ref(false)
+const sendVisible = ref(false)
+const isBroadcast = ref(false)
+const userList = ref([])
+const userLoading = ref(false)
+
+const sendForm = ref({ receiver_id: null, title: '', content: '' })
 
 const getList = async () => {
   loading.value = true
@@ -75,6 +129,63 @@ const markRead = async (row) => {
   }
 }
 
+const cleanup = async (years) => {
+  const cf = await ElMessageBox.confirm(`确定删除超过 ${years} 年的消息？此操作不可恢复。`, { type: 'warning', confirmButtonText: '确认删除', cancelButtonText: '取消' }).catch(_ => false)
+  if (!cf) return
+  const res = await apiCleanup(years).catch(_ => false)
+  if (res) {
+    ElMessage.success(`已清理 ${res.data.deleted} 条消息`)
+    getList()
+  }
+}
+
+const searchUsers = async (query) => {
+  if (!query) return
+  userLoading.value = true
+  const res = await request({ url: '/user/list', params: { username: query, page_size: 20 } }).catch(_ => false)
+  userLoading.value = false
+  if (res) userList.value = res.data.list || []
+}
+
+const showSendDialog = () => {
+  isBroadcast.value = false
+  sendForm.value = { receiver_id: null, title: '', content: '' }
+  userList.value = []
+  sendVisible.value = true
+}
+
+const showBroadcastDialog = () => {
+  isBroadcast.value = true
+  sendForm.value = { receiver_id: null, title: '', content: '' }
+  sendVisible.value = true
+}
+
+const doSend = async () => {
+  if (!sendForm.value.title && !sendForm.value.content) {
+    ElMessage.warning('请输入消息内容')
+    return
+  }
+  let res
+  if (isBroadcast.value) {
+    res = await broadcast({ title: sendForm.value.title, content: sendForm.value.content }).catch(_ => false)
+  } else {
+    if (!sendForm.value.receiver_id) {
+      ElMessage.warning('请选择接收人')
+      return
+    }
+    res = await send({
+      receiver_id: sendForm.value.receiver_id,
+      title: sendForm.value.title,
+      content: sendForm.value.content,
+    }).catch(_ => false)
+  }
+  if (res) {
+    ElMessage.success(T('OperationSuccess'))
+    sendVisible.value = false
+    getList()
+  }
+}
+
 const formatTime = (ts) => {
   if (!ts) return '-'
   const d = new Date(ts * 1000)
@@ -82,5 +193,10 @@ const formatTime = (ts) => {
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
-onMounted(getList)
+onMounted(async () => {
+  const info = await userStore.info().catch(_ => false)
+  // Check if user has admin role by checking route_names
+  isAdmin.value = userStore.route_names && userStore.route_names.includes('*')
+  getList()
+})
 </script>

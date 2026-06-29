@@ -664,5 +664,14 @@
   },
   "Home": {
     "One": "首页"
+  },
+  "SendMessage": {
+    "One": "发送消息"
+  },
+  "Sender": {
+    "One": "发送人"
+  },
+  "Receiver": {
+    "One": "接收人"
   }
 }

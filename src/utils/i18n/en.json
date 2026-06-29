@@ -648,5 +648,14 @@
   },
   "Home": {
     "One": "Home"
+  },
+  "SendMessage": {
+    "One": "Send Message"
+  },
+  "Sender": {
+    "One": "Sender"
+  },
+  "Receiver": {
+    "One": "Receiver"
   }
 }
