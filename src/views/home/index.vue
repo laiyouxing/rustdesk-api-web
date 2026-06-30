@@ -123,6 +123,7 @@
 import { onMounted, ref } from 'vue'
 import { T } from '@/utils/i18n'
 import request from '@/utils/request'
+import { useUserStore } from '@/store/user'
 
 const stats = ref({ total_peers: 0, online_peers: 0, offline_peers: 0, total_users: 0, today_connections: 0 })
 const recentPeers = ref([])
@@ -142,14 +143,18 @@ const fetchStats = async () => {
 
 const fetchRecentPeers = async () => {
   loading.value = true
-  const res = await request({ url: '/peer/list', params: { page: 1, page_size: 10, time_ago: -86400 } }).catch(_ => false)
+  const isAdmin = useUserStore().route_names?.includes('*')
+  const url = isAdmin ? '/peer/list' : '/my/peer/list'
+  const res = await request({ url, params: { page: 1, page_size: 10, time_ago: -86400 } }).catch(_ => false)
   loading.value = false
   if (res) recentPeers.value = res.data.list
 }
 
 const fetchRecentLogs = async () => {
   loadingLogs.value = true
-  const res = await request({ url: '/login_log/list', params: { page: 1, page_size: 10 } }).catch(_ => false)
+  const isAdmin = useUserStore().route_names?.includes('*')
+  const url = isAdmin ? '/login_log/list' : '/my/login_log/list'
+  const res = await request({ url, params: { page: 1, page_size: 10 } }).catch(_ => false)
   loadingLogs.value = false
   if (res) recentLogs.value = res.data.list
 }
