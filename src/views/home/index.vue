@@ -73,6 +73,49 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row :gutter="20" style="margin-top: 20px;">
+      <el-col :span="24">
+        <el-card shadow="hover">
+          <template #header>
+            <span>{{ T('StationMessages') }}</span>
+            <el-tag v-if="unreadMsgCount > 0" type="danger" size="small" style="margin-left:8px">
+              {{ unreadMsgCount }} {{ T('Unread') }}
+            </el-tag>
+            <el-button text size="small" style="float:right" @click="markAllRead" :disabled="unreadMsgCount===0">
+              {{ T('MarkAllRead') }}
+            </el-button>
+          </template>
+          <el-table :data="recentMessages" v-loading="loadingMsg" size="small" max-height="250">
+            <el-table-column prop="sender_name" :label="T('Sender')" width="120">
+              <template #default="{row}">
+                <el-tag v-if="row.type==='broadcast'" type="danger" size="small">全体</el-tag>
+                <span v-else>{{ row.sender_name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="title" :label="T('MessageTitle')" min-width="120">
+              <template #default="{row}">
+                <span :style="row.is_read ? '' : 'font-weight:bold'">{{ row.title || row.content }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column :label="T('Time')" width="160">
+              <template #default="{row}">
+                {{ formatTime(row.created_at) }}
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="80">
+              <template #default="{row}">
+                <el-button v-if="!row.is_read" text size="small" @click="markRead(row.row_id)">
+                  {{ T('MarkRead') }}
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div v-if="totalMessages > 5" style="text-align:center;margin-top:8px">
+            <router-link to="/stationMessages">{{ T('ViewAll') }} ({{ totalMessages }})</router-link>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -87,6 +130,10 @@ const loading = ref(false)
 const recentLogs = ref([])
 const loadingLogs = ref(false)
 const now = ref(Math.floor(Date.now() / 1000))
+const recentMessages = ref([])
+const loadingMsg = ref(false)
+const unreadMsgCount = ref(0)
+const totalMessages = ref(0)
 
 const fetchStats = async () => {
   const res = await request({ url: '/dashboard/stats' }).catch(_ => false)
@@ -107,6 +154,32 @@ const fetchRecentLogs = async () => {
   if (res) recentLogs.value = res.data.list
 }
 
+const fetchMessages = async () => {
+  loadingMsg.value = true
+  const [msgRes, countRes] = await Promise.all([
+    request({ url: '/station_message/list', params: { page: 1, page_size: 5, is_read: 0 } }).catch(_ => false),
+    request({ url: '/station_message/unread_count' }).catch(_ => false),
+  ])
+  loadingMsg.value = false
+  if (msgRes) {
+    recentMessages.value = msgRes.data.list || []
+    totalMessages.value = msgRes.data.total || 0
+  }
+  if (countRes) {
+    unreadMsgCount.value = countRes.data.count || 0
+  }
+}
+
+const markRead = async (id) => {
+  await request({ url: '/station_message/mark_read', method: 'post', data: { id } }).catch(_ => false)
+  fetchMessages()
+}
+
+const markAllRead = async () => {
+  await request({ url: '/station_message/mark_read', method: 'post', data: {} }).catch(_ => false)
+  fetchMessages()
+}
+
 const formatTime = (ts) => {
   if (!ts) return '-'
   const d = new Date(ts * 1000)
@@ -119,8 +192,10 @@ onMounted(() => {
   fetchStats()
   fetchRecentPeers()
   fetchRecentLogs()
+  fetchMessages()
   setInterval(fetchStats, 30000)
   setInterval(fetchRecentPeers, 30000)
+  setInterval(fetchMessages, 30000)
 })
 </script>
 

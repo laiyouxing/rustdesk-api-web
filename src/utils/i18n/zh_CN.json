@@ -632,6 +632,12 @@
   "MarkAllRead": {
     "One": "全部已读"
   },
+  "MessageTitle": {
+    "One": "消息标题"
+  },
+  "ViewAll": {
+    "One": "查看全部"
+  },
   "MarkRead": {
     "One": "标记已读"
   },

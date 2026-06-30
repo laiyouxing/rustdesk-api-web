@@ -616,6 +616,12 @@
   "MarkAllRead": {
     "One": "Mark All Read"
   },
+  "MessageTitle": {
+    "One": "Message Title"
+  },
+  "ViewAll": {
+    "One": "View All"
+  },
   "MarkRead": {
     "One": "Mark Read"
   },
