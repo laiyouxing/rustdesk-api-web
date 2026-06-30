@@ -39,11 +39,17 @@ router.beforeEach(async (to, from, next) => {
         userStore.logout()
         next(`/login?redirect=${to.path}`)
       } else {
-        next({ ...to, replace: true })
+        // 检查目标路由是否已注册，避免因动态路由未覆盖而落到 404
+        const resolved = router.resolve(to.path)
+        if (resolved.name) {
+          next({ ...to, replace: true })
+        } else {
+          next({ path: '/home', replace: true })
+        }
       }
-    }/* else if (to.path === '/404') {
-      next({path: to.redirectedFrom?.fullPath, replace: true})
-    }*/ else {
+    } else if (to.path === '/404') {
+      next({ path: to.redirectedFrom?.fullPath || '/home', replace: true })
+    } else {
       next()
     }
   }
