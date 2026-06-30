@@ -140,11 +140,17 @@ const cleanup = async (years) => {
 }
 
 const searchUsers = async (query) => {
-  if (!query || !isAdmin.value) return
+  if (!query) return
   userLoading.value = true
-  const res = await request({ url: '/user/list', params: { username: query, page_size: 20 } }).catch(_ => false)
+  // groupUsers 接口无需管理员权限，返回所有用户
+  const res = await request({ url: '/user/groupUsers', method: 'post' }).catch(_ => false)
   userLoading.value = false
-  if (res) userList.value = res.data.list || []
+  if (res && res.data.users) {
+    // 前端本地过滤匹配的用户名
+    userList.value = res.data.users.filter(u =>
+      u.username && u.username.toLowerCase().includes(query.toLowerCase())
+    )
+  }
 }
 
 const showSendDialog = () => {
