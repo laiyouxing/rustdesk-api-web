@@ -140,7 +140,7 @@ const cleanup = async (years) => {
 }
 
 const searchUsers = async (query) => {
-  if (!query) return
+  if (!query || !isAdmin.value) return
   userLoading.value = true
   const res = await request({ url: '/user/list', params: { username: query, page_size: 20 } }).catch(_ => false)
   userLoading.value = false
