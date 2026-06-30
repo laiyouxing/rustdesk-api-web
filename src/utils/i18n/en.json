@@ -649,6 +649,9 @@
   "Home": {
     "One": "Home"
   },
+  "Status": {
+    "One": "Status"
+  },
   "SendMessage": {
     "One": "Send Message"
   },

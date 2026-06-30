@@ -665,6 +665,9 @@
   "Home": {
     "One": "首页"
   },
+  "Status": {
+    "One": "状态"
+  },
   "SendMessage": {
     "One": "发送消息"
   },
