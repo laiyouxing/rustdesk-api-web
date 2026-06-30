@@ -115,7 +115,7 @@ const getList = async () => {
 }
 
 const markAllRead = async () => {
-  const res = await markMsgRead({}).catch(_ => false)
+  const res = await markMsgRead({ all: true }).catch(_ => false)
   if (res) {
     ElMessage.success(T('OperationSuccess'))
     getList()

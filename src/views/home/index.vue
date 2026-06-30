@@ -176,7 +176,7 @@ const markRead = async (id) => {
 }
 
 const markAllRead = async () => {
-  await request({ url: '/station_message/mark_read', method: 'post', data: {} }).catch(_ => false)
+  await request({ url: '/station_message/mark_read', method: 'post', data: { all: true } }).catch(_ => false)
   fetchMessages()
 }
 
