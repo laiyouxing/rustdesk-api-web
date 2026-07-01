@@ -145,9 +145,16 @@ const searchUsers = async (query) => {
   // groupUsers 接口无需管理员权限，返回所有用户
   const res = await request({ url: '/user/groupUsers', method: 'post' }).catch(_ => false)
   userLoading.value = false
-  if (res && res.data.users) {
-    // 前端本地过滤匹配的用户名
-    userList.value = res.data.users.filter(u =>
+  if (res && res.data && res.data.users) {
+    // groupUsers 返回 users 为数组，但 UserList 使用了 `json:"list,omitempty"`
+    // 兼容两种格式：直接数组 或 { list: [...] }
+    let users = []
+    if (Array.isArray(res.data.users)) {
+      users = res.data.users
+    } else if (res.data.users.list) {
+      users = res.data.users.list
+    }
+    userList.value = users.filter(u =>
       u.username && u.username.toLowerCase().includes(query.toLowerCase())
     )
   }
