@@ -46,11 +46,16 @@
           </template>
           <el-table :data="recentPeers" v-loading="loading" size="small" max-height="300">
             <el-table-column prop="id" label="ID" width="120"></el-table-column>
-            <el-table-column prop="hostname" :label="T('Hostname')" min-width="120">
+            <el-table-column prop="hostname" :label="T('Hostname')" min-width="100">
               <template #default="{row}">
                 <el-tag :type="row.last_online_time > now-300 ? 'success' : 'danger'" size="small" effect="plain">
                   {{ row.hostname || '-' }}
                 </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="alias" :label="T('Alias')" min-width="100">
+              <template #default="{row}">
+                {{ row.alias || '-' }}
               </template>
             </el-table-column>
             <el-table-column prop="last_online_time" :label="T('LastOnline')" width="160">
