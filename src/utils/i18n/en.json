@@ -550,12 +550,6 @@
   "ReleaseNotesPlaceholder": {
     "One": "What's new in this version..."
   },
-  "CreatedAt": {
-    "One": "Created At"
-  },
-  "Actions": {
-    "One": "Actions"
-  },
   "TotalDevices": {
     "One": "Total Devices"
   },
@@ -573,9 +567,6 @@
   },
   "RecentConnections": {
     "One": "Recent Connections"
-  },
-  "Hostname": {
-    "One": "Hostname"
   },
   "LastOnline": {
     "One": "Last Online"
@@ -628,12 +619,6 @@
   "Unread": {
     "One": "Unread"
   },
-  "Read": {
-    "One": "Read"
-  },
-  "Name": {
-    "One": "Name"
-  },
   "MonitorScope": {
     "One": "Monitor Scope"
   },
@@ -655,9 +640,6 @@
   "Home": {
     "One": "Home"
   },
-  "Status": {
-    "One": "Status"
-  },
   "SendMessage": {
     "One": "Send Message"
   },
@@ -666,5 +648,8 @@
   },
   "Receiver": {
     "One": "Receiver"
+  },
+  "AutoRefresh": {
+    "One": "Auto Refresh"
   }
 }

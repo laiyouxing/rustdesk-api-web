@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div style="position: relative;">
+    <!-- Refresh interval indicator -->
+    <div style="position: absolute; top: -10px; right: 0; font-size: 12px; color: #909399; z-index: 10;">
+      {{ T('AutoRefresh') }}: 30s
+    </div>
     <el-row :gutter="20">
       <el-col :span="6">
         <el-card shadow="hover">

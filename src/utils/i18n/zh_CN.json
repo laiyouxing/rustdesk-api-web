@@ -111,7 +111,7 @@
     "One": "颜色"
   },
   "CreatedAt": {
-    "One": "创建时间"
+    "One": "发布时间"
   },
   "UpdatedAt": {
     "One": "更新时间"
@@ -402,7 +402,7 @@
     "One": "规则"
   },
   "Read": {
-    "One": "读取"
+    "One": "已读"
   },
   "ReadWrite": {
     "One": "读写"
@@ -566,12 +566,6 @@
   "ReleaseNotesPlaceholder": {
     "One": "修复了哪些问题..."
   },
-  "CreatedAt": {
-    "One": "发布时间"
-  },
-  "Actions": {
-    "One": "操作"
-  },
   "TotalDevices": {
     "One": "总设备数"
   },
@@ -589,9 +583,6 @@
   },
   "RecentConnections": {
     "One": "最近连接记录"
-  },
-  "Hostname": {
-    "One": "主机名"
   },
   "LastOnline": {
     "One": "最后在线"
@@ -644,12 +635,6 @@
   "Unread": {
     "One": "未读"
   },
-  "Read": {
-    "One": "已读"
-  },
-  "Name": {
-    "One": "名称"
-  },
   "MonitorScope": {
     "One": "监控范围"
   },
@@ -671,9 +656,6 @@
   "Home": {
     "One": "首页"
   },
-  "Status": {
-    "One": "状态"
-  },
   "SendMessage": {
     "One": "发送消息"
   },
@@ -682,5 +664,8 @@
   },
   "Receiver": {
     "One": "接收人"
+  },
+  "AutoRefresh": {
+    "One": "自动刷新"
   }
 }
