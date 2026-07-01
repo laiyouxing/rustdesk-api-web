@@ -651,5 +651,8 @@
   },
   "AutoRefresh": {
     "One": "Auto Refresh"
+  },
+  "ClientType": {
+    "One": "Client Type"
   }
 }

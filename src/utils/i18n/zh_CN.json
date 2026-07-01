@@ -667,5 +667,8 @@
   },
   "AutoRefresh": {
     "One": "自动刷新"
+  },
+  "ClientType": {
+    "One": "客户端类型"
   }
 }

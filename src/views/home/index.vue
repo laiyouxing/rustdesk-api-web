@@ -73,9 +73,21 @@
             <span>{{ T('RecentConnections') }}</span>
           </template>
           <el-table :data="recentLogs" v-loading="loadingLogs" size="small" max-height="300">
-            <el-table-column prop="username" :label="T('Username')" width="100"></el-table-column>
-            <el-table-column prop="peer_id" label="Peer ID" width="120"></el-table-column>
-            <el-table-column prop="created_at" :label="T('Time')" width="160">
+            <el-table-column prop="username" :label="T('Username')" width="90"></el-table-column>
+            <el-table-column prop="peer_id" label="Peer ID" width="110"></el-table-column>
+            <el-table-column prop="peer_alias" :label="T('Alias')" min-width="80">
+              <template #default="{row}">
+                {{ row.peer_alias || '-' }}
+              </template>
+            </el-table-column>
+            <el-table-column :label="T('ClientType')" width="90">
+              <template #default="{row}">
+                <el-tag v-if="row.client === 'webadmin'" type="warning" size="small">Web</el-tag>
+                <el-tag v-else-if="row.client === 'app'" type="success" size="small">App</el-tag>
+                <el-tag v-else size="small">{{ row.client }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="created_at" :label="T('Time')" width="150">
               <template #default="{row}">{{ row.created_at }}</template>
             </el-table-column>
           </el-table>
