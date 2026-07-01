@@ -132,7 +132,7 @@ const markRead = async (row) => {
 const cleanup = async (years) => {
   const cf = await ElMessageBox.confirm(`确定删除超过 ${years} 年的消息？此操作不可恢复。`, { type: 'warning', confirmButtonText: '确认删除', cancelButtonText: '取消' }).catch(_ => false)
   if (!cf) return
-  const res = await apiCleanup(years).catch(_ => false)
+  const res = await apiCleanup({ years }).catch(_ => false)
   if (res) {
     ElMessage.success(`已清理 ${res.data.deleted} 条消息`)
     getList()
