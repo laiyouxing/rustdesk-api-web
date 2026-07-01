@@ -5,8 +5,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <span>{{ T('StationMessages') }} ({{ total }})</span>
           <div>
-            <el-button size="small" type="primary" @click="showSendDialog">{{ T('SendMessage') }}</el-button>
-            <el-button v-if="isAdmin" size="small" type="danger" @click="showBroadcastDialog">{{ T('Broadcast') }}</el-button>
+            <el-button size="small" type="primary" @click="showSendDialog">发送消息</el-button>
+            <el-button v-if="isAdmin" size="small" type="danger" @click="showBroadcastDialog">全体推送</el-button>
             <el-dropdown v-if="isAdmin" trigger="click" @command="cleanup">
               <el-button size="small" type="warning">清理旧消息</el-button>
               <template #dropdown>
@@ -58,7 +58,7 @@
     </el-card>
 
     <!-- Send message dialog -->
-    <el-dialog v-model="sendVisible" :title="isBroadcast ? T('Broadcast') : T('SendMessage')" width="500px">
+    <el-dialog v-model="sendVisible" :title="isBroadcast ? '全体推送' : '发送消息'" width="500px">
       <el-form label-width="80px">
         <el-form-item v-if="!isBroadcast" :label="T('Receiver')">
           <el-select v-model="sendForm.receiver_id" filterable remote :remote-method="searchUsers" :loading="userLoading" style="width: 100%" placeholder="搜索用户名">
