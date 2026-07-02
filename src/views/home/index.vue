@@ -68,26 +68,26 @@
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card shadow="hover">
+        <el-card shadow="hover" style="cursor:pointer" @click="goAuditConn">
           <template #header>
             <span>{{ T('RecentConnections') }}</span>
           </template>
-          <el-table :data="recentLogs" v-loading="loadingLogs" size="small" max-height="300">
-            <el-table-column prop="username" :label="T('Username')" width="90"></el-table-column>
-            <el-table-column prop="peer_id" label="Peer ID" width="110"></el-table-column>
-            <el-table-column prop="peer_alias" :label="T('Alias')" min-width="80">
+          <el-table :data="recentConns" v-loading="loadingConns" size="small" max-height="300">
+            <el-table-column prop="peer_id" :label="T('Peer')" width="120"></el-table-column>
+            <el-table-column prop="from_peer" :label="T('FromPeer')" width="120"></el-table-column>
+            <el-table-column prop="from_name" :label="T('FromName')" min-width="100">
               <template #default="{row}">
-                {{ row.peer_alias || '-' }}
+                {{ row.from_name || '-' }}
               </template>
             </el-table-column>
-            <el-table-column :label="T('ClientType')" width="90">
+            <el-table-column prop="ip" label="IP" width="120"></el-table-column>
+            <el-table-column :label="T('Type')" width="80">
               <template #default="{row}">
-                <el-tag v-if="row.client === 'webadmin'" type="warning" size="small">Web</el-tag>
-                <el-tag v-else-if="row.client === 'app'" type="success" size="small">App</el-tag>
-                <el-tag v-else size="small">{{ row.client }}</el-tag>
+                <el-tag v-if="row.type === 1" type="warning" size="small">{{ T('File') }}</el-tag>
+                <el-tag v-else size="small">{{ T('Common') }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="created_at" :label="T('Time')" width="150">
+            <el-table-column :label="T('Time')" width="150">
               <template #default="{row}">{{ row.created_at }}</template>
             </el-table-column>
           </el-table>
@@ -154,8 +154,8 @@ const isAdmin = computed(() => userStore.route_names?.includes('*'))
 const stats = ref({ total_peers: 0, online_peers: 0, offline_peers: 0, total_users: 0, today_connections: 0 })
 const recentPeers = ref([])
 const loading = ref(false)
-const recentLogs = ref([])
-const loadingLogs = ref(false)
+const recentConns = ref([])
+const loadingConns = ref(false)
 const now = ref(Math.floor(Date.now() / 1000))
 const recentMessages = ref([])
 const loadingMsg = ref(false)
@@ -176,13 +176,19 @@ const fetchRecentPeers = async () => {
   if (res) recentPeers.value = res.data.list
 }
 
-const fetchRecentLogs = async () => {
-  loadingLogs.value = true
+const fetchRecentConns = async () => {
+  loadingConns.value = true
   const isAdmin = useUserStore().route_names?.includes('*')
-  const url = isAdmin ? '/login_log/list' : '/my/login_log/list'
+  const url = isAdmin ? '/audit_conn/list' : null
+  if (!url) {
+    // 普通用户没有连接日志接口，跳过
+    loadingConns.value = false
+    recentConns.value = []
+    return
+  }
   const res = await request({ url, params: { page: 1, page_size: 10 } }).catch(_ => false)
-  loadingLogs.value = false
-  if (res) recentLogs.value = res.data.list
+  loadingConns.value = false
+  if (res) recentConns.value = res.data.list
 }
 
 const fetchMessages = async () => {
@@ -217,6 +223,10 @@ function goPeer(status) {
   router.push({ name: routeName, query: { time_ago: timeAgo } })
 }
 
+function goAuditConn() {
+  router.push({ name: 'AuditConn' })
+}
+
 const formatTime = (ts) => {
   if (!ts) return '-'
   const d = new Date(ts * 1000)
@@ -228,7 +238,7 @@ onMounted(() => {
   now.value = Math.floor(Date.now() / 1000)
   fetchStats()
   fetchRecentPeers()
-  fetchRecentLogs()
+  fetchRecentConns()
   fetchMessages()
   setInterval(fetchStats, 30000)
   setInterval(fetchRecentPeers, 30000)
