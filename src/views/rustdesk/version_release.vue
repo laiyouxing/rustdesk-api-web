@@ -23,7 +23,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm">{{ T('Publish') }}</el-button>
+          <el-button type="primary" :loading="submitting" @click="submitForm">{{ T('Publish') }}</el-button>
         </el-form-item>
       </el-form>
       <el-form inline label-width="80px">
@@ -33,7 +33,7 @@
       </el-form>
       <el-form label-width="80px">
         <el-form-item :label="T('ReleaseNotes')">
-          <el-input v-model="form.note" type="textarea" :rows="3" placeholder="{{ T('ReleaseNotesPlaceholder') }}"></el-input>
+          <el-input v-model="form.note" type="textarea" :rows="3" :placeholder="T('ReleaseNotesPlaceholder')"></el-input>
         </el-form-item>
       </el-form>
     </el-card>
@@ -107,17 +107,25 @@ const form = reactive({
   note: '',
 })
 
+const submitting = ref(false)
+
 const submitForm = async () => {
   if (!form.version || !form.url) {
     ElMessage.error(T('ParamRequired', { param: 'Version & URL' }))
     return
   }
+  submitting.value = true
   const res = await create({
     version: form.version,
     platform: form.platform,
+    status: form.status,
     url: form.url,
     note: form.note,
-  }).catch(_ => false)
+  }).catch(e => {
+    ElMessage.error((e && e.message) || T('OperationFailed'))
+    return false
+  })
+  submitting.value = false
   if (res) {
     ElMessage.success(T('OperationSuccess'))
     form.version = ''
