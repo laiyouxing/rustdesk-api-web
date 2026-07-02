@@ -14,7 +14,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover">
+        <el-card shadow="hover" style="cursor:pointer" @click="goPeer('online')">
           <div class="stat-item">
             <div class="num green">{{ stats.online_peers }}</div>
             <div class="label">{{ T('Online') }}</div>
@@ -22,7 +22,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover">
+        <el-card shadow="hover" style="cursor:pointer" @click="goPeer('offline')">
           <div class="stat-item">
             <div class="num gray">{{ stats.offline_peers }}</div>
             <div class="label">{{ T('Offline') }}</div>
@@ -141,10 +141,15 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { T } from '@/utils/i18n'
 import request from '@/utils/request'
 import { useUserStore } from '@/store/user'
+
+const router = useRouter()
+const userStore = useUserStore()
+const isAdmin = computed(() => userStore.route_names?.includes('*'))
 
 const stats = ref({ total_peers: 0, online_peers: 0, offline_peers: 0, total_users: 0, today_connections: 0 })
 const recentPeers = ref([])
@@ -204,6 +209,12 @@ const markRead = async (id) => {
 const markAllRead = async () => {
   await request({ url: '/station_message/mark_read', method: 'post', data: { all: true } }).catch(_ => false)
   fetchMessages()
+}
+
+function goPeer(status) {
+  const routeName = isAdmin.value ? 'Peer' : 'MyPeer'
+  const timeAgo = status === 'online' ? -300 : 300
+  router.push({ name: routeName, query: { time_ago: timeAgo } })
 }
 
 const formatTime = (ts) => {

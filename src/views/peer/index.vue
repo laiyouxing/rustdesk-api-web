@@ -1,6 +1,11 @@
 <template>
   <div>
     <el-card class="list-query" shadow="hover">
+      <div style="margin-bottom:12px;">
+        <el-button :type="quickFilter === 'all' ? 'primary' : 'default'" size="small" @click="setQuickFilter('all')">全部</el-button>
+        <el-button :type="quickFilter === 'online' ? 'success' : 'default'" size="small" @click="setQuickFilter('online')">在线</el-button>
+        <el-button :type="quickFilter === 'offline' ? 'danger' : 'default'" size="small" @click="setQuickFilter('offline')">离线</el-button>
+      </div>
       <el-form inline label-width="60px">
         <el-form-item label="ID">
           <el-input v-model="listQuery.id" clearable/>
@@ -231,6 +236,7 @@
 
 <script setup>
   import { computed, onActivated, onMounted, reactive, ref, watch } from 'vue'
+  import { useRoute } from 'vue-router'
   import { batchRemove, create, list, remove, update } from '@/api/peer'
   import { list as groupList } from '@/api/device_group'
   import { ElMessage, ElMessageBox } from 'element-plus'
@@ -249,6 +255,28 @@
   import { UploadFilled } from '@element-plus/icons-vue'
 
   const appStore = useAppStore()
+  const route = useRoute()
+
+  const quickFilter = ref('all')
+
+  function setQuickFilter(v) {
+    quickFilter.value = v
+    if (v === 'all') {
+      listQuery.time_ago = null
+    } else if (v === 'online') {
+      listQuery.time_ago = -300
+    } else if (v === 'offline') {
+      listQuery.time_ago = 300
+    }
+    handlerQuery()
+  }
+
+  // Read query params from home page navigation
+  if (route.query.time_ago) {
+    const ta = Number(route.query.time_ago)
+    if (ta < 0) { setQuickFilter('online'); listQuery.time_ago = ta }
+    else if (ta > 0) { setQuickFilter('offline'); listQuery.time_ago = ta }
+  }
 
   //group
   const groupListRes = reactive({
