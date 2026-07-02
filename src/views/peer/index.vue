@@ -272,11 +272,27 @@
   }
 
   // Read query params from home page navigation
-  if (route.query.time_ago) {
+  function applyTimeAgoQuery() {
+    if (route.query.time_ago == null) return
     const ta = Number(route.query.time_ago)
-    if (ta < 0) { setQuickFilter('online'); listQuery.time_ago = ta }
-    else if (ta > 0) { setQuickFilter('offline'); listQuery.time_ago = ta }
+    if (Number.isNaN(ta)) return
+    if (ta < 0) {
+      listQuery.time_ago = ta
+      quickFilter.value = 'online'
+    } else if (ta > 0) {
+      listQuery.time_ago = ta
+      quickFilter.value = 'offline'
+    } else {
+      listQuery.time_ago = null
+      quickFilter.value = 'all'
+    }
+    handlerQuery()
   }
+
+  // 在 setup 顶层第一次执行：处理首次进入时的 query
+  applyTimeAgoQuery()
+  // 监听后续 query 变化（keep-alive 下 setup 不重跑，必须用 watch 同步过滤条件）
+  watch(() => route.query.time_ago, applyTimeAgoQuery)
 
   //group
   const groupListRes = reactive({
@@ -344,8 +360,14 @@
       getList()
     }
   }
-  onMounted(getList)
-  onActivated(getList)
+onMounted(() => {
+  getList()
+  applyTimeAgoQuery()
+})
+onActivated(() => {
+  applyTimeAgoQuery()
+  getList()
+})
 
   watch(() => listQuery.page, getList)
 
