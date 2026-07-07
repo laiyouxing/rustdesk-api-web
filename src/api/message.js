@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
-export function list() {
-  return request({ url: '/station_message/list' })
+export function list(params) {
+  return request({ url: '/station_message/list', params })
 }
 
 export function unreadCount() {

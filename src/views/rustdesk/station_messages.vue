@@ -5,6 +5,14 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <span>{{ T('StationMessages') }} ({{ total }})</span>
           <div>
+            <el-switch
+              v-if="isAdmin"
+              v-model="scopeOwn"
+              active-text="仅看我的消息"
+              inactive-text="显示全部"
+              @change="getList"
+              style="margin-right: 10px;"
+            />
             <el-button size="small" type="primary" @click="showSendDialog">发送消息</el-button>
             <el-button v-if="isAdmin" size="small" type="danger" @click="showBroadcastDialog">全体推送</el-button>
             <el-dropdown v-if="isAdmin" trigger="click" @command="cleanup">
@@ -101,12 +109,14 @@ const sendVisible = ref(false)
 const isBroadcast = ref(false)
 const userList = ref([])
 const userLoading = ref(false)
+const scopeOwn = ref(false)
 
 const sendForm = ref({ receiver_id: null, title: '', content: '' })
 
 const getList = async () => {
   loading.value = true
-  const res = await getMessages().catch(_ => false)
+  const params = scopeOwn.value ? { scope: 'own' } : {}
+  const res = await getMessages(params).catch(_ => false)
   loading.value = false
   if (res) {
     messages.value = res.data.list
