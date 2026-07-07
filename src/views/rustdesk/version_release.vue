@@ -22,6 +22,10 @@
             <el-option :label="T('Disable')" :value="2"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="强制更新">
+          <el-switch v-model="form.force_update" :active-value="1" :inactive-value="0" />
+          <span style="font-size: 12px; color: #909399; margin-left: 8px;">开启后客户端静默下载安装，不弹提示</span>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="submitting" @click="submitForm">{{ T('Publish') }}</el-button>
         </el-form-item>
@@ -61,6 +65,12 @@
           <template #default="{row}">
             <el-tag v-if="row.status === 1" type="success" size="small">{{ T('Enable') }}</el-tag>
             <el-tag v-else type="danger" size="small">{{ T('Disable') }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="强制更新" width="90" align="center">
+          <template #default="{row}">
+            <el-tag v-if="row.force_update === 1" type="warning" size="small">强制</el-tag>
+            <el-tag v-else type="info" size="small">普通</el-tag>
           </template>
         </el-table-column>
         <el-table-column :label="T('CreatedAt')" width="170" align="center">
@@ -105,6 +115,7 @@ const form = reactive({
   status: 1,
   url: '',
   note: '',
+  force_update: 0,
 })
 
 const submitting = ref(false)
@@ -121,6 +132,7 @@ const submitForm = async () => {
     status: form.status,
     url: form.url,
     note: form.note,
+    force_update: form.force_update,
   }).catch(e => {
     ElMessage.error((e && e.message) || T('OperationFailed'))
     return false
