@@ -103,12 +103,20 @@ export default defineComponent({
       if (res) recentPeers.value = res.data.list
     }
 
-    const fetchRecentLogs = async () => {
-      loadingLogs.value = true
-      const res = await request({ url: '/login_log/list', params: { page: 1, page_size: 10 } }).catch(_ => false)
-      loadingLogs.value = false
-      if (res) recentLogs.value = res.data.list
-    }
+const fetchRecentLogs = async () => {
+  loadingLogs.value = true
+  const res = await request({ url: '/audit_conn/list', params: { page: 1, page_size: 10 } }).catch(_ => false)
+  loadingLogs.value = false
+  if (res) {
+    recentLogs.value = res.data.list.map(r => ({
+      username: r.from_name || r.from_peer || '-',
+      peer_id: r.peer_id,
+      peer_alias: r.peer_id,
+      client: r.type === 1 ? 'App' : 'Web',
+      created_at: r.created_at,
+    }))
+  }
+}
 
     const formatTime = (ts) => {
       if (!ts) return '-'

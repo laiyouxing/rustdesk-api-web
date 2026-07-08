@@ -179,10 +179,18 @@ const fetchRecentPeers = async () => {
 const fetchRecentLogs = async () => {
   loadingLogs.value = true
   const isAdmin = useUserStore().route_names?.includes('*')
-  const url = isAdmin ? '/login_log/list' : '/my/login_log/list'
+  const url = isAdmin ? '/audit_conn/list' : '/my/audit_conn/list'
   const res = await request({ url, params: { page: 1, page_size: 10 } }).catch(_ => false)
   loadingLogs.value = false
-  if (res) recentLogs.value = res.data.list
+  if (res) {
+    recentLogs.value = res.data.list.map(r => ({
+      username: r.from_name || r.from_peer || '-',
+      peer_id: r.peer_id,
+      peer_alias: r.peer_id,
+      client: r.type === 1 ? 'App' : 'Web',
+      created_at: r.created_at,
+    }))
+  }
 }
 
 const fetchMessages = async () => {
