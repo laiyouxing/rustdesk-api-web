@@ -32,6 +32,15 @@
           </template>
         </el-table-column>
         <el-table-column prop="priority" label="优先级" width="80" align="center"></el-table-column>
+        <el-table-column label="绑定范围" width="160" align="center">
+          <template #default="{row}">
+            <el-tag v-if="row.bind_type === 'user'" type="primary" size="small">用户</el-tag>
+            <el-tag v-else-if="row.bind_type === 'group'" type="success" size="small">设备分组</el-tag>
+            <el-tag v-else-if="row.bind_type === 'tag'" type="warning" size="small">标签</el-tag>
+            <el-tag v-else type="info" size="small">全局</el-tag>
+            <span style="margin-left: 4px; font-size: 12px;">{{ getBindName(row) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="200" align="center" fixed="right">
           <template #default="{row}">
             <el-button type="primary" size="small" @click="showEdit(row)">编辑</el-button>
@@ -59,6 +68,29 @@
         <el-form-item label="优先级">
           <el-input-number v-model="form.priority" :min="0" :max="999" />
           <span style="font-size: 12px; color: #909399; margin-left: 8px;">数字越大优先级越高</span>
+        </el-form-item>
+        <el-form-item label="绑定范围" required>
+          <el-radio-group v-model="form.bind_type">
+            <el-radio label="user">用户</el-radio>
+            <el-radio label="group">设备分组</el-radio>
+            <el-radio label="tag">标签</el-radio>
+            <el-radio label="global">全局</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="form.bind_type === 'user'" label="选择用户">
+          <el-select v-model="form.bind_id" placeholder="选择用户" style="width: 300px" filterable>
+            <el-option v-for="u in userListData" :key="u.id" :label="u.username + ' (' + (u.nickname || '') + ')'" :value="u.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.bind_type === 'group'" label="选择分组">
+          <el-select v-model="form.bind_id" placeholder="选择设备分组" style="width: 300px" filterable>
+            <el-option v-for="g in groupListData" :key="g.id" :label="g.name" :value="g.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="form.bind_type === 'tag'" label="选择标签">
+          <el-select v-model="form.bind_id" placeholder="选择标签" style="width: 300px" filterable>
+            <el-option v-for="t in tagListData" :key="t.id" :label="t.name" :value="t.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态">
           <el-switch v-model="form.status" :active-value="1" :inactive-value="2" />
@@ -156,8 +188,17 @@ enable-file-transfer=Y
 
 <script setup>
 import { list, create, update, remove } from '@/api/strategy'
-import { onMounted, reactive, ref } from 'vue'
+import { list as userList } from '@/api/user'
+import { list as groupList } from '@/api/device_group'
+import { list as tagList } from '@/api/tag'
+import { onMounted, reactive, ref, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+
+const bindNameMap = reactive({})
+const getBindName = (row) => bindNameMap[row.id] || ''
+const userListData = ref([])
+const groupListData = ref([])
+const tagListData = ref([])
 
 const query = reactive({
   name: '',
@@ -167,6 +208,8 @@ const form = reactive({
   name: '',
   status: 1,
   priority: 0,
+  bind_type: 'global',
+  bind_id: 0,
   config_items: '',
 })
 
@@ -205,12 +248,16 @@ const showEdit = (row) => {
     form.name = row.name
     form.status = row.status
     form.priority = row.priority
+    form.bind_type = row.bind_type || 'global'
+    form.bind_id = row.bind_id || 0
     form.config_items = row.config_items
   } else {
     editingId.value = 0
     form.name = ''
     form.status = 1
     form.priority = 0
+    form.bind_type = 'global'
+    form.bind_id = 0
     form.config_items = ''
   }
   dialogVisible.value = true
@@ -220,6 +267,8 @@ const resetForm = () => {
   form.name = ''
   form.status = 1
   form.priority = 0
+  form.bind_type = 'global'
+  form.bind_id = 0
   form.config_items = ''
   editingId.value = 0
 }
@@ -238,9 +287,35 @@ const getList = async () => {
   if (res) {
     listRes.list = res.data.list
     listRes.total = res.data.total
+    // 填充绑定名称映射（在表格中显示）
+    for (const row of res.data.list) {
+      let name = ''
+      if (row.bind_type === 'user') {
+        const u = userListData.value.find(u => u.id === row.bind_id)
+        name = u ? u.username : ''
+      } else if (row.bind_type === 'group') {
+        const g = groupListData.value.find(g => g.id === row.bind_id)
+        name = g ? g.name : ''
+      } else if (row.bind_type === 'tag') {
+        const t = tagListData.value.find(t => t.id === row.bind_id)
+        name = t ? t.name : ''
+      }
+      bindNameMap[row.id] = name
+    }
   }
 }
-onMounted(getList)
+onMounted(async () => {
+  getList()
+  // 预加载用户、分组、标签列表
+  const [uRes, gRes, tRes] = await Promise.all([
+    userList({ page_size: 9999 }).catch(() => ({ data: { list: [] } })),
+    groupList({ page_size: 9999 }).catch(() => ({ data: { list: [] } })),
+    tagList({ page_size: 9999 }).catch(() => ({ data: { list: [] } })),
+  ])
+  userListData.value = uRes.data.list || []
+  groupListData.value = gRes.data.list || []
+  tagListData.value = tRes.data.list || []
+})
 
 const del = async (row) => {
   const cf = await ElMessageBox.confirm(`确定删除策略「${row.name}」？`, '提示', {
@@ -251,6 +326,8 @@ const del = async (row) => {
   if (!cf) return false
   const res = await remove({ id: row.id }).catch(_ => false)
   if (res) {
+    // 清除缓存的名字
+    delete bindNameMap[row.id]
     ElMessage.success('删除成功')
     getList()
   }
