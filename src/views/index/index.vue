@@ -41,15 +41,21 @@
             <span>{{ T('RecentDevices') }}</span>
           </template>
           <el-table :data="recentPeers" v-loading="loading" size="small" max-height="300">
-            <el-table-column prop="id" label="ID" width="120"></el-table-column>
-            <el-table-column prop="hostname" :label="T('Hostname')" min-width="120">
+            <el-table-column prop="hostname" :label="T('Hostname')" min-width="90">
               <template #default="{row}">
-                <el-tag :type="row.last_online_time > now-300 ? 'success' : 'danger'" size="small" effect="plain">
-                  {{ row.hostname || '-' }}
-                </el-tag>
+                <el-tag type="danger" size="small" effect="plain">{{ row.hostname || '-' }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="last_online_time" :label="T('LastOnline')" width="160">
+            <el-table-column prop="alias" :label="T('Alias')" min-width="80">
+              <template #default="{row}">{{ row.alias || '-' }}</template>
+            </el-table-column>
+            <el-table-column label="标签" min-width="120">
+              <template #default="{row}">
+                <el-tag v-for="t in (row.tags || [])" :key="t" size="small" style="margin-right: 4px; margin-bottom: 2px;">{{ t }}</el-tag>
+                <span v-if="!row.tags || row.tags.length === 0" style="color: #ccc;">-</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="last_online_time" :label="T('LastOnline')" width="150">
               <template #default="{row}">
                 <span v-if="row.last_online_time">{{ formatTime(row.last_online_time) }}</span>
                 <span v-else>-</span>
