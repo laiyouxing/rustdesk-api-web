@@ -69,7 +69,7 @@
           <el-input v-model="form.smtp_user" placeholder="xxx@qq.com"></el-input>
         </el-form-item>
         <el-form-item v-if="form.channel === 'smtp'" :label="T('SmtpPass')">
-          <el-input v-model="form.smtp_pass" type="password" placeholder="SMTP授权码"></el-input>
+          <el-input v-model="form.smtp_pass" type="password" :placeholder="editId ? '已设置，不修改请留空' : 'SMTP授权码'"></el-input>
         </el-form-item>
         <el-form-item v-if="form.channel === 'smtp'" :label="T('SmtpTo')">
           <el-input v-model="form.smtp_to" placeholder="admin@example.com,user@example.com"></el-input>
