@@ -170,9 +170,15 @@ const fetchRecentPeers = async () => {
   loading.value = true
   const isAdmin = useUserStore().route_names?.includes('*')
   const url = isAdmin ? '/peer/list' : '/my/peer/list'
-  const res = await request({ url, params: { page: 1, page_size: 10, time_ago: -86400 } }).catch(_ => false)
+  const res = await request({ url, params: { page: 1, page_size: 50, time_ago: 300 } }).catch(_ => false)
   loading.value = false
-  if (res) recentPeers.value = res.data.list
+  if (res) {
+    // 显示最近1个月内离线的设备，按最后在线时间降序取前10
+    const monthAgo = now.value - 2592000
+    recentPeers.value = (res.data.list || [])
+      .filter(p => p.last_online_time > monthAgo)
+      .slice(0, 10)
+  }
 }
 
 const fetchRecentLogs = async () => {

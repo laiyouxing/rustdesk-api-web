@@ -109,9 +109,14 @@ export default defineComponent({
 
     const fetchRecentPeers = async () => {
       loading.value = true
-      const res = await request({ url: '/peer/list', params: { page: 1, page_size: 10, time_ago: -86400 } }).catch(_ => false)
+      const res = await request({ url: '/peer/list', params: { page: 1, page_size: 50, time_ago: 300 } }).catch(_ => false)
       loading.value = false
-      if (res) recentPeers.value = res.data.list
+      if (res) {
+        const monthAgo = now.value - 2592000
+        recentPeers.value = (res.data.list || [])
+          .filter(p => p.last_online_time > monthAgo)
+          .slice(0, 10)
+      }
     }
 
 const fetchRecentLogs = async () => {
