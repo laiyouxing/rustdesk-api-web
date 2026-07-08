@@ -654,5 +654,23 @@
   },
   "ClientType": {
     "One": "Client Type"
+  },
+  "DeviceManage": {
+    "One": "Devices"
+  },
+  "UserMgmt": {
+    "One": "Users"
+  },
+  "AbMgmt": {
+    "One": "Address Books"
+  },
+  "SystemMgmt": {
+    "One": "System"
+  },
+  "AuditMgmt": {
+    "One": "Audit Logs"
+  },
+  "Strategy": {
+    "One": "Strategies"
   }
 }

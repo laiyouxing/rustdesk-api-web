@@ -670,5 +670,23 @@
   },
   "ClientType": {
     "One": "客户端类型"
+  },
+  "DeviceManage": {
+    "One": "设备管理"
+  },
+  "UserMgmt": {
+    "One": "用户管理"
+  },
+  "AbMgmt": {
+    "One": "地址簿管理"
+  },
+  "SystemMgmt": {
+    "One": "系统管理"
+  },
+  "AuditMgmt": {
+    "One": "审计日志"
+  },
+  "Strategy": {
+    "One": "策略管理"
   }
 }
