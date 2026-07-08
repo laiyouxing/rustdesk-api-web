@@ -71,8 +71,14 @@
             <el-table-column prop="peer_alias" :label="T('Alias')" min-width="80">
               <template #default="{row}">{{ row.peer_alias || '-' }}</template>
             </el-table-column>
-            <el-table-column prop="created_at" :label="T('Time')" width="150">
+            <el-table-column label="连接时间" width="150">
               <template #default="{row}">{{ row.created_at }}</template>
+            </el-table-column>
+            <el-table-column label="结束时间" width="150">
+              <template #default="{row}">
+                <span v-if="row.close_time_str">{{ row.close_time_str }}</span>
+                <el-tag v-else type="success" size="small">进行中</el-tag>
+              </template>
             </el-table-column>
           </el-table>
         </el-card>
@@ -120,6 +126,7 @@ const fetchRecentLogs = async () => {
       peer_alias: r.peer_alias,
       type: r.type,
       created_at: r.created_at,
+      close_time: r.close_time,
     }))
   }
 }
