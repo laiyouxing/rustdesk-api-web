@@ -121,6 +121,7 @@ export default defineComponent({
         const monthAgo = now.value - 2592000
         recentPeers.value = (res.data.list || [])
           .filter(p => p.last_online_time > monthAgo)
+          .sort((a, b) => b.last_online_time - a.last_online_time)
           .slice(0, 10)
       }
     }

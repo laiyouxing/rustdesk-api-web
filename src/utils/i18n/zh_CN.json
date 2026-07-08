@@ -579,7 +579,7 @@
     "One": "今日连接"
   },
   "RecentDevices": {
-    "One": "最近活跃设备"
+    "One": "最近离线设备"
   },
   "RecentConnections": {
     "One": "最近连接记录"

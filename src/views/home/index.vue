@@ -174,10 +174,11 @@ const fetchRecentPeers = async () => {
   const res = await request({ url, params: { page: 1, page_size: 50, time_ago: 300 } }).catch(_ => false)
   loading.value = false
   if (res) {
-    // 显示最近1个月内离线的设备，按最后在线时间降序取前10
+    // 最近离线的设备：按最后在线时间降序排列，取最近1个月内离线的前10条
     const monthAgo = now.value - 2592000
     recentPeers.value = (res.data.list || [])
       .filter(p => p.last_online_time > monthAgo)
+      .sort((a, b) => b.last_online_time - a.last_online_time)
       .slice(0, 10)
   }
 }
