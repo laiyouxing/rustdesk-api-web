@@ -64,9 +64,14 @@
             <span>{{ T('RecentConnections') }}</span>
           </template>
           <el-table :data="recentLogs" v-loading="loadingLogs" size="small" max-height="300">
-            <el-table-column prop="username" :label="T('Username')" width="100"></el-table-column>
-            <el-table-column prop="peer_id" label="Peer ID" width="120"></el-table-column>
-            <el-table-column prop="created_at" :label="T('Time')" width="160">
+            <el-table-column prop="from_name" :label="T('Username')" width="90"></el-table-column>
+            <el-table-column prop="peer_hostname" label="主机名" width="100">
+              <template #default="{row}">{{ row.peer_hostname || row.peer_id?.substring(0,12) || '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="peer_alias" :label="T('Alias')" min-width="80">
+              <template #default="{row}">{{ row.peer_alias || '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="created_at" :label="T('Time')" width="150">
               <template #default="{row}">{{ row.created_at }}</template>
             </el-table-column>
           </el-table>
@@ -109,10 +114,11 @@ const fetchRecentLogs = async () => {
   loadingLogs.value = false
   if (res) {
     recentLogs.value = res.data.list.map(r => ({
-      username: r.from_name || r.from_peer || '-',
+      from_name: r.from_name || r.from_peer || '-',
       peer_id: r.peer_id,
-      peer_alias: r.peer_id,
-      client: r.type === 1 ? 'App' : 'Web',
+      peer_hostname: r.peer_hostname,
+      peer_alias: r.peer_alias,
+      type: r.type,
       created_at: r.created_at,
     }))
   }
