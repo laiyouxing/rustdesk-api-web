@@ -80,12 +80,6 @@
             <el-table-column prop="peer_alias" :label="T('Alias')" min-width="80">
               <template #default="{row}">{{ row.peer_alias || '-' }}</template>
             </el-table-column>
-            <el-table-column :label="T('ClientType')" width="90">
-              <template #default="{row}">
-                <el-tag v-if="row.type === 1" type="success" size="small">App</el-tag>
-                <el-tag v-else size="small">Web</el-tag>
-              </template>
-            </el-table-column>
             <el-table-column prop="created_at" :label="T('Time')" width="150">
               <template #default="{row}">{{ row.created_at }}</template>
             </el-table-column>
