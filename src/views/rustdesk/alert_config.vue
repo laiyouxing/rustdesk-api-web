@@ -91,6 +91,11 @@
             <div style="font-size:11px;color:#909399">{{ row.name }}</div>
           </template>
         </el-table-column>
+        <el-table-column label="接收人" min-width="180">
+          <template #default="{row}">
+            <span style="font-size:12px">{{ getRecipient(row) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="T('MonitorScope')" min-width="180">
           <template #default="{row}">
             <span v-if="row.monitor_all===1">个人全部设备</span>
@@ -221,6 +226,20 @@ const targetExpanded = reactive({})
 
 const channelType = (ch) => ({ station:'info', wecom:'success', dingtalk:'warning', smtp:'primary' }[ch]||'')
 const channelLabel = (ch) => ({ station:'站内', wecom:'企微', dingtalk:'钉钉', smtp:'邮件' }[ch]||ch)
+
+// 根据规则查找对应的通道信息，显示接收人
+const getRecipient = (rule) => {
+  const ch = channels.value.find(c => c.row_id === rule.channel_id)
+  if (!ch) return '-'
+  if (ch.channel === 'smtp') return ch.smtp_to || '-'
+  if (ch.channel === 'wecom' || ch.channel === 'dingtalk') {
+    // 从 webhook URL 提取最后一段标识
+    const url = ch.webhook_url || ''
+    const idx = url.lastIndexOf('/')
+    return idx > 0 ? url.slice(idx + 1).slice(0, 20) : url.slice(0, 20) || '-'
+  }
+  return '-'
+}
 
 // ======== 通知通道 CRUD ========
 const loadChannels = async () => {
