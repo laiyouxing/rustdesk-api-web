@@ -592,7 +592,12 @@ onActivated(() => {
     { name: 'created_at', visible: true, label: 'CreatedAt' },
     { name: 'updated_at', visible: true, label: 'UpdatedAt' },
   ])
-  const visibleColumns = ref(JSON.parse(localStorage.getItem('peer_visible_columns')) || allColumns.value)
+  let savedColumns = null
+  try {
+    const stored = localStorage.getItem('peer_visible_columns')
+    if (stored) savedColumns = JSON.parse(stored)
+  } catch (_) {}
+  const visibleColumns = ref(savedColumns || allColumns.value)
   const showColumnSetting = () => {
     columnSettingVisible.value = true
   }
