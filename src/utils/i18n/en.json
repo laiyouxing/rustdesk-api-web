@@ -146,6 +146,24 @@
   "SharedGroupNote": {
     "One": "All users can see group members and their devices"
   },
+  "OrgStructure": {
+    "One": "Organization"
+  },
+  "AllMembers": {
+    "One": "All Members"
+  },
+  "AddRootDept": {
+    "One": "Add Department"
+  },
+  "AddChildDept": {
+    "One": "Add Sub-department"
+  },
+  "DepartmentName": {
+    "One": "Department Name"
+  },
+  "ParentDept": {
+    "One": "Parent Department"
+  },
   "Nickname": {
     "One": "Nickname"
   },

@@ -146,6 +146,24 @@
   "SharedGroupNote": {
     "One": "所有用户都可以查看群组成员及其设备"
   },
+  "OrgStructure": {
+    "One": "组织架构"
+  },
+  "AllMembers": {
+    "One": "全部成员"
+  },
+  "AddRootDept": {
+    "One": "添加部门"
+  },
+  "AddChildDept": {
+    "One": "添加子部门"
+  },
+  "DepartmentName": {
+    "One": "部门名称"
+  },
+  "ParentDept": {
+    "One": "上级部门"
+  },
   "Nickname": {
     "One": "昵称"
   },

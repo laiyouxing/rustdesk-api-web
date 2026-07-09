@@ -11,14 +11,17 @@
         <el-input v-model="form.nickname"></el-input>
       </el-form-item>
       <el-form-item :label="T('Group')" prop="group_id">
-        <el-select v-model="form.group_id">
-          <el-option
-              v-for="item in groupsList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-          ></el-option>
-        </el-select>
+        <el-tree-select
+            v-model="form.group_id"
+            :data="groupTreeData"
+            :props="{ label: 'name', children: 'children' }"
+            value-key="id"
+            node-key="id"
+            check-strictly
+            :render-after-expand="false"
+            clearable
+            style="width:100%"
+        />
       </el-form-item>
       <el-form-item :label="T('IsAdmin')" prop="is_admin">
         <el-switch v-model="form.is_admin"
@@ -50,7 +53,7 @@
   import { T } from '@/utils/i18n'
 
   const route = useRoute()
-  const { form, item, getDetail, groupsList } = useGetDetail(route.params.id)
+  const { form, item, getDetail, groupTreeData } = useGetDetail(route.params.id)
 
   const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id)
 

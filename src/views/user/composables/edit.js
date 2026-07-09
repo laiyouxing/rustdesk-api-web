@@ -2,13 +2,14 @@ import { ref, onMounted, reactive, watch } from 'vue'
 import { create, detail, update, remove } from '@/api/user'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { list as groups } from '@/api/group'
+import { tree as groupTree } from '@/api/group'
 import { T } from '@/utils/i18n'
 
 export function useGetDetail (id) {
   let item = ref({})  //保留原始值
   let form = ref({})
   const groupsList = ref([])
+  const groupTreeData = ref([])
   const getDetail = async (id) => {
     const res = await detail(id)
     item.value = { ...res.data }
@@ -19,9 +20,13 @@ export function useGetDetail (id) {
   }
 
   const getGroups = async () => {
-    const res = await groups({ page_size: 9999 }).catch(_ => false)
+    const res = await groupTree().catch(_ => false)
     if (res) {
-      groupsList.value = res.data.list
+      groupTreeData.value = res.data || []
+      const flat = []
+      const walk = (nodes) => nodes.forEach(n => { flat.push(n); if (n.children) walk(n.children) })
+      walk(groupTreeData.value)
+      groupsList.value = flat
     }
   }
   onMounted(getGroups)
@@ -30,6 +35,7 @@ export function useGetDetail (id) {
     item,
     getDetail,
     groupsList,
+    groupTreeData,
   }
 }
 

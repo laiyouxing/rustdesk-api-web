@@ -36,3 +36,10 @@ export function remove (data) {
     data,
   })
 }
+
+export function tree (params) {
+  return request({
+    url: '/group/tree',
+    params,
+  })
+}
