@@ -106,6 +106,7 @@
         <el-form-item :label="T('OfflineMin')">
           <el-input-number v-model="form.offline_min" :min="1" :max="1440"></el-input-number>
           <span style="margin-left: 8px; color: #909399;">min</span>
+          <div style="margin-top: 4px; font-size: 12px; color: #909399;">系统每30分钟检查一次设备在线状态</div>
         </el-form-item>
         <el-form-item :label="T('Status')">
           <el-switch v-model="form.enabled" :active-value="1" :inactive-value="2"></el-switch>
