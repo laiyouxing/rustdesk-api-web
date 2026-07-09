@@ -113,67 +113,38 @@
 
     <!-- Help Dialog -->
     <el-dialog v-model="showHelp" title="策略配置项模板" width="650px">
-      <div style="font-size: 14px; line-height: 1.8; white-space: pre-wrap; font-family: 'Consolas', 'Courier New', monospace; background: #f8f9fa; padding: 16px; border-radius: 6px;">
-        <span style="color: #999;"># ====== 网络穿透 ======</span>
-        <span style="display: block;">
-<span style="color: #999;"># 是否强制走中继，Y=强制走中继不走P2P打洞，N=允许P2P</span>
-force_relay=N
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 启用UDP打洞，N=关闭UDP打洞只走TCP中继</span>
-enable-udp-punch=Y
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 启用IPv6打洞，N=关闭IPv6穿透</span>
-enable-ipv6-punch=Y
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 启用UPnP自动端口映射，N=关闭</span>
-enable-upnp=Y
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 自定义中继服务器地址（当使用自有中继时填写）</span>
-<span style="color: #999;"># 格式: 域名或IP:端口</span>
-#custom-rendezvous-server=relay.example.com:21116
-        </span>
-        <br>
-        <span style="color: #999;"># ====== 功能开关 ======</span>
-        <span style="display: block;">
-<span style="color: #999;"># 启用剪贴板共享，N=禁止远程复制粘贴</span>
-enable-clipboard=Y
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 启用音频传输，N=关闭远程声音</span>
-enable-audio=Y
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 启用文件传输，N=禁止远程传文件</span>
-enable-file-transfer=Y
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 加密方式，可选: default(默认)/no_encryption(不加密)/encrypted(强制加密)</span>
-#encryption-mode=default
-        </span>
-        <br>
-        <span style="color: #999;"># ====== 显示与性能 ======</span>
-        <span style="display: block;">
-<span style="color: #999;"># 远程画面质量，可选: quality(优先画质)/balanced(均衡)/speed(优先流畅)</span>
-#image-quality=balanced
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 最大帧率限制，0=不限帧率</span>
-#max-fps=30
-        </span>
-        <br>
-        <span style="color: #999;"># ====== 安全策略 ======</span>
-        <span style="display: block;">
-<span style="color: #999;"># 是否隐藏地址簿中的用户名，Y=只显示设备名不显示所属用户</span>
-#hide-username-on-card=N
-        </span>
-        <span style="display: block;">
-<span style="color: #999;"># 是否启用直连验证，Y=直连时要求双方握手验证</span>
-#enable-directx-access=Y
-        </span>
+      <div style="font-size: 14px; line-height: 1.8; font-family: 'Consolas', 'Courier New', monospace; background: #f8f9fa; padding: 16px; border-radius: 6px;">
+        <div style="color: #999; margin-bottom: 4px;"># ====== 网络穿透 ======</div>
+        <div style="color: #999;"># 是否强制走中继，Y=强制走中继不走P2P打洞，N=允许P2P</div>
+        <div style="margin-bottom: 4px;">force_relay=N</div>
+        <div style="color: #999;"># 启用UDP打洞，N=关闭UDP打洞只走TCP中继</div>
+        <div style="margin-bottom: 4px;">enable-udp-punch=Y</div>
+        <div style="color: #999;"># 启用IPv6打洞，N=关闭IPv6穿透</div>
+        <div style="margin-bottom: 4px;">enable-ipv6-punch=Y</div>
+        <div style="color: #999;"># 启用UPnP自动端口映射，N=关闭</div>
+        <div style="margin-bottom: 4px;">enable-upnp=Y</div>
+        <div style="color: #999;"># 自定义中继服务器地址（当使用自有中继时填写）</div>
+        <div style="color: #999;"># 格式: 域名或IP:端口</div>
+        <div style="margin-bottom: 8px;">#custom-rendezvous-server=relay.example.com:21116</div>
+        <div style="color: #999; margin-bottom: 4px;"># ====== 功能开关 ======</div>
+        <div style="color: #999;"># 启用剪贴板共享，N=禁止远程复制粘贴</div>
+        <div style="margin-bottom: 4px;">enable-clipboard=Y</div>
+        <div style="color: #999;"># 启用音频传输，N=关闭远程声音</div>
+        <div style="margin-bottom: 4px;">enable-audio=Y</div>
+        <div style="color: #999;"># 启用文件传输，N=禁止远程传文件</div>
+        <div style="margin-bottom: 4px;">enable-file-transfer=Y</div>
+        <div style="color: #999;"># 加密方式，可选: default(默认)/no_encryption(不加密)/encrypted(强制加密)</div>
+        <div style="margin-bottom: 8px;">#encryption-mode=default</div>
+        <div style="color: #999; margin-bottom: 4px;"># ====== 显示与性能 ======</div>
+        <div style="color: #999;"># 远程画面质量，可选: quality(优先画质)/balanced(均衡)/speed(优先流畅)</div>
+        <div style="margin-bottom: 4px;">#image-quality=balanced</div>
+        <div style="color: #999;"># 最大帧率限制，0=不限帧率</div>
+        <div style="margin-bottom: 8px;">#max-fps=30</div>
+        <div style="color: #999; margin-bottom: 4px;"># ====== 安全策略 ======</div>
+        <div style="color: #999;"># 是否隐藏地址簿中的用户名，Y=只显示设备名不显示所属用户</div>
+        <div style="margin-bottom: 4px;">#hide-username-on-card=N</div>
+        <div style="color: #999;"># 是否启用直连验证，Y=直连时要求双方握手验证</div>
+        <div style="margin-bottom: 4px;">#enable-directx-access=Y</div>
       </div>
       <div style="font-size: 12px; color: #999; margin-top: 12px; text-align: center;">
         提示：以 # 开头的行是注释，不会生效。取消注释（去掉 #）即可启用对应配置项。
