@@ -520,6 +520,27 @@
   "Save": {
     "One": "Save"
   },
+  "Reset": {
+    "One": "Reset"
+  },
+  "ConfigFile": {
+    "One": "Config File"
+  },
+  "ConfigFileTip": {
+    "One": "Edit the backend config.yaml directly here. Changes take effect after restarting the service."
+  },
+  "ConfigFilePath": {
+    "One": "Config File Path"
+  },
+  "RestartService": {
+    "One": "Restart Service"
+  },
+  "ServiceRestartTip": {
+    "One": "After saving config changes, click here to restart the backend service to apply."
+  },
+  "ServiceRestarting": {
+    "One": "Service is restarting, page will refresh shortly"
+  },
   "SendCustom": {
     "One": "Send Custom"
   },
@@ -594,6 +615,9 @@
   },
   "AlertConfig": {
     "One": "Alert Config"
+  },
+  "AlertChannel": {
+    "One": "Alert Channel"
   },
   "Channel": {
     "One": "Channel"
@@ -690,5 +714,149 @@
   },
   "Strategy": {
     "One": "Strategies"
+  },
+  "MfaTitle": {
+    "One": "Multi-factor Authentication (MFA)"
+  },
+  "MfaSetup": {
+    "One": "Set up MFA"
+  },
+  "MfaEnable": {
+    "One": "Enable MFA"
+  },
+  "MfaDisable": {
+    "One": "Disable MFA"
+  },
+  "MfaSecret": {
+    "One": "Secret"
+  },
+  "MfaCode": {
+    "One": "Verification Code"
+  },
+  "MfaVerify": {
+    "One": "Verify & Login"
+  },
+  "MfaVerifyTip": {
+    "One": "Please enter the 6-digit code from your authenticator app (e.g. Google Authenticator)"
+  },
+  "MfaScanTip": {
+    "One": "Scan the QR code below with your authenticator app, or enter the secret manually"
+  },
+  "MfaRecoveryCodes": {
+    "One": "Backup Recovery Codes"
+  },
+  "MfaRecoveryTip": {
+    "One": "Save these recovery codes securely. Each can be used only once to log in when you cannot get a verification code."
+  },
+  "MfaCodeRequired": {
+    "One": "Please enter the verification code"
+  },
+  "MfaEnabled": {
+    "One": "Enabled"
+  },
+  "MfaDisabled": {
+    "One": "Disabled"
+  },
+  "MfaDisableConfirm": {
+    "One": "Disabling MFA requires your login password"
+  },
+  "Copy": {
+    "One": "Copy"
+  },
+  "Back": {
+    "One": "Back"
+  },
+  "IdP": {
+    "One": "Identity Provider"
+  },
+  "Loading": {
+    "One": "Loading..."
+  },
+  "ServerStatus": {
+    "One": "Server Status"
+  },
+  "Hbbs": {
+    "One": "HBBS"
+  },
+  "HbbsDesc": {
+    "One": "ID / Rendezvous Server"
+  },
+  "Hbbr": {
+    "One": "HBBR"
+  },
+  "HbbrDesc": {
+    "One": "Relay Server"
+  },
+  "HbbrLoad": {
+    "One": "HBBR Load / Connections"
+  },
+  "HbbrStatsUnavailable": {
+    "One": "Unable to fetch HBBR load data"
+  },
+  "ConnectionCount": {
+    "One": "Relay Connections"
+  },
+  "CurrentSpeed": {
+    "One": "Current Total Speed"
+  },
+  "HighestSpeed": {
+    "One": "Peak Speed"
+  },
+  "TotalTraffic": {
+    "One": "Total Traffic"
+  },
+  "ClientAddr": {
+    "One": "Client Address"
+  },
+  "Duration": {
+    "One": "Duration"
+  },
+  "Traffic": {
+    "One": "Traffic"
+  },
+  "AvgSpeed": {
+    "One": "Avg Speed"
+  },
+  "ServerUp": {
+    "One": "Running"
+  },
+  "ServerDown": {
+    "One": "Unreachable"
+  },
+  "ServerNotConfigured": {
+    "One": "Not Configured"
+  },
+  "ServerHost": {
+    "One": "Host"
+  },
+  "Latency": {
+    "One": "Latency"
+  },
+  "ServerError": {
+    "One": "Error"
+  },
+  "ServerStatusTip": {
+    "One": "Monitors HBBS/HBBR port connectivity (TCP probe, 3s timeout, auto-refresh every 10s)"
+  },
+  "AutoRefresh": {
+    "One": "Auto Refresh"
+  },
+  "MfaRecoveryCode": {
+    "One": "Recovery Code"
+  },
+  "MfaUseCode": {
+    "One": "Use verification code"
+  },
+  "MfaUseRecovery": {
+    "One": "Use recovery code"
+  },
+  "MfaReset": {
+    "One": "Reset MFA"
+  },
+  "MfaResetConfirm": {
+    "One": "Reset multi-factor authentication (MFA) for user {username}? This clears their MFA secret and recovery codes, allowing them to log in with password only."
+  },
+  "OperationFailed": {
+    "One": "Operation failed"
   }
 }

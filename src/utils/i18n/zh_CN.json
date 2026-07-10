@@ -533,6 +533,9 @@
   "Save": {
     "One": "保存"
   },
+  "Reset": {
+    "One": "重置"
+  },
   "SendCustom": {
     "One": "发送自定义"
   },
@@ -610,6 +613,27 @@
   },
   "AlertConfig": {
     "One": "告警配置"
+  },
+  "AlertChannel": {
+    "One": "告警通道"
+  },
+  "ConfigFile": {
+    "One": "配置文件"
+  },
+  "ConfigFileTip": {
+    "One": "此处直接编辑后端 config.yaml 配置文件，保存后需重启服务生效。"
+  },
+  "ConfigFilePath": {
+    "One": "配置文件路径"
+  },
+  "RestartService": {
+    "One": "重启服务"
+  },
+  "ServiceRestartTip": {
+    "One": "修改配置保存后，点击此处重启后端服务进程使配置生效。"
+  },
+  "ServiceRestarting": {
+    "One": "服务正在重启，稍后将自动刷新页面"
   },
   "Channel": {
     "One": "推送通道"
@@ -706,5 +730,149 @@
   },
   "Strategy": {
     "One": "策略管理"
+  },
+  "MfaTitle": {
+    "One": "多因素认证 (MFA)"
+  },
+  "MfaSetup": {
+    "One": "设置 MFA"
+  },
+  "MfaEnable": {
+    "One": "启用 MFA"
+  },
+  "MfaDisable": {
+    "One": "关闭 MFA"
+  },
+  "MfaSecret": {
+    "One": "密钥"
+  },
+  "MfaCode": {
+    "One": "动态验证码"
+  },
+  "MfaVerify": {
+    "One": "验证并登录"
+  },
+  "MfaVerifyTip": {
+    "One": "请输入身份验证器（如 Google Authenticator）中的 6 位动态码"
+  },
+  "MfaScanTip": {
+    "One": "请用身份验证器 App 扫描下方二维码，或手动输入密钥"
+  },
+  "MfaRecoveryCodes": {
+    "One": "备用恢复码"
+  },
+  "MfaRecoveryTip": {
+    "One": "请妥善保存以下恢复码，每个仅可使用一次，无法获取动态码时用于登录。"
+  },
+  "MfaCodeRequired": {
+    "One": "请输入动态验证码"
+  },
+  "MfaEnabled": {
+    "One": "已启用"
+  },
+  "MfaDisabled": {
+    "One": "未启用"
+  },
+  "MfaDisableConfirm": {
+    "One": "关闭 MFA 需要验证登录密码"
+  },
+  "Copy": {
+    "One": "复制"
+  },
+  "Back": {
+    "One": "返回"
+  },
+  "IdP": {
+    "One": "身份提供商"
+  },
+  "Loading": {
+    "One": "加载中..."
+  },
+  "ServerStatus": {
+    "One": "服务器状态"
+  },
+  "Hbbs": {
+    "One": "HBBS"
+  },
+  "HbbsDesc": {
+    "One": "ID / 注册服务器"
+  },
+  "Hbbr": {
+    "One": "HBBR"
+  },
+  "HbbrDesc": {
+    "One": "中继服务器"
+  },
+  "HbbrLoad": {
+    "One": "HBBR 负载 / 连接数"
+  },
+  "HbbrStatsUnavailable": {
+    "One": "无法获取 HBBR 负载数据"
+  },
+  "ConnectionCount": {
+    "One": "中继连接数"
+  },
+  "CurrentSpeed": {
+    "One": "当前总速率"
+  },
+  "HighestSpeed": {
+    "One": "峰值速率"
+  },
+  "TotalTraffic": {
+    "One": "累计流量"
+  },
+  "ClientAddr": {
+    "One": "客户端地址"
+  },
+  "Duration": {
+    "One": "时长"
+  },
+  "Traffic": {
+    "One": "流量"
+  },
+  "AvgSpeed": {
+    "One": "平均速率"
+  },
+  "ServerUp": {
+    "One": "运行中"
+  },
+  "ServerDown": {
+    "One": "不可达"
+  },
+  "ServerNotConfigured": {
+    "One": "未配置"
+  },
+  "ServerHost": {
+    "One": "地址"
+  },
+  "Latency": {
+    "One": "延迟"
+  },
+  "ServerError": {
+    "One": "错误信息"
+  },
+  "ServerStatusTip": {
+    "One": "监控 HBBS/HBBR 服务端口连通性（TCP 探测，超时 3 秒，每 10 秒自动刷新）"
+  },
+  "AutoRefresh": {
+    "One": "自动刷新"
+  },
+  "MfaRecoveryCode": {
+    "One": "恢复码"
+  },
+  "MfaUseCode": {
+    "One": "使用动态验证码"
+  },
+  "MfaUseRecovery": {
+    "One": "使用恢复码登录"
+  },
+  "MfaReset": {
+    "One": "重置 MFA"
+  },
+  "MfaResetConfirm": {
+    "One": "确认重置用户 {username} 的多因素认证(MFA)？此操作将清除其 MFA 密钥与恢复码，使其可用密码重新登录。"
+  },
+  "OperationFailed": {
+    "One": "操作失败"
   }
 }
