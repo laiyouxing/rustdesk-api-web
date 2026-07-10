@@ -836,7 +836,52 @@
     "One": "Error"
   },
   "ServerStatusTip": {
-    "One": "Monitors HBBS/HBBR port connectivity (TCP probe, 3s timeout, auto-refresh every 10s)"
+    "One": "Add custom server addresses and probe connectivity & latency in real time (TCP probe, 3s timeout, auto-refresh every 10s). You can monitor multiple servers."
+  },
+  "AddServer": {
+    "One": "Add Server"
+  },
+  "EditServer": {
+    "One": "Edit Server"
+  },
+  "ServerName": {
+    "One": "Name"
+  },
+  "ServerAddress": {
+    "One": "Address"
+  },
+  "ServerHost": {
+    "One": "Host / IP"
+  },
+  "ServerPort": {
+    "One": "Port"
+  },
+  "ServerHostPlaceholder": {
+    "One": "Enter host or IP, e.g. 192.168.1.10 or hbbs.example.com"
+  },
+  "ServerPortPlaceholder": {
+    "One": "Port (optional, 0 means host only)"
+  },
+  "ServerNamePlaceholder": {
+    "One": "Enter a display name for the server"
+  },
+  "ServerNameHostRequired": {
+    "One": "Name and host address are required"
+  },
+  "NoServer": {
+    "One": "No server added yet. Click \"Add Server\" at the top right."
+  },
+  "ConfirmDeleteServer": {
+    "One": "Delete this server monitor?"
+  },
+  "Saved": {
+    "One": "Saved"
+  },
+  "Deleted": {
+    "One": "Deleted"
+  },
+  "Enabled": {
+    "One": "Enabled"
   },
   "AutoRefresh": {
     "One": "Auto Refresh"

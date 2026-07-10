@@ -4,50 +4,52 @@
       <div class="toolbar">
         <span class="tip">{{ T('ServerStatusTip') }}</span>
         <el-switch v-model="autoRefresh" :active-text="T('AutoRefresh')" />
+        <el-button type="primary" @click="openCreate">{{ T('AddServer') }}</el-button>
         <el-button type="primary" @click="load" :loading="loading">{{ T('Refresh') }}</el-button>
       </div>
     </el-card>
 
-    <el-row :gutter="20" class="cards">
-      <el-col :span="12">
-        <el-card shadow="hover" class="status-card">
-          <template #header>
-            <div class="card-header">
-              <b>{{ T('Hbbs') }}</b>
-              <span>{{ T('HbbsDesc') }}</span>
-            </div>
+    <el-card shadow="hover" class="list-card">
+      <el-table :data="servers" size="default" v-loading="loading" empty-text=" ">
+        <el-table-column :label="T('ServerName')" min-width="160">
+          <template #default="{ row }">
+            <b>{{ row.name }}</b>
           </template>
-          <div class="card-body" v-if="hbbs">
-            <el-tag :type="tagType(hbbs.status)" effect="dark" style="margin-bottom:10px">
-              {{ statusText(hbbs.status) }}
+        </el-table-column>
+        <el-table-column :label="T('ServerAddress')" min-width="220">
+          <template #default="{ row }">
+            <span class="addr">{{ row.addr }}</span>
+            <el-tag v-if="row.protocol && row.protocol !== 'tcp'" size="small" type="info" style="margin-left:6px">
+              {{ row.protocol }}
             </el-tag>
-            <p>{{ T('ServerHost') }}: {{ hbbs.host || '-' }}</p>
-            <p v-if="hbbs.status === 'up'">{{ T('Latency') }}: {{ hbbs.latency_ms }} ms</p>
-            <p v-else>{{ T('ServerError') }}: {{ hbbs.error || '-' }}</p>
-          </div>
-          <div class="card-body" v-else>{{ T('Loading') }}</div>
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card shadow="hover" class="status-card">
-          <template #header>
-            <div class="card-header">
-              <b>{{ T('Hbbr') }}</b>
-              <span>{{ T('HbbrDesc') }}</span>
-            </div>
           </template>
-          <div class="card-body" v-if="hbbr">
-            <el-tag :type="tagType(hbbr.status)" effect="dark" style="margin-bottom:10px">
-              {{ statusText(hbbr.status) }}
-            </el-tag>
-            <p>{{ T('ServerHost') }}: {{ hbbr.host || '-' }}</p>
-            <p v-if="hbbr.status === 'up'">{{ T('Latency') }}: {{ hbbr.latency_ms }} ms</p>
-            <p v-else>{{ T('ServerError') }}: {{ hbbr.error || '-' }}</p>
+        </el-table-column>
+        <el-table-column :label="T('Status')" width="160">
+          <template #default="{ row }">
+            <el-tag :type="tagType(row.status)" effect="dark">{{ statusText(row.status) }}</el-tag>
+            <span v-if="row.status === 'up'" class="latency">{{ row.latency_ms }} ms</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="T('ServerError')" min-width="200">
+          <template #default="{ row }">
+            <span v-if="row.status !== 'up'" class="err">{{ row.error || '-' }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="T('Actions')" width="160" fixed="right">
+          <template #default="{ row }">
+            <el-button size="small" @click="openEdit(row)">{{ T('Edit') }}</el-button>
+            <el-button size="small" type="danger" @click="remove(row)">{{ T('Delete') }}</el-button>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <div class="empty">
+            <span>{{ T('NoServer') }}</span>
+            <el-button type="primary" size="small" @click="openCreate">{{ T('AddServer') }}</el-button>
           </div>
-          <div class="card-body" v-else>{{ T('Loading') }}</div>
-        </el-card>
-      </el-col>
-    </el-row>
+        </template>
+      </el-table>
+    </el-card>
 
     <!-- HBBR 负载 / 连接数（仅 api-server 与 hbbr 同机时可用） -->
     <el-card shadow="hover" class="stats-card" v-if="hbbrStats">
@@ -116,20 +118,50 @@
         </el-table>
       </template>
     </el-card>
+
+    <!-- 新增/编辑对话框 -->
+    <el-dialog v-model="dialogVisible" :title="editing ? T('EditServer') : T('AddServer')" width="480px">
+      <el-form :model="form" label-width="90px">
+        <el-form-item :label="T('ServerName')">
+          <el-input v-model="form.name" :placeholder="T('ServerNamePlaceholder')" />
+        </el-form-item>
+        <el-form-item :label="T('ServerHost')">
+          <el-input v-model="form.host" :placeholder="T('ServerHostPlaceholder')" />
+        </el-form-item>
+        <el-form-item :label="T('ServerPort')">
+          <el-input v-model.number="form.port" type="number" :placeholder="T('ServerPortPlaceholder')" />
+        </el-form-item>
+        <el-form-item :label="T('Enabled')">
+          <el-switch v-model="form.enabled" :active-value="1" :inactive-value="0" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialogVisible = false">{{ T('Cancel') }}</el-button>
+        <el-button type="primary" :loading="saving" @click="save">{{ T('Save') }}</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
-  import { serverStatus } from '@/api/serverStatus'
+  import {
+    serverStatus,
+    serverStatusCreate,
+    serverStatusUpdate,
+    serverStatusDelete,
+  } from '@/api/serverStatus'
   import { T } from '@/utils/i18n'
-  import { ElMessage } from 'element-plus'
+  import { ElMessage, ElMessageBox } from 'element-plus'
 
-  const hbbs = ref(null)
-  const hbbr = ref(null)
+  const servers = ref([])
   const hbbrStats = ref(null)
   const loading = ref(false)
+  const saving = ref(false)
   const autoRefresh = ref(true)
+  const dialogVisible = ref(false)
+  const editing = ref(false)
+  const form = ref({ row_id: 0, name: '', host: '', port: 0, enabled: 1 })
   let timer = null
 
   const tagType = (status) => {
@@ -162,10 +194,59 @@
     })
     loading.value = false
     if (res) {
-      hbbs.value = res.data.hbbs
-      hbbr.value = res.data.hbbr
+      servers.value = res.data.list || []
       hbbrStats.value = res.data.hbbr_stats
     }
+  }
+
+  const openCreate = () => {
+    editing.value = false
+    form.value = { row_id: 0, name: '', host: '', port: 0, enabled: 1 }
+    dialogVisible.value = true
+  }
+  const openEdit = (row) => {
+    editing.value = true
+    form.value = {
+      row_id: row.row_id,
+      name: row.name,
+      host: row.host,
+      port: row.port,
+      enabled: 1,
+    }
+    dialogVisible.value = true
+  }
+  const save = async () => {
+    if (!form.value.name || !form.value.host) {
+      ElMessage.warning(T('ServerNameHostRequired'))
+      return
+    }
+    saving.value = true
+    const data = { ...form.value }
+    const api = editing.value ? serverStatusUpdate : serverStatusCreate
+    const res = await api(data).catch(e => {
+      ElMessage.error(e?.message || T('OperationFailed'))
+      return false
+    })
+    saving.value = false
+    if (res) {
+      ElMessage.success(T('Saved'))
+      dialogVisible.value = false
+      load()
+    }
+  }
+  const remove = (row) => {
+    ElMessageBox.confirm(T('ConfirmDeleteServer'), T('Hint'), {
+      type: 'warning',
+    }).then(async () => {
+      const res = await serverStatusDelete(row.row_id).catch(e => {
+        ElMessage.error(e?.message || T('OperationFailed'))
+        return false
+      })
+      if (res) {
+        ElMessage.success(T('Deleted'))
+        load()
+      }
+    }).catch(() => {})
   }
 
   onMounted(() => {
@@ -190,14 +271,32 @@
     font-size: 13px;
   }
 }
-.cards {
+.list-card {
   margin-top: 20px;
 }
 .stats-card {
   margin-top: 20px;
 }
-.status-card {
-  min-height: 180px;
+.addr {
+  font-family: monospace;
+}
+.latency {
+  margin-left: 8px;
+  color: #67c23a;
+  font-size: 13px;
+}
+.err {
+  color: #f56c6c;
+  font-size: 13px;
+  word-break: break-all;
+}
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #909399;
+  padding: 20px 0;
 }
 .card-header {
   display: flex;
@@ -207,13 +306,6 @@
     font-size: 12px;
     color: #999;
     font-weight: normal;
-  }
-}
-.card-body {
-  font-size: 14px;
-  line-height: 1.9;
-  p {
-    margin: 4px 0;
   }
 }
 .metrics {

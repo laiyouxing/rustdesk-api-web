@@ -852,7 +852,52 @@
     "One": "错误信息"
   },
   "ServerStatusTip": {
-    "One": "监控 HBBS/HBBR 服务端口连通性（TCP 探测，超时 3 秒，每 10 秒自动刷新）"
+    "One": "自定义服务器地址并实时 TCP 探测连通性与延迟（超时 3 秒，每 10 秒自动刷新）。可添加多个服务器。"
+  },
+  "AddServer": {
+    "One": "添加服务器"
+  },
+  "EditServer": {
+    "One": "编辑服务器"
+  },
+  "ServerName": {
+    "One": "名称"
+  },
+  "ServerAddress": {
+    "One": "地址"
+  },
+  "ServerHost": {
+    "One": "主机 / IP"
+  },
+  "ServerPort": {
+    "One": "端口"
+  },
+  "ServerHostPlaceholder": {
+    "One": "请输入主机或 IP，如 192.168.1.10 或 hbbs.example.com"
+  },
+  "ServerPortPlaceholder": {
+    "One": "端口（可选，0 表示仅探测主机）"
+  },
+  "ServerNamePlaceholder": {
+    "One": "请输入服务器显示名称"
+  },
+  "ServerNameHostRequired": {
+    "One": "名称和主机地址不能为空"
+  },
+  "NoServer": {
+    "One": "尚未添加任何服务器，点击右上角“添加服务器”"
+  },
+  "ConfirmDeleteServer": {
+    "One": "确认删除该服务器监控项？"
+  },
+  "Saved": {
+    "One": "已保存"
+  },
+  "Deleted": {
+    "One": "已删除"
+  },
+  "Enabled": {
+    "One": "启用"
   },
   "AutoRefresh": {
     "One": "自动刷新"
