@@ -135,10 +135,30 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="T('MonitorScope')">
-          <el-radio-group v-model="ruleForm.monitor_all">
+          <el-radio-group v-model="ruleForm.monitor_all" @change="onRuleMonitorChange">
             <el-radio :value="1">个人全部设备</el-radio>
             <el-radio :value="2">仅选择的设备</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="ruleForm.monitor_all===2" label="选择设备">
+          <div v-if="targetCollections.length>0" style="max-height:240px;overflow-y:auto;border:1px solid #dcdfe6;border-radius:4px;padding:8px">
+            <div v-for="col in targetCollections" :key="'c-'+col.id" style="margin-bottom:4px">
+              <el-checkbox v-model="targetSelectedColls" :label="col.id" @change="()=>onTargetCollToggle(col)">
+                <strong>{{ col.name }}</strong>
+                <span style="color:#909399;font-size:12px;margin-left:4px">({{ col.peer_count }}台)</span>
+              </el-checkbox>
+              <div v-if="targetExpanded[col.id]" style="margin-left:28px;margin-top:2px">
+                <div v-for="peer in (col.peers||[])" :key="'p-'+peer.peer_id" style="margin-bottom:2px">
+                  <el-checkbox v-model="targetSelectedPeers" :label="peer.peer_id">
+                    {{ peer.hostname || peer.peer_id }}
+                  </el-checkbox>
+                </div>
+                <el-button v-if="!col.peersLoaded" size="small" type="text" @click="loadTargetPeers(col)">加载设备</el-button>
+                <span v-else-if="col.peers&&col.peers.length===0" style="font-size:12px;color:#909399">无设备</span>
+              </div>
+            </div>
+          </div>
+          <div v-else style="color:#909399;font-size:13px">暂无分组</div>
         </el-form-item>
         <el-form-item :label="T('OfflineMin')">
           <el-input-number v-model="ruleForm.offline_min" :min="1" :max="1440"></el-input-number>
@@ -311,14 +331,38 @@ const getRules = async () => {
   }
 }
 
-const showRuleForm = (row) => {
+const showRuleForm = async (row) => {
   ruleEditId.value = row?.row_id || 0
   ruleForm.channel_id = row?.channel_id || null
   ruleForm.monitor_all = row?.monitor_all || 1
   ruleForm.offline_min = row?.offline_min || 5
   ruleForm.enabled = row?.enabled || 1
   ruleForm.recipients = row?.recipients || ''
+  targetCollections.value = []
+  targetSelectedColls.value = []
+  targetSelectedPeers.value = []
+  Object.keys(targetExpanded).forEach(k => delete targetExpanded[k])
+  if (ruleForm.monitor_all === 2 && row?.row_id) {
+    await loadTargetCollections()
+    const tRes = await request({ url: '/alert_config/targets', params: { alert_id: row.row_id } }).catch(_=>false)
+    if (tRes && tRes.data.list) {
+      for (const t of tRes.data.list) {
+        if (t.target_type === 'collection') { targetSelectedColls.value.push(parseInt(t.target_id)); targetExpanded[parseInt(t.target_id)] = true }
+        else targetSelectedPeers.value.push(t.target_id)
+      }
+      for (const col of targetCollections.value) { if (targetExpanded[col.id]) await loadTargetPeers(col) }
+    }
+  }
   ruleFormVisible.value = true
+}
+
+const onRuleMonitorChange = async (val) => {
+  if (val === 2) {
+    await loadTargetCollections()
+  } else {
+    targetSelectedColls.value = []
+    targetSelectedPeers.value = []
+  }
 }
 
 const submitRule = async () => {
@@ -327,6 +371,15 @@ const submitRule = async () => {
   const api = ruleEditId.value ? update : create
   const res = await api(data).catch(_ => false)
   if (res) {
+    const alertId = ruleEditId.value || res.data?.row_id
+    if (alertId) {
+      const oldT = await request({ url: '/alert_config/targets', params: { alert_id: alertId } }).catch(_=>false)
+      if (oldT && oldT.data.list) for (const t of oldT.data.list) { await request({ url: '/alert_config/targets/delete', method:'post', data:{id:t.row_id} }).catch(_=>false) }
+      if (ruleForm.monitor_all === 2) {
+        for (const colId of targetSelectedColls.value) { const col = targetCollections.value.find(c=>c.id===colId); await request({ url:'/alert_config/targets/create', method:'post', data:{ alert_id:alertId, target_type:'collection', target_id:String(colId), target_name:col?.name||'' } }).catch(_=>false) }
+        for (const peerId of targetSelectedPeers.value) { await request({ url:'/alert_config/targets/create', method:'post', data:{ alert_id:alertId, target_type:'peer', target_id:peerId, target_name:peerId } }).catch(_=>false) }
+      }
+    }
     ElMessage.success(T('OperationSuccess'))
     ruleFormVisible.value = false
     getRules()
