@@ -81,11 +81,29 @@ const save = async () => {
   }
 }
 
+const restartState = { done: false, timer: null }
+
 const restartService = async () => {
-  const cf = await ElMessageBox.confirm(
-    T('Confirm?', { param: T('RestartService') }),
-    { type: 'warning', confirmButtonText: T('Confirm'), cancelButtonText: T('Cancel') }
-  ).catch(_ => false)
+  restartState.done = false
+  if (restartState.timer) { clearInterval(restartState.timer); restartState.timer = null }
+  const boxPromise = ElMessageBox.confirm(
+    T('ConfirmRestartWithCountdown', { param: T('RestartService'), seconds: 10 }),
+    { type: 'warning', confirmButtonText: T('Confirm'), cancelButtonText: T('Cancel'),
+      beforeClose: (action, instance, done) => {
+        if (action !== 'confirm') {
+          if (restartState.timer) { clearInterval(restartState.timer); restartState.timer = null }
+          done()
+          return
+        }
+        // 仅倒计时结束后允许确认关闭
+        if (restartState.done) done()
+      }
+    }
+  )
+  // 确认框渲染后启动 10 秒倒计时
+  setTimeout(startRestartCountdown, 50)
+  const cf = await boxPromise.catch(_ => false)
+  if (restartState.timer) { clearInterval(restartState.timer); restartState.timer = null }
   if (!cf) return
   restarting.value = true
   const res = await serviceRestart().catch(_ => false)
@@ -96,6 +114,28 @@ const restartService = async () => {
   } else {
     restarting.value = false
   }
+}
+
+// 进入确认框即启动 10 秒倒计时，期间禁用确认按钮
+const startRestartCountdown = () => {
+  const boxes = document.querySelectorAll('.el-message-box')
+  const box = boxes[boxes.length - 1]
+  if (!box) return
+  const btn = box.querySelector('.el-message-box__btns .el-button--primary')
+  const msg = box.querySelector('.el-message-box__message')
+  if (btn) btn.disabled = true
+  let left = 10
+  const tick = () => {
+    left -= 1
+    if (msg) msg.textContent = T('ConfirmRestartWithCountdown', { param: T('RestartService'), seconds: left })
+    if (left <= 0) {
+      if (btn) btn.disabled = false
+      if (msg) msg.textContent = T('Confirm?', { param: T('RestartService') })
+      restartState.done = true
+      if (restartState.timer) { clearInterval(restartState.timer); restartState.timer = null }
+    }
+  }
+  restartState.timer = setInterval(tick, 1000)
 }
 
 onMounted(() => {

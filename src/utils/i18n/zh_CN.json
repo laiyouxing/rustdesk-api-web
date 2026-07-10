@@ -50,6 +50,9 @@
   "Confirm?": {
     "One": "确定{param}?"
   },
+  "ConfirmRestartWithCountdown": {
+    "One": "确定{param}？请确认操作后果（{seconds} 秒后可确认）"
+  },
   "Cancel": {
     "One": "取消"
   },

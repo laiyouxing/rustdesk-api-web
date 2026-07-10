@@ -50,6 +50,9 @@
   "Confirm?": {
     "One": "{param} Confirm?"
   },
+  "ConfirmRestartWithCountdown": {
+    "One": "{param}? Please confirm the consequences ({seconds}s remaining before confirm is enabled)"
+  },
   "Cancel": {
     "One": "Cancel"
   },
