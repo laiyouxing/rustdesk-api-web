@@ -116,6 +116,10 @@
     } else if (res.code === 113) {
       // need MFA second step
       mfaToken.value = res.data.mfa_token
+      // 暂存到 sessionStorage，防止会话内重渲染/异常导致 mfa_token 丢失
+      if (res.data.mfa_token) {
+        sessionStorage.setItem('mfa_token', res.data.mfa_token)
+      }
       step.value = 'mfa'
       mfaInput.value = ''
       useRecovery.value = false
@@ -125,6 +129,10 @@
     if (!mfaInput.value) {
       ElMessage.warning(T('MfaCodeRequired'))
       return
+    }
+    // 兜底从 sessionStorage 读取，避免 mfa_token 在会话内丢失
+    if (!mfaToken.value) {
+      mfaToken.value = sessionStorage.getItem('mfa_token') || ''
     }
     mfaLoading.value = true
     const payload = { mfa_token: mfaToken.value }
@@ -138,6 +146,7 @@
     if (!res.code) {
       useAppStore().loadConfig()
       userStore.saveUserData(res.data)
+      sessionStorage.removeItem('mfa_token')
       ElMessage.success(T('LoginSuccess'))
       router.push({ path: redirect || '/home', replace: true })
     }
