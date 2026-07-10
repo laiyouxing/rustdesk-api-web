@@ -8,7 +8,16 @@
         <el-button @click="loadRules" :loading="loading">{{ T('ProcessRefresh') }}</el-button>
       </div>
       <el-table :data="rules" stripe border v-loading="loading" style="width:100%">
-        <el-table-column prop="peer_id" :label="T('ProcessPeerId')" min-width="150" />
+        <el-table-column :label="T('ProcessPeerId')" min-width="200">
+          <template #default="{row}">
+            <span v-if="row.source_type === 'peers' || !row.source_type">{{ row.peer_id }}</span>
+            <div v-else>
+              <el-tag size="small" type="info">{{ row.source_type === 'device_group' ? T('ProcessSourceGroup') : T('ProcessSourceTag') }}</el-tag>
+              <span style="margin-left:6px">{{ row.source_name || row.source_id }}</span>
+              <el-tag size="small" type="warning" style="margin-left:6px">{{ row.peers?.length || 0 }} {{ T('ProcessDeviceCount') }}</el-tag>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" :label="T('ProcessName')" min-width="120" />
         <el-table-column :label="T('ProcessType')" min-width="90">
           <template #default="{row}">
@@ -63,7 +72,7 @@
     </el-card>
 
     <!-- 规则编辑对话框 -->
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="540px">
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="640px">
       <el-form :model="form" label-width="120px">
         <el-form-item v-if="!editing" :label="T('ProcessTargetMode')">
           <el-radio-group v-model="sourceType" @change="onSourceTypeChange">
@@ -73,9 +82,14 @@
           </el-radio-group>
         </el-form-item>
 
-        <!-- 手动单个设备（编辑时也用此项） -->
-        <el-form-item v-if="editing || sourceType === 'peers'" :label="T('ProcessPeerId')">
+        <!-- 手动单个设备（新增） -->
+        <el-form-item v-if="!editing && sourceType === 'peers'" :label="T('ProcessPeerId')">
           <el-input v-model="form.peer_id" :placeholder="T('ProcessPeerIdTip')" />
+        </el-form-item>
+
+        <!-- 编辑单设备规则 -->
+        <el-form-item v-if="editing && form.source_type === 'peers'" :label="T('ProcessPeerId')">
+          <el-input v-model="form.peer_id" disabled />
         </el-form-item>
 
         <!-- 按设备组 -->
@@ -101,6 +115,13 @@
             />
           </el-select>
         </el-form-item>
+
+        <!-- 编辑集合规则时展示来源 -->
+        <el-form-item v-if="editing && isCollection" :label="T('ProcessTargetMode')">
+          <el-tag type="info">{{ form.source_type === 'device_group' ? T('ProcessSourceGroup') : T('ProcessSourceTag') }}</el-tag>
+          <span style="margin-left:8px">{{ form.source_name || form.source_id }}</span>
+        </el-form-item>
+
         <el-form-item :label="T('ProcessName')">
           <el-input v-model="form.name" />
         </el-form-item>
@@ -127,6 +148,34 @@
         <el-form-item :label="T('ProcessEnabled')">
           <el-switch v-model="form.enabledBool" />
         </el-form-item>
+
+        <!-- 集合规则：单设备覆盖配置 -->
+        <template v-if="editing && isCollection">
+          <el-divider />
+          <div class="peers-title">{{ T('ProcessPeers') }}</div>
+          <div class="peer-list">
+            <div v-for="(p, idx) in form.peers" :key="p.peer_id" class="peer-item">
+              <div class="peer-header">
+                <span class="peer-id">{{ p.peer_id }}</span>
+                <el-switch v-model="p.override" :active-text="T('ProcessPeerOverride')" :inactive-text="T('ProcessInherit')" />
+              </div>
+              <div v-if="p.override" class="peer-form">
+                <el-input v-model="p.overrides.name" :placeholder="T('ProcessName')" style="width:120px" />
+                <el-select v-model="p.overrides.type" style="width:90px">
+                  <el-option :label="T('ProcessProcess')" value="process" />
+                  <el-option :label="T('ProcessPort')" value="port" />
+                </el-select>
+                <el-input v-model="p.overrides.target" :placeholder="T('ProcessTarget')" style="width:120px" />
+                <el-input-number v-model="p.overrides.interval" :min="5" :step="5" style="width:110px" />
+                <el-input-number v-model="p.overrides.down_threshold" :min="0" :step="30" style="width:120px" />
+                <el-select v-model="p.overrides.alert_config_id" clearable :placeholder="T('ProcessAlertRule')" style="width:120px">
+                  <el-option v-for="a in alertConfigs" :key="a.row_id" :label="a.name" :value="a.row_id" />
+                </el-select>
+                <el-switch v-model="p.overrides.enabledBool" />
+              </div>
+            </div>
+          </div>
+        </template>
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">{{ T('ProcessCancel') }}</el-button>
@@ -137,7 +186,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   processRules, createProcessRule, updateProcessRule, deleteProcessRule, processStatus, alertConfigList,
@@ -156,9 +205,12 @@ const dialogTitle = ref('')
 const saving = ref(false)
 const editing = ref(false)
 const form = ref({
-  row_id: 0, peer_id: '', name: '', type: 'process', target: '',
-  interval: 30, down_threshold: 300, alert_config_id: null, enabledBool: true,
+  row_id: 0, peer_id: '', source_type: 'peers', source_id: '', source_name: '',
+  name: '', type: 'process', target: '', interval: 30, down_threshold: 300,
+  alert_config_id: null, enabledBool: true, peers: [],
 })
+const isCollection = computed(() => form.value.source_type === 'device_group' || form.value.source_type === 'ab_tags')
+
 // 批量配置来源
 const sourceType = ref('peers') // peers | device_group | ab_tags
 const deviceGroups = ref([])
@@ -198,7 +250,11 @@ const onSourceTypeChange = () => {
 const openCreate = () => {
   editing.value = false
   dialogTitle.value = T('ProcessAdd')
-  form.value = { row_id: 0, peer_id: '', name: '', type: 'process', target: '', interval: 30, down_threshold: 300, alert_config_id: null, enabledBool: true }
+  form.value = {
+    row_id: 0, peer_id: '', source_type: 'peers', source_id: '', source_name: '',
+    name: '', type: 'process', target: '', interval: 30, down_threshold: 300,
+    alert_config_id: null, enabledBool: true, peers: [],
+  }
   sourceType.value = 'peers'
   selectedGroupId.value = null
   selectedTags.value = []
@@ -208,11 +264,45 @@ const openCreate = () => {
 const openEdit = (row) => {
   editing.value = true
   dialogTitle.value = T('ProcessEdit')
+  const peers = (row.peers || []).map(p => ({
+    row_id: p.row_id,
+    peer_id: p.peer_id,
+    override: p.overrides && Object.keys(p.overrides).length > 0,
+    overrides: {
+      name: p.overrides?.name || '',
+      type: p.overrides?.type || row.type,
+      target: p.overrides?.target || '',
+      interval: p.overrides?.interval || row.interval,
+      down_threshold: p.overrides?.down_threshold || row.down_threshold,
+      alert_config_id: p.overrides?.alert_config_id || null,
+      enabledBool: p.overrides?.enabled === 1 || p.overrides?.enabled === undefined,
+    },
+  }))
   form.value = {
-    row_id: row.row_id, peer_id: row.peer_id, name: row.name, type: row.type, target: row.target,
-    interval: row.interval, down_threshold: row.down_threshold, alert_config_id: row.alert_config_id || null, enabledBool: row.enabled === 1,
+    row_id: row.row_id, peer_id: row.peer_id || '', source_type: row.source_type || 'peers',
+    source_id: row.source_id || '', source_name: row.source_name || '',
+    name: row.name, type: row.type, target: row.target, interval: row.interval,
+    down_threshold: row.down_threshold, alert_config_id: row.alert_config_id || null,
+    enabledBool: row.enabled === 1, peers,
   }
   dialogVisible.value = true
+}
+const buildPeerOverrides = () => {
+  return form.value.peers.map(p => {
+    if (!p.override) {
+      return { peer_id: p.peer_id }
+    }
+    const o = p.overrides
+    const ov = {}
+    if (o.name && o.name !== form.value.name) ov.name = o.name
+    if (o.type && o.type !== form.value.type) ov.type = o.type
+    if (o.target && o.target !== form.value.target) ov.target = o.target
+    if (o.interval && o.interval !== form.value.interval) ov.interval = o.interval
+    if (o.down_threshold !== undefined && o.down_threshold !== form.value.down_threshold) ov.down_threshold = o.down_threshold
+    if (o.alert_config_id && o.alert_config_id !== form.value.alert_config_id) ov.alert_config_id = o.alert_config_id
+    if (o.enabledBool !== form.value.enabledBool) ov.enabled = o.enabledBool ? 1 : 0
+    return { peer_id: p.peer_id, overrides: ov }
+  })
 }
 const save = async () => {
   if (!form.value.target) { ElMessage.warning(T('ProcessTargetTip')); return }
@@ -240,14 +330,18 @@ const save = async () => {
     return
   }
   // 单个新增 / 编辑
-  if (!form.value.peer_id) { ElMessage.warning(T('ProcessPeerIdTip')); return }
+  if (!editing.value && !form.value.peer_id) { ElMessage.warning(T('ProcessPeerIdTip')); return }
   saving.value = true
   const payload = {
-    peer_id: form.value.peer_id, name: form.value.name, type: form.value.type, target: form.value.target,
+    row_id: form.value.row_id,
+    peer_id: form.value.peer_id,
+    name: form.value.name, type: form.value.type, target: form.value.target,
     interval: form.value.interval, down_threshold: form.value.down_threshold,
     alert_config_id: form.value.alert_config_id || 0, enabled: form.value.enabledBool ? 1 : 0,
   }
-  if (editing.value) payload.row_id = form.value.row_id
+  if (isCollection.value) {
+    payload.peers = buildPeerOverrides()
+  }
   const api = editing.value ? updateProcessRule : createProcessRule
   const res = await api(payload).catch(e => { ElMessage.error(e?.message || T('OperationFailed')); return false })
   saving.value = false
@@ -276,6 +370,36 @@ onMounted(() => { loadRules(); loadStatus(); loadAlertConfigs() })
     flex: 1;
     color: #888;
     font-size: 13px;
+  }
+}
+.peers-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.peer-list {
+  max-height: 320px;
+  overflow-y: auto;
+  .peer-item {
+    border: 1px solid var(--el-border-color);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+    .peer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      .peer-id {
+        font-family: monospace;
+        font-weight: 500;
+      }
+    }
+    .peer-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
   }
 }
 </style>

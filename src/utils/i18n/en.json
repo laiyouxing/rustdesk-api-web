@@ -937,6 +937,24 @@
   "ProcessBatchResult": {
     "One": "Batch created: {created} added, {skipped} skipped (already exist)"
   },
+  "ProcessSourceGroup": {
+    "One": "Device Group"
+  },
+  "ProcessSourceTag": {
+    "One": "Address Book Tag"
+  },
+  "ProcessDeviceCount": {
+    "One": "Device Count"
+  },
+  "ProcessPeers": {
+    "One": "Device List"
+  },
+  "ProcessPeerOverride": {
+    "One": "Override"
+  },
+  "ProcessInherit": {
+    "One": "Inherit"
+  },
   "ProcessPeerId": {
     "One": "Device ID"
   },

@@ -953,6 +953,24 @@
   "ProcessBatchResult": {
     "One": "批量创建完成：新增 {created} 条，跳过 {skipped} 条（已存在）"
   },
+  "ProcessSourceGroup": {
+    "One": "设备组"
+  },
+  "ProcessSourceTag": {
+    "One": "地址簿标签"
+  },
+  "ProcessDeviceCount": {
+    "One": "设备数"
+  },
+  "ProcessPeers": {
+    "One": "设备列表"
+  },
+  "ProcessPeerOverride": {
+    "One": "单独配置"
+  },
+  "ProcessInherit": {
+    "One": "继承父规则"
+  },
   "ProcessPeerId": {
     "One": "设备ID"
   },
