@@ -225,41 +225,61 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #2d3a4b;
+  min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  background: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
+}
+
+html.dark .login-container {
+  background: #1c1c1e;
 }
 
 .login-card {
-  width: 360px;
-  background-color: #283342;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 380px;
+  max-width: 90vw;
+  background: #ffffff;
+  padding: 44px 36px;
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+html.dark .login-card {
+  background: #2c2c2e;
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 h1 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  font-weight: bold;
+  margin-bottom: 18px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+html.dark h1 {
+  color: #f5f5f7;
 }
 
 .login-form {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 .login-input {
   width: 100%;
-  .captcha{
+
+  .captcha {
     cursor: pointer;
     width: 150px;
+    height: 38px;
   }
 }
-.captcha-input{
+
+.captcha-input {
   :deep(.el-input-group__append) {
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 0;
     overflow: hidden;
   }
@@ -267,24 +287,26 @@ h1 {
 
 .login-button {
   width: 100%;
-  height: 40px;
-  margin-bottom: 20px;
+  height: 44px;
+  margin-bottom: 12px;
   margin-left: 0;
+  font-weight: 600;
+  border-radius: 10px;
 }
 
 .divider {
   display: flex;
   align-items: center;
-  margin: 20px 0;
-  font-size: 14px;
-  color: #888;
+  margin: 18px 0;
+  font-size: 13px;
+  color: #8e8e93;
 
   &::before,
   &::after {
     content: '';
     flex: 1;
     height: 1px;
-    background-color: #ddd;
+    background-color: #e5e5ea;
   }
 
   &::before {
@@ -293,6 +315,13 @@ h1 {
 
   &::after {
     margin-left: 10px;
+  }
+}
+
+html.dark .divider {
+  &::before,
+  &::after {
+    background-color: #3a3a3c;
   }
 }
 
@@ -308,42 +337,54 @@ h1 {
   justify-content: center;
   gap: 10px;
   width: 100%;
-  height: 50px;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  color: black;
+  height: 48px;
+  background: #ffffff;
+  border: 1px solid #d2d2d7;
+  border-radius: 10px;
+  color: #1d1d1f;
   font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s ease;
+}
+
+.oidc-btn:hover {
+  background: #f5f5f7;
+}
+
+html.dark .oidc-btn {
+  background: #3a3a3c;
+  border-color: #48484a;
+  color: #f5f5f7;
+}
+
+html.dark .oidc-btn:hover {
+  background: #48484a;
 }
 
 .oidc-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
 }
 
 .login-logo {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 18px;
   display: block;
 }
 
 .el-form-item {
   ::v-deep(.el-form-item__label) {
-    color: #fff;
+    color: #1d1d1f;
+    font-weight: 500;
   }
+}
 
-  .el-input {
-    ::v-deep(.el-input__wrapper) {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: transparent;
-    }
-
-    ::v-deep(input) {
-      color: #fff;
-    }
+html.dark .el-form-item {
+  ::v-deep(.el-form-item__label) {
+    color: #f5f5f7;
   }
 }
 </style>

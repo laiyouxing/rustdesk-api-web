@@ -74,10 +74,9 @@
 <style lang="scss" scoped>
 
 .tag {
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
-
-  &.active {
-  }
+  margin-right: 6px;
+  transition: all 0.2s ease;
 }
 </style>

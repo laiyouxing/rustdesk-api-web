@@ -70,18 +70,17 @@
 <style scoped lang="scss">
 .oauth {
   width: 100vw;
-  height: 100vh;
-  background-color: #2d3a4b;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
   padding-top: 25vh;
   box-sizing: border-box;
 
   .card {
     max-width: 500px;
-    background-color: #283342;
-    color: #fff;
-    border: none;
     margin: 0 auto;
     text-align: center;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
 
     .info {
       display: block;
@@ -89,14 +88,20 @@
       margin-bottom: 50px;
 
       ::v-deep(.el-form-item__label) {
-        color: #fff;
+        color: var(--el-text-color-regular);
       }
     }
 
     .impt {
-      font-weight: bold;
+      font-weight: 600;
       font-size: 20px;
     }
   }
+}
+html.dark .oauth {
+  background: #1c1c1e;
+}
+html.dark .oauth .card {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 </style>

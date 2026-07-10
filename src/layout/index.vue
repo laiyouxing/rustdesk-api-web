@@ -46,21 +46,36 @@
 
 <style lang="scss" scoped>
 .app-header {
-  background-color: #3f454b;
-  color: var(--basicWhite);
+  background-color: rgba(245, 245, 247, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  color: var(--el-text-color-primary);
   display: flex;
   height: 50px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+html.dark .app-header {
+  background-color: rgba(28, 28, 30, 0.72);
 }
 
 .header-tags {
   height: auto;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  background-color: rgba(245, 245, 247, 0.55);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
   display: flex;
   padding: 0;
 }
 
+html.dark .header-tags {
+  background-color: rgba(28, 28, 30, 0.55);
+}
+
 .app-left {
   transition: width 0.5s;
+  border-right: 1px solid var(--el-border-color-lighter);
 }
 
 .app-container {
