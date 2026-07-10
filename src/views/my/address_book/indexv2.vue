@@ -280,6 +280,7 @@
         cursor: pointer;
 
         &.checked {
+          background-color: var(--el-color-primary);
           color: #fff;
         }
 
