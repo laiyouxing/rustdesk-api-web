@@ -6,7 +6,7 @@
     </div>
     <el-row :gutter="20">
       <el-col :span="6">
-        <el-card shadow="hover">
+        <el-card shadow="hover" style="cursor:pointer" @click="goPeer('all')">
           <div class="stat-item">
             <div class="num">{{ stats.total_peers }}</div>
             <div class="label">{{ T('TotalDevices') }}</div>
@@ -30,7 +30,7 @@
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card shadow="hover">
+        <el-card shadow="hover" :style="isAdmin ? 'cursor:pointer' : ''" @click="goConnLog">
           <div class="stat-item">
             <div class="num blue">{{ stats.today_connections }}</div>
             <div class="label">{{ T('TodayConnections') }}</div>
@@ -231,8 +231,15 @@ const markAllRead = async () => {
 
 function goPeer(status) {
   const routeName = isAdmin.value ? 'Peer' : 'MyPeer'
-  const timeAgo = status === 'online' ? -300 : 300
+  let timeAgo = 0
+  if (status === 'online') timeAgo = -300
+  else if (status === 'offline') timeAgo = 300
   router.push({ name: routeName, query: { time_ago: timeAgo } })
+}
+
+function goConnLog() {
+  if (!isAdmin.value) return
+  router.push({ name: 'AuditConn' })
 }
 
 const formatTime = (ts) => {

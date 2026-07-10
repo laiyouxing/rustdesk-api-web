@@ -289,8 +289,6 @@
     handlerQuery()
   }
 
-  // 在 setup 顶层第一次执行：处理首次进入时的 query
-  applyTimeAgoQuery()
   // 监听后续 query 变化（keep-alive 下 setup 不重跑，必须用 watch 同步过滤条件）
   watch(() => route.query.time_ago, applyTimeAgoQuery)
 
@@ -344,6 +342,9 @@
     }
   }
 
+  // 首次进入时应用首页跳转带来的 time_ago 过滤（必须在 listQuery / handlerQuery 定义之后，避免 TDZ 崩溃）
+  applyTimeAgoQuery()
+
   const del = async (row) => {
     const cf = await ElMessageBox.confirm(T('Confirm?', { param: T('Delete') }), {
       confirmButtonText: T('Confirm'),
@@ -361,12 +362,12 @@
     }
   }
 onMounted(() => {
-  getList()
-  applyTimeAgoQuery()
+  // query 过滤已在 setup 末尾的 applyTimeAgoQuery 中处理；无 query 时才在此加载全部
+  if (route.query.time_ago == null) getList()
 })
 onActivated(() => {
   applyTimeAgoQuery()
-  getList()
+  if (route.query.time_ago == null) getList()
 })
 
   watch(() => listQuery.page, getList)

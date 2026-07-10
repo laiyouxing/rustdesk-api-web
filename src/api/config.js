@@ -20,3 +20,28 @@ export function admin () {
     method: 'get',
   })
 }
+
+// 读取后端配置文件（config.yaml）原始内容
+export function fileGet () {
+  return request({
+    url: '/config/file/get',
+    method: 'get',
+  })
+}
+
+// 保存后端配置文件（config.yaml）原始内容
+export function fileUpdate (content) {
+  return request({
+    url: '/config/file/update',
+    method: 'post',
+    data: { content },
+  })
+}
+
+// 重启后端服务进程（使配置生效），仅管理员
+export function serviceRestart () {
+  return request({
+    url: '/config/restart',
+    method: 'post',
+  })
+}

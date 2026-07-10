@@ -17,7 +17,7 @@
         </el-table-column>
         <el-table-column label="配置摘要" min-width="200">
           <template #default="{row}">
-            <span v-if="row.channel==='smtp'" style="font-size:12px;color:#666">{{ row.smtp_user }} → {{ row.smtp_to }}</span>
+            <span v-if="row.channel==='smtp'" style="font-size:12px;color:#666">{{ row.smtp_user }}（收件人在规则中指定）</span>
             <span v-else-if="row.webhook_url" style="font-size:12px;color:#666">{{ row.webhook_url.slice(0,60) }}...</span>
             <span v-else style="color:#909399">-</span>
           </template>
@@ -64,9 +64,8 @@
           <el-form-item label="密码/授权码">
             <el-input v-model="chForm.smtp_pass" type="password" :placeholder="chEditId ? '不修改请留空' : '必填'"></el-input>
           </el-form-item>
-          <el-form-item label="收件人">
-            <el-input v-model="chForm.smtp_to" placeholder="admin@example.com,user2@example.com"></el-input>
-          </el-form-item>
+          <el-alert type="info" :closable="false" show-icon style="margin-bottom:8px"
+            title="收件人在下方“告警规则”中添加，本通道仅配置发件服务器" />
         </template>
         <el-form-item>
           <el-button type="primary" @click="submitChannel">{{ T('Submit') }}</el-button>
@@ -148,6 +147,13 @@
         <el-form-item :label="T('Status')">
           <el-switch v-model="ruleForm.enabled" :active-value="1" :inactive-value="2"></el-switch>
         </el-form-item>
+        <el-form-item label="接收人" v-if="ruleChannelType==='smtp'">
+          <el-input v-model="ruleForm.recipients" type="textarea" :rows="2"
+            placeholder="收件人邮箱，多个用逗号分隔，如 a@x.com,b@x.com"></el-input>
+        </el-form-item>
+        <el-form-item label="接收人" v-else>
+          <span style="font-size:12px;color:#909399">{{ recipientHint }}</span>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitRule">{{ T('Submit') }}</el-button>
           <el-button @click="ruleFormVisible=false">{{ T('Cancel') }}</el-button>
@@ -192,7 +198,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, computed } from 'vue'
 import { T } from '@/utils/i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { list as getAlertList, create, update, remove } from '@/api/alert'
@@ -205,7 +211,7 @@ const chFormVisible = ref(false)
 const chEditId = ref(0)
 const chForm = reactive({
   name: '', channel: 'wecom', webhook_url: '',
-  smtp_host: '', smtp_port: 465, smtp_user: '', smtp_pass: '', smtp_to: '',
+  smtp_host: '', smtp_port: 465, smtp_user: '', smtp_pass: '',
 })
 
 // 告警规则
@@ -213,7 +219,7 @@ const configs = ref([])
 const loading = ref(false)
 const ruleFormVisible = ref(false)
 const ruleEditId = ref(0)
-const ruleForm = reactive({ channel_id: null, monitor_all: 1, offline_min: 5, enabled: 1 })
+const ruleForm = reactive({ channel_id: null, monitor_all: 1, offline_min: 5, enabled: 1, recipients: '' })
 
 // 监控目标
 const targetVisible = ref(false)
@@ -227,17 +233,26 @@ const targetExpanded = reactive({})
 const channelType = (ch) => ({ station:'info', wecom:'success', dingtalk:'warning', smtp:'primary' }[ch]||'')
 const channelLabel = (ch) => ({ station:'站内', wecom:'企微', dingtalk:'钉钉', smtp:'邮件' }[ch]||ch)
 
-// 根据规则查找对应的通道信息，显示接收人
-const getRecipient = (rule) => {
-  const ch = channels.value.find(c => c.row_id === rule.channel_id)
-  if (!ch) return '-'
-  if (ch.channel === 'smtp') return ch.smtp_to || '-'
-  if (ch.channel === 'wecom' || ch.channel === 'dingtalk') {
-    // 从 webhook URL 提取最后一段标识
-    const url = ch.webhook_url || ''
-    const idx = url.lastIndexOf('/')
-    return idx > 0 ? url.slice(idx + 1).slice(0, 20) : url.slice(0, 20) || '-'
+// 当前规则所选用通道的类型
+const ruleChannelType = computed(() => {
+  const ch = channels.value.find(c => c.row_id === ruleForm.channel_id)
+  return ch ? ch.channel : ''
+})
+// 非 SMTP 通道的接收人说明
+const recipientHint = computed(() => {
+  switch (ruleChannelType.value) {
+    case 'station': return '站内信发送给当前登录用户本人'
+    case 'wecom': return '消息发送至企业微信群机器人，无需指定接收人'
+    case 'dingtalk': return '消息发送至钉钉群机器人，无需指定接收人'
+    default: return '请先选择 SMTP 邮件通道以指定收件人'
   }
+})
+
+// 根据规则显示接收人：SMTP 取规则中配置的收件人，其余按通道类型说明
+const getRecipient = (rule) => {
+  if (rule.channel === 'smtp') return rule.recipients || '-'
+  if (rule.channel === 'station') return '本人(站内信)'
+  if (rule.channel === 'wecom' || rule.channel === 'dingtalk') return '群机器人'
   return '-'
 }
 
@@ -254,10 +269,10 @@ const showChannelForm = (row) => {
   Object.assign(chForm, row ? {
     name: row.name, channel: row.channel, webhook_url: row.webhook_url||'',
     smtp_host: row.smtp_host||'', smtp_port: row.smtp_port||465,
-    smtp_user: row.smtp_user||'', smtp_pass: '', smtp_to: row.smtp_to||'',
+    smtp_user: row.smtp_user||'', smtp_pass: '',
   } : {
     name: '', channel: 'wecom', webhook_url: '',
-    smtp_host: '', smtp_port: 465, smtp_user: '', smtp_pass: '', smtp_to: '',
+    smtp_host: '', smtp_port: 465, smtp_user: '', smtp_pass: '',
   })
   chFormVisible.value = true
 }
@@ -302,6 +317,7 @@ const showRuleForm = (row) => {
   ruleForm.monitor_all = row?.monitor_all || 1
   ruleForm.offline_min = row?.offline_min || 5
   ruleForm.enabled = row?.enabled || 1
+  ruleForm.recipients = row?.recipients || ''
   ruleFormVisible.value = true
 }
 

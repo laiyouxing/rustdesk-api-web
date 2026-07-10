@@ -874,5 +874,98 @@
   },
   "OperationFailed": {
     "One": "操作失败"
+  },
+  "ProcessMonitor": {
+    "One": "进程监控"
+  },
+  "ProcessMonitorTip": {
+    "One": "集中配置需要监控的进程或端口，客户端定时上报运行状态；进程/端口停止超过阈值将触发告警。"
+  },
+  "ProcessStatusTip": {
+    "One": "各设备监控项实时运行状态（由客户端上报）"
+  },
+  "ProcessPeerId": {
+    "One": "设备ID"
+  },
+  "ProcessPeerIdTip": {
+    "One": "填写需要监控的设备 peer id（可在设备管理页查看）"
+  },
+  "ProcessName": {
+    "One": "监控名称"
+  },
+  "ProcessType": {
+    "One": "类型"
+  },
+  "ProcessProcess": {
+    "One": "进程"
+  },
+  "ProcessPort": {
+    "One": "端口"
+  },
+  "ProcessTarget": {
+    "One": "目标"
+  },
+  "ProcessTargetTip": {
+    "One": "进程名(如 notepad.exe) 或端口号(如 8080)"
+  },
+  "ProcessInterval": {
+    "One": "检测间隔(秒)"
+  },
+  "ProcessDownThreshold": {
+    "One": "停止阈值(秒)"
+  },
+  "ProcessAlertRule": {
+    "One": "告警规则"
+  },
+  "ProcessAlertRuleTip": {
+    "One": "关联已有告警配置，停止时发送通知；不选则不告警"
+  },
+  "ProcessEnabled": {
+    "One": "启用"
+  },
+  "ProcessOperation": {
+    "One": "操作"
+  },
+  "ProcessAdd": {
+    "One": "新增规则"
+  },
+  "ProcessEdit": {
+    "One": "编辑"
+  },
+  "ProcessDelete": {
+    "One": "删除"
+  },
+  "ProcessRefresh": {
+    "One": "刷新"
+  },
+  "ProcessRunning": {
+    "One": "运行状态"
+  },
+  "ProcessUp": {
+    "One": "正常"
+  },
+  "ProcessDown": {
+    "One": "停止"
+  },
+  "ProcessDownSince": {
+    "One": "停止起始"
+  },
+  "ProcessCancel": {
+    "One": "取消"
+  },
+  "ProcessSave": {
+    "One": "保存"
+  },
+  "ProcessSaved": {
+    "One": "已保存"
+  },
+  "ProcessDeleted": {
+    "One": "已删除"
+  },
+  "ProcessConfirmDelete": {
+    "One": "确认删除该监控规则？"
+  },
+  "ProcessTip": {
+    "One": "提示"
   }
 }

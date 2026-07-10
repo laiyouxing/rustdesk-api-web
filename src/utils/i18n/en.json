@@ -858,5 +858,98 @@
   },
   "OperationFailed": {
     "One": "Operation failed"
+  },
+  "ProcessMonitor": {
+    "One": "Process Monitor"
+  },
+  "ProcessMonitorTip": {
+    "One": "Centrally configure processes or ports to monitor. Clients report status periodically; an alert is fired when a process/port stays down beyond the threshold."
+  },
+  "ProcessStatusTip": {
+    "One": "Realtime status of monitored items per device (reported by clients)"
+  },
+  "ProcessPeerId": {
+    "One": "Device ID"
+  },
+  "ProcessPeerIdTip": {
+    "One": "The peer id of the device to monitor (see Device Management)"
+  },
+  "ProcessName": {
+    "One": "Monitor Name"
+  },
+  "ProcessType": {
+    "One": "Type"
+  },
+  "ProcessProcess": {
+    "One": "Process"
+  },
+  "ProcessPort": {
+    "One": "Port"
+  },
+  "ProcessTarget": {
+    "One": "Target"
+  },
+  "ProcessTargetTip": {
+    "One": "Process name (e.g. notepad.exe) or port number (e.g. 8080)"
+  },
+  "ProcessInterval": {
+    "One": "Check Interval (s)"
+  },
+  "ProcessDownThreshold": {
+    "One": "Down Threshold (s)"
+  },
+  "ProcessAlertRule": {
+    "One": "Alert Rule"
+  },
+  "ProcessAlertRuleTip": {
+    "One": "Bind an existing alert config to notify when down; leave empty for no alert"
+  },
+  "ProcessEnabled": {
+    "One": "Enabled"
+  },
+  "ProcessOperation": {
+    "One": "Actions"
+  },
+  "ProcessAdd": {
+    "One": "Add Rule"
+  },
+  "ProcessEdit": {
+    "One": "Edit"
+  },
+  "ProcessDelete": {
+    "One": "Delete"
+  },
+  "ProcessRefresh": {
+    "One": "Refresh"
+  },
+  "ProcessRunning": {
+    "One": "Running"
+  },
+  "ProcessUp": {
+    "One": "Up"
+  },
+  "ProcessDown": {
+    "One": "Down"
+  },
+  "ProcessDownSince": {
+    "One": "Down Since"
+  },
+  "ProcessCancel": {
+    "One": "Cancel"
+  },
+  "ProcessSave": {
+    "One": "Save"
+  },
+  "ProcessSaved": {
+    "One": "Saved"
+  },
+  "ProcessDeleted": {
+    "One": "Deleted"
+  },
+  "ProcessConfirmDelete": {
+    "One": "Delete this monitor rule?"
+  },
+  "ProcessTip": {
+    "One": "Tip"
   }
 }

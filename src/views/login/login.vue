@@ -3,7 +3,7 @@
     <div class="login-card">
       <img src="@/assets/logo.png" alt="logo" class="login-logo"/>
 
-      <el-form v-if="!disablePwd" label-position="top" class="login-form">
+      <el-form v-if="!disablePwd && step === 'pwd'" label-position="top" class="login-form">
         <el-form-item :label="T('Username')">
           <el-input v-model="form.username" type="username" class="login-input"></el-input>
         </el-form-item>
@@ -25,6 +25,20 @@
         </el-form-item>
       </el-form>
 
+      <el-form v-else-if="!disablePwd && step === 'mfa'" label-position="top" class="login-form">
+        <el-alert :title="T('MfaVerifyTip')" type="warning" :closable="false" show-icon style="margin-bottom:12px" />
+        <el-form-item :label="useRecovery ? T('MfaRecoveryCode') : T('MfaCode')">
+          <el-input v-model="mfaInput" @keyup.enter.native="submitMfa" class="login-input"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="submitMfa" type="primary" class="login-button" :loading="mfaLoading">{{ T('MfaVerify') }}</el-button>
+          <el-button @click="backToPwd" class="login-button">{{ T('Back') }}</el-button>
+        </el-form-item>
+        <el-button link type="primary" class="login-button" @click="useRecovery = !useRecovery">
+          {{ useRecovery ? T('MfaUseCode') : T('MfaUseRecovery') }}
+        </el-button>
+      </el-form>
+
       <div class="divider" v-if="options.length > 0 && !disablePwd">
         <span>{{ T('or login in with') }}</span>
       </div>
@@ -44,10 +58,11 @@
 <script setup>
   import { reactive, onMounted, ref } from 'vue'
   import { useUserStore } from '@/store/user'
+  import { useAppStore } from '@/store/app'
   import { ElMessage } from 'element-plus'
   import { T } from '@/utils/i18n'
   import { useRoute, useRouter } from 'vue-router'
-  import { loginOptions, captcha } from '@/api/login'
+  import { loginOptions, captcha, mfaLogin } from '@/api/login'
   import { getCode, removeCode } from '@/utils/auth'
 
   const oauthInfo = ref({})
@@ -83,6 +98,11 @@
 
   const captchaCode = ref('')
   const redirect = route.query?.redirect
+  const step = ref('pwd')
+  const mfaToken = ref('')
+  const mfaInput = ref('')
+  const useRecovery = ref(false)
+  const mfaLoading = ref(false)
   const login = async () => {
     const res = await userStore.login(form).catch(e => e)
     if (!res.code) {
@@ -93,7 +113,39 @@
     if (res.code === 110) {
       // need captcha
       loadCaptcha()
+    } else if (res.code === 113) {
+      // need MFA second step
+      mfaToken.value = res.data.mfa_token
+      step.value = 'mfa'
+      mfaInput.value = ''
+      useRecovery.value = false
     }
+  }
+  const submitMfa = async () => {
+    if (!mfaInput.value) {
+      ElMessage.warning(T('MfaCodeRequired'))
+      return
+    }
+    mfaLoading.value = true
+    const payload = { mfa_token: mfaToken.value }
+    if (useRecovery.value) {
+      payload.recovery_code = mfaInput.value
+    } else {
+      payload.code = mfaInput.value
+    }
+    const res = await mfaLogin(payload).catch(e => e)
+    mfaLoading.value = false
+    if (!res.code) {
+      useAppStore().loadConfig()
+      userStore.saveUserData(res.data)
+      ElMessage.success(T('LoginSuccess'))
+      router.push({ path: redirect || '/home', replace: true })
+    }
+  }
+  const backToPwd = () => {
+    step.value = 'pwd'
+    mfaInput.value = ''
+    useRecovery.value = false
   }
 
   const loadCaptcha = async () => {

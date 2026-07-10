@@ -42,6 +42,7 @@
             <el-button @click="toAddressBook(row)">{{ T('UserAddressBook') }}</el-button>
             <el-button @click="toEdit(row)">{{ T('Edit') }}</el-button>
             <el-button type="warning" @click="changePass(row)">{{ T('ResetPassword') }}</el-button>
+            <el-button type="info" @click="resetMfa(row)">{{ T('MfaReset') }}</el-button>
             <el-button type="danger" @click="remove(row)">{{ T('Delete') }}</el-button>
           </template>
         </el-table-column>
@@ -63,7 +64,7 @@
   import { useRepositories, useDel, useToEditOrAdd, useChangePwd } from '@/views/user/composables'
   import { T } from '@/utils/i18n'
   import { DISABLE_STATUS, ENABLE_STATUS } from '@/utils/common_options'
-  import { update } from '@/api/user'
+  import { update, mfaReset } from '@/api/user'
   import { ElMessageBox, ElMessage } from 'element-plus'
   import { onMounted, watch } from 'vue'
   //列表
@@ -105,6 +106,25 @@
       return false
     }*/
     const res = await update(row).catch(_ => false)
+    if (res) {
+      ElMessage.success(T('OperationSuccess'))
+      getList(listQuery)
+    }
+  }
+
+  // 管理员强制重置用户 MFA
+  const resetMfa = async (row) => {
+    const cf = await ElMessageBox.confirm(
+      T('MfaResetConfirm', { username: row.username }),
+      T('MfaReset'),
+      {
+        confirmButtonText: T('Confirm'),
+        cancelButtonText: T('Cancel'),
+        type: 'warning',
+      }
+    ).catch(_ => false)
+    if (!cf) return
+    const res = await mfaReset({ user_id: row.id }).catch(_ => false)
     if (res) {
       ElMessage.success(T('OperationSuccess'))
       getList(listQuery)

@@ -29,3 +29,11 @@ export function captcha () {
     method: 'get',
   })
 }
+
+export function mfaLogin (data) {
+  return request({
+    url: '/login/mfa',
+    method: 'post',
+    data,
+  })
+}

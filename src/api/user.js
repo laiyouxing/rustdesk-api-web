@@ -75,6 +75,45 @@ export function myOauth () {
   })
 }
 
+export function mfaSetup () {
+  return request({
+    url: '/user/mfa/setup',
+    method: 'post',
+  })
+}
+
+export function mfaEnable (data) {
+  return request({
+    url: '/user/mfa/enable',
+    method: 'post',
+    data,
+  })
+}
+
+export function mfaDisable (data) {
+  return request({
+    url: '/user/mfa/disable',
+    method: 'post',
+    data,
+  })
+}
+
+export function mfaStatus () {
+  return request({
+    url: '/user/mfa/status',
+    method: 'get',
+  })
+}
+
+// 管理员强制重置指定用户的 MFA（救援：用户丢失验证器/恢复码时）
+export function mfaReset (data) {
+  return request({
+    url: '/user/mfa/reset',
+    method: 'post',
+    data,
+  })
+}
+
 export function myPeer (params) {
   return request({
     url: '/user/myPeer',

@@ -216,12 +216,6 @@
     handlerQuery()
   }
 
-  if (route.query.time_ago) {
-    const ta = Number(route.query.time_ago)
-    if (ta < 0) { setQuickFilter('online'); listQuery.time_ago = ta }
-    else if (ta > 0) { setQuickFilter('offline'); listQuery.time_ago = ta }
-  }
-
   const listRes = reactive({
     list: [], total: 0, loading: false,
   })
@@ -250,6 +244,13 @@
     }
   }
 
+  // 首次进入时应用首页跳转带来的 time_ago 过滤（必须在 listQuery / handlerQuery 定义之后，避免 TDZ 崩溃）
+  if (route.query.time_ago) {
+    const ta = Number(route.query.time_ago)
+    if (ta < 0) { setQuickFilter('online'); listQuery.time_ago = ta }
+    else if (ta > 0) { setQuickFilter('offline'); listQuery.time_ago = ta }
+  }
+
   /*const del = async (row) => {
     const cf = await ElMessageBox.confirm(T('Confirm?', { param: T('Delete') }), {
       confirmButtonText: T('Confirm'),
@@ -266,8 +267,13 @@
       getList()
     }
   }*/
-  onMounted(getList)
-  onActivated(getList)
+  onMounted(() => {
+    // query 过滤已在 setup 末尾处理；无 query 时才在此加载全部
+    if (route.query.time_ago == null) getList()
+  })
+  onActivated(() => {
+    if (route.query.time_ago == null) getList()
+  })
 
   watch(() => listQuery.page, getList)
 

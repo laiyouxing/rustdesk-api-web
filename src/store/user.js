@@ -15,6 +15,7 @@ export const useUserStore = defineStore({
     role: '',
     avatar: '',
     route_names: [],
+    mfa_enabled: false,
   }),
 
   actions: {

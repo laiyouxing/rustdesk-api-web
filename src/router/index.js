@@ -235,6 +235,24 @@ export const asyncRoutes = [
         component: () => import('@/views/rustdesk/station_messages.vue'),
       },
       {
+        path: '/configFile',
+        name: 'ConfigFile',
+        meta: { title: 'ConfigFile', icon: 'Document' },
+        component: () => import('@/views/rustdesk/config_file.vue'),
+      },
+      {
+        path: '/serverStatus',
+        name: 'ServerStatus',
+        meta: { title: 'ServerStatus', icon: 'Monitor' },
+        component: () => import('@/views/rustdesk/server_status.vue'),
+      },
+      {
+        path: '/processMonitor',
+        name: 'ProcessMonitor',
+        meta: { title: 'ProcessMonitor', icon: 'Monitor' },
+        component: () => import('@/views/rustdesk/process_monitor.vue'),
+      },
+      {
         path: '/shareRecord',
         name: 'ShareRecord',
         meta: { title: 'ShareRecord', icon: 'Share' },
