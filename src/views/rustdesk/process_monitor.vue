@@ -65,8 +65,41 @@
     <!-- 规则编辑对话框 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="540px">
       <el-form :model="form" label-width="120px">
-        <el-form-item :label="T('ProcessPeerId')">
+        <el-form-item v-if="!editing" :label="T('ProcessTargetMode')">
+          <el-radio-group v-model="sourceType" @change="onSourceTypeChange">
+            <el-radio-button label="peers">{{ T('ProcessModeManual') }}</el-radio-button>
+            <el-radio-button label="device_group">{{ T('ProcessModeDeviceGroup') }}</el-radio-button>
+            <el-radio-button label="ab_tags">{{ T('ProcessModeAbTags') }}</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+
+        <!-- 手动单个设备（编辑时也用此项） -->
+        <el-form-item v-if="editing || sourceType === 'peers'" :label="T('ProcessPeerId')">
           <el-input v-model="form.peer_id" :placeholder="T('ProcessPeerIdTip')" />
+        </el-form-item>
+
+        <!-- 按设备组 -->
+        <el-form-item v-if="!editing && sourceType === 'device_group'" :label="T('ProcessModeDeviceGroup')">
+          <el-select v-model="selectedGroupId" filterable :placeholder="T('ProcessSelectDeviceGroup')" style="width:100%">
+            <el-option
+              v-for="g in deviceGroups"
+              :key="g.id"
+              :label="`${g.name} (${g.count})`"
+              :value="g.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <!-- 按地址簿标签 -->
+        <el-form-item v-if="!editing && sourceType === 'ab_tags'" :label="T('ProcessModeAbTags')">
+          <el-select v-model="selectedTags" multiple filterable collapse-tags :placeholder="T('ProcessSelectAbTags')" style="width:100%">
+            <el-option
+              v-for="t in abTags"
+              :key="t.tag"
+              :label="`${t.tag} (${t.count})`"
+              :value="t.tag"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item :label="T('ProcessName')">
           <el-input v-model="form.name" />
@@ -108,6 +141,7 @@ import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   processRules, createProcessRule, updateProcessRule, deleteProcessRule, processStatus, alertConfigList,
+  batchCreateProcessRule, processPeerSources,
 } from '@/api/process'
 import { T } from '@/utils/i18n'
 
@@ -125,6 +159,12 @@ const form = ref({
   row_id: 0, peer_id: '', name: '', type: 'process', target: '',
   interval: 30, down_threshold: 300, alert_config_id: null, enabledBool: true,
 })
+// 批量配置来源
+const sourceType = ref('peers') // peers | device_group | ab_tags
+const deviceGroups = ref([])
+const abTags = ref([])
+const selectedGroupId = ref(null)
+const selectedTags = ref([])
 
 const loadRules = async () => {
   loading.value = true
@@ -142,10 +182,27 @@ const loadAlertConfigs = async () => {
   const res = await alertConfigList().catch(() => false)
   if (res) alertConfigs.value = res.data.list || []
 }
+const loadPeerSources = async () => {
+  const res = await processPeerSources().catch(() => false)
+  if (res) {
+    deviceGroups.value = res.data.device_groups || []
+    abTags.value = res.data.ab_tags || []
+  }
+}
+const onSourceTypeChange = () => {
+  if ((sourceType.value === 'device_group' && !deviceGroups.value.length) ||
+      (sourceType.value === 'ab_tags' && !abTags.value.length)) {
+    loadPeerSources()
+  }
+}
 const openCreate = () => {
   editing.value = false
   dialogTitle.value = T('ProcessAdd')
   form.value = { row_id: 0, peer_id: '', name: '', type: 'process', target: '', interval: 30, down_threshold: 300, alert_config_id: null, enabledBool: true }
+  sourceType.value = 'peers'
+  selectedGroupId.value = null
+  selectedTags.value = []
+  loadPeerSources()
   dialogVisible.value = true
 }
 const openEdit = (row) => {
@@ -158,6 +215,32 @@ const openEdit = (row) => {
   dialogVisible.value = true
 }
 const save = async () => {
+  if (!form.value.target) { ElMessage.warning(T('ProcessTargetTip')); return }
+  // 新增 + 批量来源（设备组 / 地址簿标签）
+  if (!editing.value && sourceType.value !== 'peers') {
+    if (sourceType.value === 'device_group' && !selectedGroupId.value) { ElMessage.warning(T('ProcessSelectDeviceGroup')); return }
+    if (sourceType.value === 'ab_tags' && !selectedTags.value.length) { ElMessage.warning(T('ProcessSelectAbTags')); return }
+    saving.value = true
+    const payload = {
+      source_type: sourceType.value,
+      group_id: sourceType.value === 'device_group' ? selectedGroupId.value : 0,
+      tags: sourceType.value === 'ab_tags' ? selectedTags.value : [],
+      name: form.value.name, type: form.value.type, target: form.value.target,
+      interval: form.value.interval, down_threshold: form.value.down_threshold,
+      alert_config_id: form.value.alert_config_id || 0, enabled: form.value.enabledBool ? 1 : 0,
+    }
+    const res = await batchCreateProcessRule(payload).catch(e => { ElMessage.error(e?.message || T('OperationFailed')); return false })
+    saving.value = false
+    if (res) {
+      const d = res.data || {}
+      ElMessage.success(T('ProcessBatchResult', { created: d.created ?? 0, skipped: d.skipped ?? 0 }))
+      dialogVisible.value = false
+      loadRules()
+    }
+    return
+  }
+  // 单个新增 / 编辑
+  if (!form.value.peer_id) { ElMessage.warning(T('ProcessPeerIdTip')); return }
   saving.value = true
   const payload = {
     peer_id: form.value.peer_id, name: form.value.name, type: form.value.type, target: form.value.target,

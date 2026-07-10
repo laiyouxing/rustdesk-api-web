@@ -916,6 +916,27 @@
   "ProcessStatusTip": {
     "One": "Realtime status of monitored items per device (reported by clients)"
   },
+  "ProcessTargetMode": {
+    "One": "Target Mode"
+  },
+  "ProcessModeManual": {
+    "One": "Manual"
+  },
+  "ProcessModeDeviceGroup": {
+    "One": "By Device Group"
+  },
+  "ProcessModeAbTags": {
+    "One": "By Address Book Tags"
+  },
+  "ProcessSelectDeviceGroup": {
+    "One": "Select a device group (creates for all devices in the group)"
+  },
+  "ProcessSelectAbTags": {
+    "One": "Select address book tags (creates for devices with the selected tags)"
+  },
+  "ProcessBatchResult": {
+    "One": "Batch created: {created} added, {skipped} skipped (already exist)"
+  },
   "ProcessPeerId": {
     "One": "Device ID"
   },

@@ -932,6 +932,27 @@
   "ProcessStatusTip": {
     "One": "各设备监控项实时运行状态（由客户端上报）"
   },
+  "ProcessTargetMode": {
+    "One": "配置方式"
+  },
+  "ProcessModeManual": {
+    "One": "手动输入"
+  },
+  "ProcessModeDeviceGroup": {
+    "One": "按设备组"
+  },
+  "ProcessModeAbTags": {
+    "One": "按地址簿标签"
+  },
+  "ProcessSelectDeviceGroup": {
+    "One": "选择设备组（将为组内所有设备批量创建）"
+  },
+  "ProcessSelectAbTags": {
+    "One": "选择地址簿标签（将为含所选标签的设备批量创建）"
+  },
+  "ProcessBatchResult": {
+    "One": "批量创建完成：新增 {created} 条，跳过 {skipped} 条（已存在）"
+  },
   "ProcessPeerId": {
     "One": "设备ID"
   },
