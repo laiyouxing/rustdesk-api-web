@@ -19,7 +19,7 @@
           <template #default="{row}">
             <span v-if="row.channel==='smtp'" style="font-size:12px;color:#666">{{ row.smtp_user }}（收件人在规则中指定）</span>
             <span v-else-if="row.webhook_url" style="font-size:12px;color:#666">{{ row.webhook_url.slice(0,60) }}...</span>
-            <span v-else style="color:#909399">-</span>
+            <span v-else style="color:var(--apple-gray)">-</span>
           </template>
         </el-table-column>
         <el-table-column label="创建时间" width="160">
@@ -87,7 +87,7 @@
         <el-table-column label="通知通道" width="120">
           <template #default="{row}">
             <el-tag :type="channelType(row.channel)" size="small">{{ channelLabel(row.channel) }}</el-tag>
-            <div style="font-size:11px;color:#909399">{{ row.name }}</div>
+            <div style="font-size:11px;color:var(--apple-gray)">{{ row.name }}</div>
           </template>
         </el-table-column>
         <el-table-column label="接收人" min-width="180">
@@ -102,7 +102,7 @@
               <el-tag size="small" type="info" style="margin-right:4px" v-for="t in (row.targets||[])" :key="t.row_id">
                 {{ t.target_name || t.target_id }}
               </el-tag>
-              <span v-if="!row.targets||row.targets.length===0" style="color:#909399">未设置</span>
+              <span v-if="!row.targets||row.targets.length===0" style="color:var(--apple-gray)">未设置</span>
             </span>
           </template>
         </el-table-column>
@@ -145,7 +145,7 @@
             <div v-for="col in targetCollections" :key="'c-'+col.id" style="margin-bottom:4px">
               <el-checkbox v-model="targetSelectedColls" :label="col.id" @change="()=>onTargetCollToggle(col)">
                 <strong>{{ col.name }}</strong>
-                <span style="color:#909399;font-size:12px;margin-left:4px">({{ col.peer_count }}台)</span>
+                <span style="color:var(--apple-gray);font-size:12px;margin-left:4px">({{ col.peer_count }}台)</span>
               </el-checkbox>
               <div v-if="targetExpanded[col.id]" style="margin-left:28px;margin-top:2px">
                 <div v-for="peer in (col.peers||[])" :key="'p-'+peer.peer_id" style="margin-bottom:2px">
@@ -154,15 +154,15 @@
                   </el-checkbox>
                 </div>
                 <el-button v-if="!col.peersLoaded" size="small" type="text" @click="loadTargetPeers(col)">加载设备</el-button>
-                <span v-else-if="col.peers&&col.peers.length===0" style="font-size:12px;color:#909399">无设备</span>
+                <span v-else-if="col.peers&&col.peers.length===0" style="font-size:12px;color:var(--apple-gray)">无设备</span>
               </div>
             </div>
           </div>
-          <div v-else style="color:#909399;font-size:13px">暂无分组</div>
+          <div v-else style="color:var(--apple-gray);font-size:13px">暂无分组</div>
         </el-form-item>
         <el-form-item :label="T('OfflineMin')">
           <el-input-number v-model="ruleForm.offline_min" :min="1" :max="1440"></el-input-number>
-          <span style="margin-left:8px;color:#909399">min</span>
+          <span style="margin-left:8px;color:var(--apple-gray)">min</span>
         </el-form-item>
         <el-form-item :label="T('Status')">
           <el-switch v-model="ruleForm.enabled" :active-value="1" :inactive-value="2"></el-switch>
@@ -172,7 +172,7 @@
             placeholder="收件人邮箱，多个用逗号分隔，如 a@x.com,b@x.com"></el-input>
         </el-form-item>
         <el-form-item label="接收人" v-else>
-          <span style="font-size:12px;color:#909399">{{ recipientHint }}</span>
+          <span style="font-size:12px;color:var(--apple-gray)">{{ recipientHint }}</span>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitRule">{{ T('Submit') }}</el-button>
@@ -194,7 +194,7 @@
           <div v-for="col in targetCollections" :key="'c-'+col.id" style="margin-bottom:4px">
             <el-checkbox v-model="targetSelectedColls" :label="col.id" @change="()=>onTargetCollToggle(col)">
               <strong>{{ col.name }}</strong>
-              <span style="color:#909399;font-size:12px;margin-left:4px">({{ col.peer_count }}台)</span>
+              <span style="color:var(--apple-gray);font-size:12px;margin-left:4px">({{ col.peer_count }}台)</span>
             </el-checkbox>
             <div v-if="targetExpanded[col.id]" style="margin-left:28px;margin-top:2px">
               <div v-for="peer in (col.peers||[])" :key="'p-'+peer.peer_id" style="margin-bottom:2px">
@@ -203,11 +203,11 @@
                 </el-checkbox>
               </div>
               <el-button v-if="!col.peersLoaded" size="small" type="text" @click="loadTargetPeers(col)">加载设备</el-button>
-              <span v-else-if="col.peers&&col.peers.length===0" style="font-size:12px;color:#909399">无设备</span>
+              <span v-else-if="col.peers&&col.peers.length===0" style="font-size:12px;color:var(--apple-gray)">无设备</span>
             </div>
           </div>
         </div>
-        <div v-else-if="targetMonitorAll===2 && targetCollections.length===0" style="color:#909399;font-size:13px">暂无分组</div>
+        <div v-else-if="targetMonitorAll===2 && targetCollections.length===0" style="color:var(--apple-gray);font-size:13px">暂无分组</div>
       </template>
       <template #footer>
         <el-button type="primary" @click="saveTargets">{{ T('Submit') }}</el-button>

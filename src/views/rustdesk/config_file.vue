@@ -31,7 +31,7 @@
       <el-divider />
 
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="color: #909399; font-size: 13px;">{{ T('ServiceRestartTip') }}</span>
+        <span style="color: var(--apple-gray); font-size: 13px;">{{ T('ServiceRestartTip') }}</span>
         <el-button type="danger" :loading="restarting" @click="restartService">
           <el-icon v-if="!restarting"><RefreshRight /></el-icon>
           {{ T('RestartService') }}

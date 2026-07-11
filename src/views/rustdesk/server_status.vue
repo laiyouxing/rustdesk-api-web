@@ -282,7 +282,7 @@
 }
 .latency {
   margin-left: 8px;
-  color: #67c23a;
+  color: var(--apple-green);
   font-size: 13px;
 }
 .err {
@@ -295,7 +295,7 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: #909399;
+  color: var(--apple-gray);
   padding: 20px 0;
 }
 .card-header {
@@ -324,7 +324,7 @@
   .metric-label {
     margin-top: 6px;
     font-size: 12px;
-    color: #909399;
+    color: var(--apple-gray);
   }
 }
 .conn-table {
