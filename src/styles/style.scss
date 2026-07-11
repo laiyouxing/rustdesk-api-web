@@ -76,6 +76,35 @@ $basicWhite: #ffffff;
   --apple-radius-sm: 10px;
   --apple-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   --apple-glass: saturate(180%) blur(20px);
+
+  // —— Apple 间距 token ——
+  --apple-spacing-1: 4px;
+  --apple-spacing-2: 8px;
+  --apple-spacing-3: 12px;
+  --apple-spacing-4: 16px;
+  --apple-spacing-6: 24px;
+  --apple-spacing-8: 32px;
+
+  // —— Apple 字号 token ——
+  --apple-font-xs: 12px;
+  --apple-font-sm: 13px;
+  --apple-font-base: 14px;
+  --apple-font-md: 16px;
+  --apple-font-lg: 20px;
+  --apple-font-xl: 24px;
+  --apple-font-2xl: 32px;
+
+  // —— Apple 文本 / 边框 token ——
+  --apple-text-primary: #1d1d1f;
+  --apple-text-secondary: #8e8e93;
+  --apple-border: #e5e5ea;
+
+  // —— Tag 浅底 subtle 底色 ——
+  --apple-green-subtle: rgba(52, 199, 89, 0.12);
+  --apple-orange-subtle: rgba(255, 149, 0, 0.12);
+  --apple-blue-subtle: rgba(0, 122, 255, 0.10);
+  --apple-red-subtle: rgba(255, 59, 48, 0.10);
+  --apple-gray-subtle: rgba(142, 142, 147, 0.12);
 }
 
 // ===== 深色模式（Apple Dark: #1C1C1E / #2C2C2E）=====
@@ -112,6 +141,33 @@ html.dark {
 
   --tag-bg-color: #2c2c2e;
   --basicBlack: #fff;
+
+  // —— Apple 间距 / 字号 token（深色与浅色一致，双写）——
+  --apple-spacing-1: 4px;
+  --apple-spacing-2: 8px;
+  --apple-spacing-3: 12px;
+  --apple-spacing-4: 16px;
+  --apple-spacing-6: 24px;
+  --apple-spacing-8: 32px;
+  --apple-font-xs: 12px;
+  --apple-font-sm: 13px;
+  --apple-font-base: 14px;
+  --apple-font-md: 16px;
+  --apple-font-lg: 20px;
+  --apple-font-xl: 24px;
+  --apple-font-2xl: 32px;
+
+  // —— Apple 文本 / 边框 token（深色覆盖）——
+  --apple-text-primary: #f5f5f7;
+  --apple-text-secondary: #98989d;
+  --apple-border: #38383a;
+
+  // —— Tag 浅底 subtle 底色（深色 alpha 提升）——
+  --apple-green-subtle: rgba(52, 199, 89, 0.22);
+  --apple-orange-subtle: rgba(255, 149, 0, 0.22);
+  --apple-blue-subtle: rgba(0, 122, 255, 0.22);
+  --apple-red-subtle: rgba(255, 59, 48, 0.22);
+  --apple-gray-subtle: rgba(142, 142, 147, 0.22);
 }
 
 // ===== 全局基础 =====
@@ -204,6 +260,33 @@ html.dark .apple-glass {
   }
 }
 
+// ===== Apple 美化补充：通用片段 =====
+// 次要灰提示文字
+.hint-text {
+  color: var(--apple-gray);
+  font-size: var(--apple-font-sm);
+}
+// 查询区卡片
+.query-card {
+  border-radius: var(--apple-radius-lg);
+  border: 1px solid var(--el-border-color-lighter);
+  box-shadow: var(--apple-shadow);
+  background: var(--el-bg-color);
+}
+// 列表表格
+.list-table {
+  border-radius: var(--apple-radius-md);
+  overflow: hidden;
+  --el-table-border-color: var(--el-border-color-lighter);
+  .el-table__cell {
+    border-bottom: 1px solid var(--el-border-color-lighter);
+  }
+  .el-table__row > td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
 // ===== 滚动条（Apple 细滚动条）=====
 ::-webkit-scrollbar {
   width: 10px;
@@ -245,10 +328,30 @@ html.dark .el-table {
   font-weight: 600;
 }
 
-// ===== 标签圆角 =====
+// ===== 标签：Apple 浅底 subtle 风格 =====
 .el-tag {
+  border: none;
   border-radius: 6px;
   font-weight: 500;
+  // 默认 / info：浅蓝 subtle
+  background: var(--apple-blue-subtle);
+  color: var(--apple-blue);
+  &.el-tag--info {
+    background: var(--apple-blue-subtle);
+    color: var(--apple-blue);
+  }
+  &.el-tag--success {
+    background: var(--apple-green-subtle);
+    color: var(--apple-green);
+  }
+  &.el-tag--warning {
+    background: var(--apple-orange-subtle);
+    color: var(--apple-orange);
+  }
+  &.el-tag--danger {
+    background: var(--apple-red-subtle);
+    color: var(--apple-red);
+  }
 }
 
 // ===== 分页圆角 =====
