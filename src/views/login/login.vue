@@ -265,7 +265,7 @@ h1 {
   margin-bottom: 18px;
   font-size: 26px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--apple-text-primary);
 }
 
 html.dark h1 {
@@ -308,14 +308,14 @@ html.dark h1 {
   align-items: center;
   margin: 18px 0;
   font-size: 13px;
-  color: #8e8e93;
+  color: var(--apple-gray);
 
   &::before,
   &::after {
     content: '';
     flex: 1;
     height: 1px;
-    background-color: #e5e5ea;
+    background-color: var(--apple-border);
   }
 
   &::before {
@@ -350,7 +350,7 @@ html.dark .divider {
   background: #ffffff;
   border: 1px solid #d2d2d7;
   border-radius: 10px;
-  color: #1d1d1f;
+  color: var(--apple-text-primary);
   font-size: 14px;
   font-weight: 500;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -386,7 +386,7 @@ html.dark .oidc-btn:hover {
 
 .el-form-item {
   ::v-deep(.el-form-item__label) {
-    color: #1d1d1f;
+    color: var(--apple-text-primary);
     font-weight: 500;
   }
 }
