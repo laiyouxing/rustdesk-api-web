@@ -25,9 +25,10 @@
         <el-table-column label="创建时间" width="160">
           <template #default="{row}">{{ row.created_at || '-' }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="120" align="center">
+        <el-table-column label="操作" width="220" align="center">
           <template #default="{row}">
             <el-button size="small" @click="showChannelForm(row)">{{ T('Edit') }}</el-button>
+            <el-button size="small" @click="testChannel(row)">测试</el-button>
             <el-button size="small" type="danger" @click="delChannel(row)">{{ T('Delete') }}</el-button>
           </template>
         </el-table-column>
@@ -69,6 +70,7 @@
         </template>
         <el-form-item>
           <el-button type="primary" @click="submitChannel">{{ T('Submit') }}</el-button>
+          <el-button @click="testChannelForm">测试发送</el-button>
           <el-button @click="chFormVisible=false">{{ T('Cancel') }}</el-button>
         </el-form-item>
       </el-form>
@@ -307,6 +309,36 @@ const submitChannel = async () => {
     chFormVisible.value = false
     loadChannels()
   }
+}
+
+const testChannel = async (row) => {
+  let recipients = ''
+  if (row.channel === 'smtp') {
+    const r = await ElMessageBox.prompt('请输入测试邮件接收地址（留空则发送给自己：' + (row.smtp_user || '') + '）', '测试发送', { inputValue: row.smtp_user || '', confirmButtonText: '发送', cancelButtonText: '取消' }).catch(_ => false)
+    if (r === false) return
+    recipients = (r.value || '').trim()
+  }
+  const res = await request({
+    url: '/alert_channel/test', method: 'post',
+    data: {
+      row_id: row.row_id, channel: row.channel, webhook_url: row.webhook_url,
+      smtp_host: row.smtp_host, smtp_port: row.smtp_port, smtp_user: row.smtp_user,
+      smtp_pass: '', test_recipients: recipients,
+    },
+  }).catch(e => { ElMessage.error('测试发送失败：' + (e?.response?.data?.msg || e.message)); return false })
+  if (res) ElMessage.success('测试消息已发送，请确认是否收到')
+}
+
+const testChannelForm = async () => {
+  let recipients = ''
+  if (chForm.channel === 'smtp') {
+    const r = await ElMessageBox.prompt('请输入测试邮件接收地址（留空则发送给自己）', '测试发送', { inputValue: chForm.smtp_user || '', confirmButtonText: '发送', cancelButtonText: '取消' }).catch(_ => false)
+    if (r === false) return
+    recipients = (r.value || '').trim()
+  }
+  const data = { ...chForm, row_id: chEditId.value, test_recipients: recipients }
+  const res = await request({ url: '/alert_channel/test', method: 'post', data }).catch(e => { ElMessage.error('测试发送失败：' + (e?.response?.data?.msg || e.message)); return false })
+  if (res) ElMessage.success('测试消息已发送，请确认是否收到')
 }
 
 const delChannel = async (row) => {
