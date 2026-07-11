@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="list-query" shadow="hover">
+    <el-card class="list-query query-card" shadow="hover">
       <el-form inline label-width="120px">
         <el-form-item :label="T('Owner')">
           <el-select v-model="listQuery.user_id" clearable @change="changeQueryUser">
@@ -35,7 +35,7 @@
     </el-card>
     <el-card class="list-body" shadow="hover">
       <!--      <el-tag type="danger" style="margin-bottom: 10px">不建议在此操作地址簿，可能会造成数据不同步</el-tag>-->
-      <el-table :data="listRes.list" v-loading="listRes.loading" border>
+      <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border>
         <el-table-column prop="id" label="ID" align="center" width="200">
           <template #default="{row}">
             <div>

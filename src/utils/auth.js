@@ -2,17 +2,20 @@ const TokenKey = 'access_token'
 const OidcCode = 'oidc_code'
 const OidcCodeExpiry = 'oidc_code_expiry';
 
+// token 由后端通过 HttpOnly Cookie 下发，前端 JS 不可读写，从根本上消除 XSS 盗取风险。
+// 因此不再用 localStorage 存储 token；以下函数保留签名以兼容调用点，但不再持久化。
 export function getToken () {
-  return localStorage.getItem(TokenKey)
+  return ''
 }
 
 export function setToken (token) {
-  localStorage.setItem(`wc-option:local:access_token`, token)
-  return localStorage.setItem(TokenKey, token)
+  // no-op: token 存于 HttpOnly Cookie，前端不接触
+  return
 }
 
 export function removeToken () {
-  return localStorage.removeItem(TokenKey)
+  // no-op: 登出由后端清除 Cookie（见 store/user.js logout）
+  return
 }
 
 // 设置 code，并存储当前时间戳（单位：毫秒）

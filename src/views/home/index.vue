@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative;">
     <!-- Refresh interval indicator -->
-    <div style="position: absolute; top: -10px; right: 0; font-size: 12px; color: #909399; z-index: 10;">
+    <div style="position: absolute; top: -10px; right: 0; font-size: 12px; color: var(--apple-gray); z-index: 10;">
       {{ T('AutoRefresh') }}: 30s
     </div>
     <el-row :gutter="20">
@@ -56,7 +56,7 @@
             <el-table-column label="标签" min-width="120">
               <template #default="{row}">
                 <el-tag v-for="t in (row.tags || [])" :key="t" size="small" style="margin-right: 4px; margin-bottom: 2px;">{{ t }}</el-tag>
-                <span v-if="!row.tags || row.tags.length === 0" style="color: #ccc;">-</span>
+                <span v-if="!row.tags || row.tags.length === 0" style="color: var(--apple-border);">-</span>
               </template>
             </el-table-column>
             <el-table-column prop="last_online_time" :label="T('LastOnline')" width="150">
@@ -269,10 +269,10 @@ onMounted(() => {
     font-size: 36px;
     font-weight: bold;
     margin-bottom: 8px;
-    &.green { color: #67C23A; }
-    &.gray { color: #909399; }
-    &.blue { color: #409EFF; }
+    &.green { color: var(--apple-green); }
+    &.gray { color: var(--apple-gray); }
+    &.blue { color: var(--apple-blue); }
   }
-  .label { font-size: 14px; color: #909399; }
+  .label { font-size: var(--apple-font-base); color: var(--apple-gray); }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="list-query" shadow="hover">
+    <el-card class="list-query query-card" shadow="hover">
       <div style="margin-bottom:12px;">
         <el-button :type="quickFilter === 'all' ? 'primary' : 'default'" size="small" @click="setQuickFilter('all')">全部</el-button>
         <el-button :type="quickFilter === 'online' ? 'success' : 'default'" size="small" @click="setQuickFilter('online')">在线</el-button>
@@ -71,7 +71,7 @@
         <el-button :icon="Setting" @click="showColumnSetting"></el-button>
       </div>
 
-      <el-table :data="listRes.list" v-loading="listRes.loading" border size="small" @selection-change="handleSelectionChange">
+      <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border size="small" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
         <template v-for="c in visibleColumns.filter(cc => cc.visible)" :key="c">
           <el-table-column v-if="c.name==='id'" prop="id" label="ID" align="center" width="150">

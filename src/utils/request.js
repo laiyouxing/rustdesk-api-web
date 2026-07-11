@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { getToken, removeToken } from '@/utils/auth'
-import { useUserStore } from '@/store/user'
-import { pinia } from '@/store'
+import { removeToken } from '@/utils/auth'
 import { useAppStore } from '@/store/app'
 
 // create an axios instance
@@ -18,13 +16,6 @@ service.interceptors.request.use(
     if (!config.headers) {
       config.headers = {}
     }
-    const userStore = useUserStore(pinia)
-
-    const token = userStore.token || getToken()
-    if (token) {
-      config.headers['api-token'] = token
-    }
-
     const app = useAppStore()
     const lang = app.setting.lang
     if (lang) {

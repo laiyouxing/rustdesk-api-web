@@ -4,7 +4,7 @@
     <el-card class="list-query" shadow="hover">
       <div class="action-bar">
         <span style="font-size: 16px; font-weight: 500;">策略管理</span>
-        <el-button type="text" size="small" style="margin-left: 4px; font-size: 16px; color: #409eff;" @click="showHelp = true">?</el-button>
+        <el-button type="text" size="small" style="margin-left: 4px; font-size: 16px; color: var(--apple-blue);" @click="showHelp = true">?</el-button>
         <el-button type="primary" size="small" style="float: right;" @click="showEdit(null)">新建策略</el-button>
       </div>
       <el-form inline label-width="80px">
@@ -67,7 +67,7 @@
         </el-form-item>
         <el-form-item label="优先级">
           <el-input-number v-model="form.priority" :min="0" :max="999" />
-          <span style="font-size: 12px; color: #909399; margin-left: 8px;">数字越大优先级越高</span>
+          <span class="hint-text" style="font-size:12px;margin-left:8px;">数字越大优先级越高</span>
         </el-form-item>
         <el-form-item label="绑定范围" required>
           <el-radio-group v-model="form.bind_type">
@@ -100,7 +100,7 @@
             placeholder="每行一个配置项，格式: key=value&#10;例如:&#10;force_relay=Y&#10;enable-udp-punch=N&#10;enable-clipboard=N&#10;custom-rendezvous-server=192.168.1.100:21116"
             style="width: 100%">
           </el-input>
-          <div style="font-size: 12px; color: #909399; margin-top: 4px;">
+          <div class="hint-text" style="font-size:12px;margin-top:4px;">
             常见配置项：force_relay、enable-udp-punch、enable-ipv6-punch、enable-clipboard、enable-audio、enable-file-transfer、custom-rendezvous-server
           </div>
         </el-form-item>

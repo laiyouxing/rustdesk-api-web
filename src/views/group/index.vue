@@ -47,7 +47,7 @@
           <el-button type="primary" @click="handlerQuery">{{ T('Filter') }}</el-button>
         </el-form-item>
       </el-form>
-      <el-table :data="listRes.list" v-loading="listRes.loading" border>
+      <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border>
         <el-table-column prop="id" label="ID" width="80" align="center" />
         <el-table-column prop="username" :label="T('Username')" />
         <el-table-column prop="nickname" :label="T('Nickname')" />

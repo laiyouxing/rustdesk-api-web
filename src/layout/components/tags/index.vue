@@ -6,7 +6,8 @@
           @close="close(t)"
           @click="toTag(t)"
           :type="t.active?'primary':'info'"
-          :effect="t.active?'dark':'plain'">
+          effect="plain"
+          :class="{'tag--active': t.active}">
     {{ T(t.title) }}
   </el-tag>
 </template>
@@ -78,5 +79,11 @@
   cursor: pointer;
   margin-right: 6px;
   transition: all 0.2s ease;
+}
+.tag--active {
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
+  border-color: var(--el-color-primary-light-7);
+  border-radius: var(--apple-radius-md);
 }
 </style>

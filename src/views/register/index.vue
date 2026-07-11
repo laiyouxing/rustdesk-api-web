@@ -125,7 +125,7 @@ h1 {
   margin-bottom: 18px;
   font-size: 26px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--apple-text-primary);
 }
 
 html.dark h1 {
@@ -159,7 +159,7 @@ html.dark h1 {
 
 .el-form-item {
   ::v-deep(.el-form-item__label) {
-    color: #1d1d1f;
+    color: var(--apple-text-primary);
     font-weight: 500;
   }
 }

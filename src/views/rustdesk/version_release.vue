@@ -24,7 +24,7 @@
         </el-form-item>
         <el-form-item label="强制更新">
           <el-switch v-model="form.force_update" :active-value="1" :inactive-value="0" />
-          <span style="font-size: 12px; color: #909399; margin-left: 8px;">开启后客户端静默下载安装，不弹提示</span>
+          <span class="hint-text" style="font-size:12px;margin-left:8px;">开启后客户端静默下载安装，不弹提示</span>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :loading="submitting" @click="submitForm">{{ T('Publish') }}</el-button>
