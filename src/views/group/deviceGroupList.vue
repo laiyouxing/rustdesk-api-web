@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="list-query" shadow="hover">
+    <el-card class="list-query query-card" shadow="hover">
       <el-form inline label-width="80px">
         <!--        <el-form-item label="名称">
                   <el-input v-model="listQuery.name"></el-input>
@@ -12,7 +12,7 @@
       </el-form>
     </el-card>
     <el-card class="list-body" shadow="hover">
-      <el-table :data="listRes.list" v-loading="listRes.loading" border>
+      <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border>
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
         <el-table-column prop="name" :label="T('Name')" align="center"/>
         <el-table-column prop="created_at" :label="T('CreatedAt')" align="center"/>

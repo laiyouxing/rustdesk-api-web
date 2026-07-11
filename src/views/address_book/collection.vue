@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="list-query" shadow="hover">
+    <el-card class="list-query query-card" shadow="hover">
       <el-form inline label-width="80px">
         <el-form-item :label="T('Owner')">
           <el-select v-model="listQuery.user_id" clearable>
@@ -19,7 +19,7 @@
       </el-form>
     </el-card>
     <el-card class="list-body" shadow="hover">
-      <el-table :data="listRes.list" v-loading="listRes.loading" border>
+      <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border>
         <el-table-column prop="id" label="ID" align="center"/>
         <el-table-column prop="user_id" :label="T('Owner')" align="center">
           <template #default="{row}">
