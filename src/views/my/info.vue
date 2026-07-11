@@ -171,6 +171,7 @@
   import { ElMessage, ElMessageBox } from 'element-plus'
   import { T } from '@/utils/i18n'
   import { marked } from 'marked'
+  import DOMPurify from 'dompurify'
 
   const appStore = useAppStore()
   const userStore = useUserStore()
@@ -281,7 +282,8 @@
     }
   }
 
-  const html = computed(_ => marked(appStore.setting.hello||''))
+  // 公告来自管理员 Markdown，经 marked 转 HTML 后用 DOMPurify 净化，防止存储型 XSS
+  const html = computed(_ => DOMPurify.sanitize(marked(appStore.setting.hello||'')))
 
 </script>
 

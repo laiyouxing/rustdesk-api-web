@@ -1,6 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { current, login } from '@/api/user'
-import { setToken, removeToken, setCode, removeCode } from '@/utils/auth'
+import { removeToken, setCode, removeCode } from '@/utils/auth'
+import request from '@/utils/request'
 import { useRouteStore } from '@/store/router'
 import { useAppStore } from '@/store/app'
 import { oidcAuth, oidcQuery } from '@/api/login'
@@ -19,7 +20,13 @@ export const useUserStore = defineStore({
   }),
 
   actions: {
-    logout () {
+    async logout () {
+      // 调用后端 /logout 清除 HttpOnly Cookie 与 user_token 记录
+      try {
+        await request({ url: '/logout', method: 'post' })
+      } catch (e) {
+        // 即使请求失败也继续清理本地状态
+      }
       removeToken()
       removeCode()
       this.$patch({
@@ -29,9 +36,7 @@ export const useUserStore = defineStore({
     },
 
     saveUserData (userData) {
-      // useAppStore().getAppConfig()
-      setToken(userData.token)
-      //
+      // token 由后端通过 HttpOnly Cookie 下发，前端不再存储
       localStorage.setItem('user_info', JSON.stringify({ name: userData.username }))
       this.$patch({
         ...userData,
@@ -58,7 +63,7 @@ export const useUserStore = defineStore({
       if (res) {
         useAppStore().loadConfig()
         const userData = res.data
-        setToken(userData.token)
+        // token 由后端通过 HttpOnly Cookie 下发，前端不再存储
         this.$patch({
           ...userData,
         })
