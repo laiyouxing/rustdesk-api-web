@@ -1,5 +1,11 @@
 <template>
   <div class="profile-page">
+    <!-- 背景装饰光斑：为毛玻璃卡片提供虚化底色 -->
+    <div class="bg-blobs">
+      <span class="blob blob-1"></span>
+      <span class="blob blob-2"></span>
+      <span class="blob blob-3"></span>
+    </div>
     <!-- ====== 毛玻璃个人资料横幅 ====== -->
     <div class="profile-hero apple-glass">
       <div class="hero-avatar">
@@ -281,9 +287,56 @@
 
 <style scoped lang="scss">
 .profile-page {
+  position: relative;
   max-width: 1100px;
   margin: 0 auto;
   padding: var(--apple-spacing-6);
+  min-height: calc(100vh - 130px);
+  border-radius: var(--apple-radius-lg);
+  overflow: hidden;
+  background: linear-gradient(135deg, #eef2ff 0%, #faf5ff 48%, #ecfeff 100%);
+
+  // 背景装饰光斑（毛玻璃的虚化底色）
+  .bg-blobs {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.85;
+  }
+  .blob-1 {
+    top: -90px;
+    left: -70px;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(0, 122, 255, 0.55), transparent 70%);
+  }
+  .blob-2 {
+    bottom: -110px;
+    right: -50px;
+    width: 440px;
+    height: 440px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.50), transparent 70%);
+  }
+  .blob-3 {
+    top: 40%;
+    left: 30%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.40), transparent 70%);
+  }
+}
+
+html.dark .profile-page {
+  background: linear-gradient(135deg, #161827 0%, #1c1830 48%, #101a26 100%);
+  .blob-1 { background: radial-gradient(circle, rgba(10, 132, 255, 0.55), transparent 70%); }
+  .blob-2 { background: radial-gradient(circle, rgba(168, 85, 247, 0.48), transparent 70%); }
+  .blob-3 { background: radial-gradient(circle, rgba(236, 72, 153, 0.40), transparent 70%); }
 }
 
 /* ========== 毛玻璃英雄横幅 ========== */
@@ -295,6 +348,7 @@
   border-radius: var(--apple-radius-lg);
   margin-bottom: var(--apple-spacing-6);
   position: relative;
+  z-index: 1;
   overflow: hidden;
 
   // 装饰性渐变光晕（毛玻璃底层）
@@ -379,6 +433,8 @@
 
 /* ========== 内容网格 ========== */
 .profile-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--apple-spacing-6);
