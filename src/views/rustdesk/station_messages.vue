@@ -32,7 +32,7 @@
         <el-table-column prop="sender_name" :label="T('Sender')" width="120">
           <template #default="{row}">
             <span v-if="row.sender_name">{{ row.sender_name }}</span>
-            <span v-else style="color: #909399;">系统</span>
+            <span v-else class="hint-text">系统</span>
           </template>
         </el-table-column>
         <el-table-column prop="title" :label="T('Title')" min-width="140">
