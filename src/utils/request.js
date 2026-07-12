@@ -62,7 +62,20 @@ service.interceptors.response.use(
 
       if (res.code === 403) {
         removeToken()
-        window.location.reload()
+        // 会话失效（未登录 / Cookie 过期 / 指纹不匹配）：跳转登录页重新登录。
+        // 切勿 window.location.reload()：在受保护页会因持续 403 陷入 reload 死循环横跳，
+        // 表现为"登录界面反复刷新横跳"，且刷新瞬间未完成的请求被中止报 "Request aborted"。
+        import('@/router').then(m => {
+          const r = m.default
+          const cur = r.currentRoute.value
+          if (cur.path !== '/login' && cur.path !== '/register') {
+            r.push(`/login?redirect=${encodeURIComponent(cur.fullPath)}`)
+          }
+        }).catch(() => {
+          if (!window.location.hash.includes('/login') && window.location.pathname !== '/login') {
+            window.location.href = '/#/login'
+          }
+        })
       }
       return Promise.reject(res)
     } else {
