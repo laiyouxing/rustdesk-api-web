@@ -46,7 +46,7 @@
 
 <style lang="scss" scoped>
 .app-header {
-  background-color: rgba(245, 245, 247, 0.72);
+  background-color: rgba(245, 245, 247, 0.6);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   color: var(--el-text-color-primary);
@@ -56,13 +56,13 @@
 }
 
 html.dark .app-header {
-  background-color: rgba(28, 28, 30, 0.72);
+  background-color: rgba(28, 28, 30, 0.6);
 }
 
 .header-tags {
   height: auto;
   border-bottom: 1px solid var(--el-border-color-lighter);
-  background-color: rgba(245, 245, 247, 0.55);
+  background-color: rgba(245, 245, 247, 0.45);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   display: flex;
@@ -70,7 +70,7 @@ html.dark .app-header {
 }
 
 html.dark .header-tags {
-  background-color: rgba(28, 28, 30, 0.55);
+  background-color: rgba(28, 28, 30, 0.45);
 }
 
 .app-left {

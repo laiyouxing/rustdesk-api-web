@@ -15,12 +15,12 @@
 
 <style scoped lang="scss">
 .scroll-sidebar {
-  background-color: rgba(245, 245, 247, 0.72);
+  background-color: rgba(245, 245, 247, 0.6);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
 
 html.dark .scroll-sidebar {
-  background-color: rgba(28, 28, 30, 0.72);
+  background-color: rgba(28, 28, 30, 0.6);
 }
 </style>

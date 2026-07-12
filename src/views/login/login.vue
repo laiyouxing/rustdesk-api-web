@@ -237,27 +237,40 @@
   min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
-  background: linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 100%);
+  background-color: #f5f5f7;
+  background-image:
+    radial-gradient(900px 600px at 15% 10%, rgba(0, 122, 255, 0.18), transparent 60%),
+    radial-gradient(800px 600px at 85% 15%, rgba(255, 149, 0, 0.14), transparent 55%),
+    radial-gradient(900px 700px at 80% 90%, rgba(52, 199, 89, 0.14), transparent 55%),
+    radial-gradient(800px 600px at 10% 90%, rgba(175, 82, 222, 0.14), transparent 55%);
+  background-attachment: fixed;
 }
 
 html.dark .login-container {
-  background: #1c1c1e;
+  background-color: #1c1c1e;
+  background-image:
+    radial-gradient(900px 600px at 15% 10%, rgba(10, 132, 255, 0.26), transparent 60%),
+    radial-gradient(800px 600px at 85% 15%, rgba(255, 149, 0, 0.20), transparent 55%),
+    radial-gradient(900px 700px at 80% 90%, rgba(48, 209, 88, 0.20), transparent 55%),
+    radial-gradient(800px 600px at 10% 90%, rgba(175, 82, 222, 0.22), transparent 55%);
 }
 
 .login-card {
   width: 380px;
   max-width: 90vw;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
   padding: 44px 36px;
   border-radius: 18px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 html.dark .login-card {
-  background: #2c2c2e;
-  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(44, 44, 46, 0.72);
+  border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
