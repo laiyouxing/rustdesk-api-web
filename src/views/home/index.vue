@@ -44,7 +44,7 @@
           <template #header>
             <span>{{ T('RecentDevices') }}</span>
           </template>
-          <el-table :data="recentPeers" v-loading="loading" size="small" max-height="300">
+          <el-table :data="recentPeers" v-loading="loading" size="small" height="300">
             <el-table-column prop="hostname" :label="T('Hostname')" min-width="90">
               <template #default="{row}">
                 <el-tag type="danger" size="small" effect="plain">{{ row.hostname || '-' }}</el-tag>
@@ -73,7 +73,7 @@
           <template #header>
             <span>{{ T('RecentConnections') }}</span>
           </template>
-          <el-table :data="recentLogs" v-loading="loadingLogs" size="small" max-height="300">
+          <el-table :data="recentLogs" v-loading="loadingLogs" size="small" height="300">
             <el-table-column prop="from_name" :label="T('Username')" width="90"></el-table-column>
             <el-table-column prop="peer_hostname" label="主机名" width="100">
               <template #default="{row}">{{ row.peer_hostname || row.peer_id?.substring(0,12) || '-' }}</template>
