@@ -134,6 +134,12 @@
     if (!mfaToken.value) {
       mfaToken.value = sessionStorage.getItem('mfa_token') || ''
     }
+    // mfa_token 仍缺失：登录态已失效，回到密码登录页重新登录
+    if (!mfaToken.value) {
+      step.value = 'pwd'
+      ElMessage.warning(T('MfaTokenMissing'))
+      return
+    }
     mfaLoading.value = true
     const payload = { mfa_token: mfaToken.value }
     if (useRecovery.value) {
@@ -144,11 +150,24 @@
     const res = await mfaLogin(payload).catch(e => e)
     mfaLoading.value = false
     if (!res.code) {
+      // 验证成功：签发正式令牌并跳转后台
       useAppStore().loadConfig()
       userStore.saveUserData(res.data)
       sessionStorage.removeItem('mfa_token')
+      mfaToken.value = ''
       ElMessage.success(T('LoginSuccess'))
       router.push({ path: redirect || '/home', replace: true })
+    } else if (res.code === 114) {
+      // mfa_token 失效/丢失：回到密码登录页重新走完整登录流程（避免卡死在动态码页）
+      step.value = 'pwd'
+      mfaToken.value = ''
+      mfaInput.value = ''
+      sessionStorage.removeItem('mfa_token')
+      ElMessage.warning(T('MfaTokenMissing'))
+    } else {
+      // 101 等：动态码错误 / 令牌无效 —— 保留 mfa_token，清空输入，允许用户重试
+      ElMessage.error(res.message || T('MfaCodeError'))
+      mfaInput.value = ''
     }
   }
   const backToPwd = () => {

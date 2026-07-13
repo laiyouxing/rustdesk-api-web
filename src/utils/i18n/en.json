@@ -742,6 +742,12 @@
   "MfaVerifyTip": {
     "One": "Please enter the 6-digit code from your authenticator app (e.g. Google Authenticator)"
   },
+  "MfaCodeError": {
+    "One": "Invalid code, please try again"
+  },
+  "MfaTokenMissing": {
+    "One": "Session expired, please sign in again"
+  },
   "MfaScanTip": {
     "One": "Scan the QR code below with your authenticator app, or enter the secret manually"
   },

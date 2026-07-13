@@ -758,6 +758,12 @@
   "MfaVerifyTip": {
     "One": "请输入身份验证器（如 Google Authenticator）中的 6 位动态码"
   },
+  "MfaCodeError": {
+    "One": "动态码错误，请重新输入"
+  },
+  "MfaTokenMissing": {
+    "One": "登录已失效，请重新输入账号密码"
+  },
   "MfaScanTip": {
     "One": "请用身份验证器 App 扫描下方二维码，或手动输入密钥"
   },
