@@ -143,4 +143,72 @@ html.dark .header-tags {
 }
 </style>
 
+<style lang="scss">
+// ===== 移动端响应式（非 scoped，影响全局子元素）=====
+@media (max-width: 768px) {
+  // 主内容区撑满 + 减少内边距
+  .app-main {
+    padding: 8px !important;
+    overflow-x: hidden;
+  }
+
+  // Element Plus 表格在小屏幕自动横向滚动 + 字体缩小
+  .el-table {
+    font-size: 13px;
+    .el-table__cell {
+      padding: 8px 5px;
+    }
+  }
+
+  // 搜索表单竖排
+  .el-form .el-form-item {
+    display: block;
+    margin-bottom: 10px;
+    .el-select,
+    .el-input {
+      width: 100% !important;
+    }
+  }
+
+  // 按钮触屏化
+  .el-button {
+    min-height: 42px;
+    padding-left: 14px;
+    padding-right: 14px;
+    font-size: 14px;
+    &--small {
+      min-height: 34px;
+      padding-left: 12px;
+      padding-right: 12px;
+      font-size: 13px;
+    }
+  }
+
+  // 对话框全宽
+  .el-dialog {
+    width: 92vw !important;
+    margin: 20px auto !important;
+    .el-dialog__body {
+      padding: 12px 10px;
+    }
+  }
+
+  // 分页换行居中
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  // 卡片内边距
+  .el-card__body {
+    padding: 10px 8px;
+  }
+
+  // 统计行间距
+  .el-row .el-col {
+    margin-bottom: 8px;
+  }
+}
+</style>
+
 
