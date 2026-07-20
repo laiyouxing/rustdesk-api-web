@@ -67,54 +67,81 @@
       </el-form>
     </el-card>
     <el-card class="list-body" shadow="hover">
-      <div style="text-align: right; margin-bottom: 10px">
-        <el-button :icon="Setting" @click="showColumnSetting"></el-button>
+      <!-- 桌面端：列设置 + 表格 -->
+      <div class="table-view">
+        <div style="text-align: right; margin-bottom: 10px">
+          <el-button :icon="Setting" @click="showColumnSetting"></el-button>
+        </div>
+        <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border size="small" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center"/>
+          <template v-for="c in visibleColumns.filter(cc => cc.visible)" :key="c">
+            <el-table-column v-if="c.name==='id'" prop="id" label="ID" align="center" width="150">
+              <template #default="{row}">
+                <span>{{ row.id }} <el-icon @click="handleClipboard(row.id, $event)"><CopyDocument/></el-icon></span>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="c.name==='cpu'" prop="cpu" label="CPU" align="center" width="100" show-overflow-tooltip/>
+            <el-table-column v-if="c.name==='hostname'" prop="hostname" :label="T('Hostname')" align="center" width="120"/>
+            <el-table-column v-if="c.name==='memory'" prop="memory" :label="T('Memory')" align="center" width="120"/>
+            <el-table-column v-if="c.name==='os'" prop="os" :label="T('Os')" align="center" width="120" show-overflow-tooltip/>
+            <el-table-column v-if="c.name==='last_online_time'" prop="last_online_time" :label="T('LastOnlineTime')" align="center" min-width="120">
+              <template #default="{row}">
+                <div class="last_oline_time">
+                  <span> {{ row.last_online_time ? timeAgo(row.last_online_time * 1000) : '-' }}</span> <span class="dot" :class="{red: timeDis(row.last_online_time) >= 60, green: timeDis(row.last_online_time)< 60}"></span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="c.name==='last_online_ip'" prop="last_online_ip" :label="T('LastOnlineIp')" align="center" min-width="120"/>
+            <el-table-column v-if="c.name==='username'" prop="username" :label="T('Username')" align="center" width="120"/>
+            <el-table-column v-if="c.name==='group_id'" prop="group_id" :label="T('Group')" align="center" width="120">
+              <template #default="{row}">
+                <span v-if="row.group_id"> <el-tag>{{ groupListRes.list?.find(g => g.id === row.group_id)?.name }} </el-tag> </span>
+                <span v-else> - </span>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="c.name==='uuid'" prop="uuid" :label="T('Uuid')" align="center" width="120" show-overflow-tooltip/>
+            <el-table-column v-if="c.name==='version'" prop="version" :label="T('Version')" align="center" width="80"/>
+            <el-table-column v-if="c.name==='alias'" prop="alias" :label="T('Alias')" align="center" width="80"/>
+            <el-table-column v-if="c.name==='created_at'" prop="created_at" :label="T('CreatedAt')" align="center" width="150"/>
+            <el-table-column v-if="c.name==='updated_at'" prop="updated_at" :label="T('UpdatedAt')" align="center" width="150"/>
+          </template>
+
+          <el-table-column :label="T('Actions')" align="center" width="500" class-name="table-actions" fixed="right">
+            <template #default="{row}">
+              <el-button type="success" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
+              <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">Web Client</el-button>
+              <el-button type="primary" @click="toAddressBook(row)">{{ T('AddToAddressBook') }}</el-button>
+              <el-button @click="toEdit(row)">{{ T('Edit') }}</el-button>
+              <el-button type="danger" @click="del(row)">{{ T('Delete') }}</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
 
-      <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border size="small" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" align="center"/>
-        <template v-for="c in visibleColumns.filter(cc => cc.visible)" :key="c">
-          <el-table-column v-if="c.name==='id'" prop="id" label="ID" align="center" width="150">
-            <template #default="{row}">
-              <span>{{ row.id }} <el-icon @click="handleClipboard(row.id, $event)"><CopyDocument/></el-icon></span>
-            </template>
-          </el-table-column>
-          <el-table-column v-if="c.name==='cpu'" prop="cpu" label="CPU" align="center" width="100" show-overflow-tooltip/>
-          <el-table-column v-if="c.name==='hostname'" prop="hostname" :label="T('Hostname')" align="center" width="120"/>
-          <el-table-column v-if="c.name==='memory'" prop="memory" :label="T('Memory')" align="center" width="120"/>
-          <el-table-column v-if="c.name==='os'" prop="os" :label="T('Os')" align="center" width="120" show-overflow-tooltip/>
-          <el-table-column v-if="c.name==='last_online_time'" prop="last_online_time" :label="T('LastOnlineTime')" align="center" min-width="120">
-            <template #default="{row}">
-              <div class="last_oline_time">
-                <span> {{ row.last_online_time ? timeAgo(row.last_online_time * 1000) : '-' }}</span> <span class="dot" :class="{red: timeDis(row.last_online_time) >= 60, green: timeDis(row.last_online_time)< 60}"></span>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column v-if="c.name==='last_online_ip'" prop="last_online_ip" :label="T('LastOnlineIp')" align="center" min-width="120"/>
-          <el-table-column v-if="c.name==='username'" prop="username" :label="T('Username')" align="center" width="120"/>
-          <el-table-column v-if="c.name==='group_id'" prop="group_id" :label="T('Group')" align="center" width="120">
-            <template #default="{row}">
-              <span v-if="row.group_id"> <el-tag>{{ groupListRes.list?.find(g => g.id === row.group_id)?.name }} </el-tag> </span>
-              <span v-else> - </span>
-            </template>
-          </el-table-column>
-          <el-table-column v-if="c.name==='uuid'" prop="uuid" :label="T('Uuid')" align="center" width="120" show-overflow-tooltip/>
-          <el-table-column v-if="c.name==='version'" prop="version" :label="T('Version')" align="center" width="80"/>
-          <el-table-column v-if="c.name==='alias'" prop="alias" :label="T('Alias')" align="center" width="80"/>
-          <el-table-column v-if="c.name==='created_at'" prop="created_at" :label="T('CreatedAt')" align="center" width="150"/>
-          <el-table-column v-if="c.name==='updated_at'" prop="updated_at" :label="T('UpdatedAt')" align="center" width="150"/>
-        </template>
-
-        <el-table-column :label="T('Actions')" align="center" width="500" class-name="table-actions" fixed="right">
-          <template #default="{row}">
-            <el-button type="success" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
-            <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">Web Client</el-button>
-            <el-button type="primary" @click="toAddressBook(row)">{{ T('AddToAddressBook') }}</el-button>
-            <el-button @click="toEdit(row)">{{ T('Edit') }}</el-button>
-            <el-button type="danger" @click="del(row)">{{ T('Delete') }}</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <!-- 手机端：卡片列表 -->
+      <div class="mobile-card-view" v-loading="listRes.loading">
+        <div v-for="row in listRes.list" :key="row.row_id" class="peer-card">
+          <div class="card-header">
+            <span class="card-id">{{ row.id }}</span>
+            <span class="dot" :class="{red: timeDis(row.last_online_time) >= 60, green: timeDis(row.last_online_time) < 60}" style="display:inline-block; margin-left:6px;"></span>
+          </div>
+          <div class="card-meta">
+            <span class="meta-item">{{ row.hostname || '-' }}</span>
+            <span class="meta-item">{{ row.username || '-' }}</span>
+            <span v-if="row.group_id" class="meta-item"><el-tag size="small">{{ groupListRes.list?.find(g => g.id === row.group_id)?.name }}</el-tag></span>
+            <span class="meta-item">{{ row.version || '-' }}</span>
+            <span class="meta-item">IP: {{ row.last_online_ip || '-' }}</span>
+            <span class="meta-item">{{ row.last_online_time ? timeAgo(row.last_online_time * 1000) : '-' }}</span>
+          </div>
+          <div class="card-actions">
+            <el-button type="success" size="small" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
+            <el-button v-if="appStore.setting.appConfig.web_client" type="success" size="small" @click="toWebClientLink(row)">Web Client</el-button>
+            <el-button type="primary" size="small" @click="toAddressBook(row)">{{ T('AddToAddressBook') }}</el-button>
+            <el-button size="small" @click="toEdit(row)">{{ T('Edit') }}</el-button>
+            <el-button type="danger" size="small" @click="del(row)">{{ T('Delete') }}</el-button>
+          </div>
+        </div>
+      </div>
     </el-card>
     <el-card class="list-page" shadow="hover">
       <el-pagination background
@@ -648,6 +675,73 @@ onActivated(() => {
 
   &.green {
     background-color: green;
+  }
+}
+
+// 手机端：表格换卡片列表
+.table-view { display: block; }
+.mobile-card-view { display: none; }
+
+@media (max-width: 768px) {
+  .table-view { display: none; }
+  .mobile-card-view { display: block; }
+
+  .list-query .el-form {
+    display: flex;
+    flex-direction: column;
+    .el-form-item {
+      margin-right: 0;
+      margin-bottom: 8px;
+      .el-select, .el-input {
+        width: 100% !important;
+      }
+    }
+  }
+
+  .peer-card {
+    background: var(--el-bg-color);
+    border: 1px solid var(--el-border-color-lighter);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      .card-id {
+        color: var(--el-color-primary);
+        word-break: break-all;
+      }
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      font-size: 12px;
+      color: var(--el-text-color-secondary);
+      margin-bottom: 10px;
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      .el-button {
+        min-height: 36px;
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+    }
   }
 }
 </style>
