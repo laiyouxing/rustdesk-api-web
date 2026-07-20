@@ -84,6 +84,18 @@
           <el-button type="primary" size="small" @click="showRuleForm()">{{ T('Add') }}</el-button>
         </div>
       </template>
+      <el-alert type="info" :closable="false" show-icon style="margin-bottom:12px">
+        <template #title>离线告警逻辑说明</template>
+        <template #description>
+          <ul style="margin:4px 0 0;padding-left:18px;line-height:1.7;font-size:12px">
+            <li>每 5 分钟检测一次设备在线状态。</li>
+            <li>设备离线（超过下方「离线阈值」时长）则权重 +1；权重累计达到 <b>10</b>（约离线 50 分钟）才推送离线告警邮件。</li>
+            <li>权重每天自动重置。</li>
+            <li>同一设备每天最多推送 <b>3</b> 次。</li>
+            <li>连续 <b>3 天</b>触发告警后停止推送；设备重新上线后自动解除该限制。</li>
+          </ul>
+        </template>
+      </el-alert>
       <el-table :data="configs" v-loading="loading" border>
         <el-table-column prop="name" :label="T('Name')" min-width="100"></el-table-column>
         <el-table-column label="通知通道" width="120">
@@ -165,6 +177,9 @@
         <el-form-item :label="T('OfflineMin')">
           <el-input-number v-model="ruleForm.offline_min" :min="1" :max="1440"></el-input-number>
           <span style="margin-left:8px;color:var(--apple-gray)">min</span>
+          <div style="font-size:12px;color:var(--apple-gray);margin-top:4px;line-height:1.5">
+            设备离线超过该时长后才开始累计离线权重（详见上方告警逻辑说明）
+          </div>
         </el-form-item>
         <el-form-item :label="T('Status')">
           <el-switch v-model="ruleForm.enabled" :active-value="1" :inactive-value="2"></el-switch>

@@ -14,6 +14,7 @@
             <el-option label="Windows" value="windows"></el-option>
             <el-option label="macOS" value="macos"></el-option>
             <el-option label="Ubuntu" value="ubuntu"></el-option>
+            <el-option label="Android" value="android"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="T('Status')">
