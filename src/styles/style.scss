@@ -420,3 +420,120 @@ html.dark .el-table {
 .app-main {
   background: transparent;
 }
+
+// ===== 移动端响应式适配（< 768px）=====
+@media (max-width: 768px) {
+  // 卡片减少内边距
+  .el-card__body {
+    padding: 12px 8px;
+  }
+  .el-card__header {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  // 表格水平滚动 + 字体缩小
+  .el-table {
+    font-size: 13px;
+    .el-table__cell {
+      padding: 8px 6px;
+    }
+  }
+
+  // 查询区域：筛选项竖排堆叠
+  .list-query {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    .el-select,
+    .el-input {
+      --el-select-width: 100%;
+      --el-input-width: 100%;
+      width: 100% !important;
+    }
+    .el-button {
+      width: 100%;
+      min-height: 44px;
+    }
+  }
+
+  // 表单：单行变竖排
+  .el-form-item {
+    margin-bottom: 12px;
+  }
+  .el-form-item__label {
+    font-size: 13px;
+    padding-bottom: 2px;
+  }
+
+  // 按钮触屏化（最小 44px 高度）
+  .el-button {
+    min-height: 42px;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 14px;
+    &--small {
+      min-height: 36px;
+      padding-left: 14px;
+      padding-right: 14px;
+      font-size: 13px;
+    }
+    &--mini {
+      min-height: 32px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  // 表格操作按钮
+  .table-actions .el-button {
+    margin: 3px 2px;
+  }
+
+  // 对话框全宽
+  .el-dialog {
+    width: 92vw !important;
+    margin: 10px auto !important;
+    border-radius: var(--apple-radius-md);
+    .el-dialog__body {
+      padding: 14px 12px;
+    }
+    .el-dialog__header {
+      padding: 14px 16px 8px;
+    }
+  }
+
+  // 消息提示居中
+  .el-message {
+    min-width: auto;
+    width: 90vw;
+    margin: 0 auto;
+  }
+
+  // 分页自适应
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    .el-pagination__sizes,
+    .el-pagination__jump {
+      margin-top: 4px;
+    }
+  }
+
+  // 统计卡片间距
+  .el-row .el-col {
+    margin-bottom: 10px;
+  }
+
+  // 标签页调整
+  .el-tabs__nav-wrap {
+    padding: 0 8px;
+  }
+
+  // 内容区间距
+  .main-container,
+  .app-main {
+    padding: 8px;
+  }
+}
