@@ -29,7 +29,29 @@
                           :placeholder="T('ExpiredAtPlaceholder')"
                           value-format="x"
                           style="width:100%"/>
+          <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap;">
+            <el-button size="small" @click="setExpiredAt(30)">1个月</el-button>
+            <el-button size="small" @click="setExpiredAt(90)">3个月</el-button>
+            <el-button size="small" @click="setExpiredAt(365)">1年</el-button>
+            <el-button size="small" @click="setExpiredAt(3650)">10年</el-button>
+            <el-button size="small" @click="setExpiredAt(-1)">永久</el-button>
+          </div>
           <span class="el-form-item__tip">{{ T('DefaultExpire1Day') }}</span>
+        </el-form-item>
+        <el-form-item :label="T('UserExpiredAt')" prop="user_expired_at">
+          <el-date-picker v-model="createForm.userExpiredAtDate"
+                          type="datetime"
+                          :placeholder="T('ExpiredAtPlaceholder')"
+                          value-format="x"
+                          style="width:100%"/>
+          <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap;">
+            <el-button size="small" @click="setUserExpiredAt(30)">1个月</el-button>
+            <el-button size="small" @click="setUserExpiredAt(90)">3个月</el-button>
+            <el-button size="small" @click="setUserExpiredAt(365)">1年</el-button>
+            <el-button size="small" @click="setUserExpiredAt(3650)">10年</el-button>
+            <el-button size="small" @click="setUserExpiredAt(-1)">永久</el-button>
+          </div>
+          <span class="el-form-item__tip">{{ T('UserExpiredAtTip') }}</span>
         </el-form-item>
         <el-form-item :label="T('Remark')" prop="remark">
           <el-input v-model="createForm.remark" type="textarea" :rows="2"/>
@@ -118,6 +140,8 @@
     max_users: 1,
     expiredAtDate: Date.now() + 86400000, // 默认1天后
     expired_at: 0,
+    userExpiredAtDate: null, // 用户过期时间，默认永久
+    user_expired_at: 0,
     remark: '',
   })
   const createRules = {
@@ -147,6 +171,24 @@
   watch(() => page.value, getList)
   watch(() => pageSize.value, () => { page.value = 1; getList() })
 
+  // 设置邀请码过期时间
+  const setExpiredAt = (days) => {
+    if (days < 0) {
+      createForm.expiredAtDate = null
+    } else {
+      createForm.expiredAtDate = Date.now() + days * 86400000
+    }
+  }
+
+  // 设置用户过期时间
+  const setUserExpiredAt = (days) => {
+    if (days < 0) {
+      createForm.userExpiredAtDate = null
+    } else {
+      createForm.userExpiredAtDate = Date.now() + days * 86400000
+    }
+  }
+
   const generateCode = () => {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
     let result = ''
@@ -163,6 +205,7 @@
       code: createForm.code,
       max_users: 1,
       expired_at: createForm.expiredAtDate ? Math.floor(createForm.expiredAtDate / 1000) : 0,
+      user_expired_at: createForm.userExpiredAtDate ? Math.floor(createForm.userExpiredAtDate / 1000) : 0,
       remark: createForm.remark,
     }
     const res = await invitationCreate(payload).catch(_ => false)
@@ -172,6 +215,8 @@
       createForm.code = ''
       createForm.max_users = 1
       createForm.expiredAtDate = Date.now() + 86400000
+      createForm.userExpiredAtDate = null
+      createForm.user_expired_at = 0
       createForm.remark = ''
       getList()
     }

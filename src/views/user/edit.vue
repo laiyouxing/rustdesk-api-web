@@ -41,6 +41,13 @@
                         value-format="x"
                         :placeholder="T('ExpiredAtPlaceholder')"
                         style="width:100%"/>
+        <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap;">
+          <el-button size="small" @click="setExpiredAt(30)">1个月</el-button>
+          <el-button size="small" @click="setExpiredAt(90)">3个月</el-button>
+          <el-button size="small" @click="setExpiredAt(365)">1年</el-button>
+          <el-button size="small" @click="setExpiredAt(3650)">10年</el-button>
+          <el-button size="small" @click="setExpiredAt(-1)">永久</el-button>
+        </div>
       </el-form-item>
       <el-form-item :label="T('Remark')" prop="remark">
           <el-input v-model="form.remark"></el-input>
@@ -63,6 +70,14 @@
   const { form, item, getDetail, groupTreeData } = useGetDetail(route.params.id)
 
   const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id)
+
+  const setExpiredAt = (days) => {
+    if (days < 0) {
+      form.value.expiredAtDate = null
+    } else {
+      form.value.expiredAtDate = String(Date.now() + days * 86400000)
+    }
+  }
 
 </script>
 

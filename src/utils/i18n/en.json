@@ -1093,6 +1093,12 @@
   "ExpiredAtTip": {
     "One": "Leave empty for no expiry"
   },
+  "UserExpiredAt": {
+    "One": "User Expires At"
+  },
+  "UserExpiredAtTip": {
+    "One": "Leave empty for users created by this code to never expire"
+  },
   "UsageCount": {
     "One": "Used"
   },

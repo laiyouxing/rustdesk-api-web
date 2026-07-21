@@ -1109,6 +1109,12 @@
   "ExpiredAtTip": {
     "One": "留空表示永不过期"
   },
+  "UserExpiredAt": {
+    "One": "用户过期时间"
+  },
+  "UserExpiredAtTip": {
+    "One": "留空表示该邀请码创建的用户永不过期"
+  },
   "UsageCount": {
     "One": "使用次数"
   },
