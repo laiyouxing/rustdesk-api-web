@@ -129,3 +129,27 @@ export function register (data) {
     data,
   })
 }
+
+// 邀请码管理
+export function invitationList (params) {
+  return request({
+    url: '/invitation/list',
+    params,
+  })
+}
+
+export function invitationCreate (data) {
+  return request({
+    url: '/invitation/create',
+    method: 'post',
+    data,
+  })
+}
+
+export function invitationDelete (data) {
+  return request({
+    url: '/invitation/delete',
+    method: 'post',
+    data,
+  })
+}

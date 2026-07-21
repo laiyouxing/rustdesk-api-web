@@ -13,7 +13,10 @@ export function useGetDetail (id) {
   const getDetail = async (id) => {
     const res = await detail(id)
     item.value = { ...res.data }
-    form.value = { ...res.data }
+    form.value = {
+      ...res.data,
+      expiredAtDate: res.data.expired_at > 0 ? String(res.data.expired_at * 1000) : null,
+    }
   }
   if (id > 0) {
     onMounted(_ => {getDetail(id)})
@@ -61,7 +64,15 @@ export function useSubmit (form, id) {
   }
 
   const submitUpdate = async () => {
-    const res = await update(form.value).catch(_ => false)
+    // 转换 expired_at
+    const payload = { ...form.value }
+    if (payload.expiredAtDate) {
+      payload.expired_at = Math.floor(Number(payload.expiredAtDate) / 1000)
+    } else {
+      payload.expired_at = 0
+    }
+    delete payload.expiredAtDate
+    const res = await update(payload).catch(_ => false)
     return res.code === 0
   }
   const submitFunc = id > 0 ? submitUpdate : submitCreate

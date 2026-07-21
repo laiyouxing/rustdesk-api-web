@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="login" type="primary" class="login-button">{{ T('Login') }}</el-button>
-          <el-button v-if="allowRegister" @click="register" class="login-button">{{ T('Register') }}</el-button>
+          <el-button v-if="allowRegister" @click="goRegister" class="login-button">{{ T('Register') }}</el-button>
         </el-form-item>
       </el-form>
 
@@ -123,6 +123,9 @@
       step.value = 'mfa'
       mfaInput.value = ''
       useRecovery.value = false
+    } else if (res.code === 101) {
+      // 显示后端返回的错误信息（如账户过期、用户被禁用等）
+      ElMessage.error(res.message || T('LoginFailed'))
     }
   }
   const submitMfa = async () => {
@@ -207,6 +210,7 @@
 
   const allowRegister = ref(false)
   const disablePwd = ref(false)
+  const inviteOnly = ref(false)
   const loadLoginOptions = async () => {
     try {
       const res = await loginOptions().catch(_ => false)
@@ -218,6 +222,7 @@
       }
       disablePwd.value = res.data.disable_pwd
       allowRegister.value = res.data.register
+      inviteOnly.value = res.data.invite_only
       if (res.data.need_captcha) {
         loadCaptcha()
       }
@@ -243,8 +248,8 @@
     }
   })
 
-  const register = () => {
-    router.push('/register')
+  const goRegister = () => {
+    router.push({ path: '/register', query: { invite_only: inviteOnly.value ? '1' : undefined } })
   }
 </script>
 

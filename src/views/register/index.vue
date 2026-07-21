@@ -19,6 +19,14 @@
           <el-input v-model="form.confirm_password" type="password" @keyup.enter.native="submit" show-password
                     class="login-input"></el-input>
         </el-form-item>
+        <el-form-item :label="T('InviteCode')" v-if="showInviteField" :required="inviteOnly">
+          <el-input v-if="inviteOnly && !prefilledCode" v-model="form.invite_code" class="login-input" :placeholder="T('InviteCodePlaceholder')" />
+          <el-input v-else :model-value="form.invite_code" disabled class="login-input">
+            <template #append>
+              <el-tag type="success">{{ T('Active') }}</el-tag>
+            </template>
+          </el-input>
+        </el-form-item>
         <el-form-item label="">
           <el-button @click="submit" class="login-button" type="success">{{ T('Submit') }}</el-button>
           <el-button @click="toLogin" class="login-button">{{ T('ToLogin') }}</el-button>
@@ -29,7 +37,7 @@
 </template>
 
 <script setup>
-  import { reactive, ref } from 'vue'
+  import { reactive, ref, computed } from 'vue'
   import { ElMessage } from 'element-plus'
   import { T } from '@/utils/i18n'
   import { useRoute, useRouter } from 'vue-router'
@@ -37,15 +45,20 @@
   import { useUserStore } from '@/store/user'
   import { useAppStore } from '@/store/app'
 
+  const route = useRoute()
   const router = useRouter()
   const userStore = useUserStore()
+  const inviteOnly = computed(() => route.query.invite_only === '1')
+  const prefilledCode = computed(() => route.query.invite_code || '')
+  const showInviteField = computed(() => inviteOnly.value || !!prefilledCode.value)
   const form = reactive({
     username: '',
     email: '',
     password: '',
     confirm_password: '',
+    invite_code: prefilledCode.value,
   })
-  const rules = {
+  const rules = reactive({
     username: [
       { required: true, message: T('ParamRequired', { param: T('Username') }), trigger: 'blur' },
     ],
@@ -67,20 +80,30 @@
         }, trigger: 'blur',
       },
     ],
-  }
+  })
   const f = ref(null)
   const submit = async () => {
+    // 邀请模式下需要检查邀请码
+    if (inviteOnly.value && !form.invite_code) {
+      ElMessage.warning(T('InviteCodeRequired'))
+      return
+    }
     const v = await f.value.validate().catch(_ => false)
     if (!v) {
       return
     }
-    const res = await register(form).catch(_ => false)
-    if (!res) {
+    const res = await register(form)
+    if (!res || res.code !== 0) {
+      if (res && res.message) {
+        ElMessage.error(res.message)
+      } else {
+        ElMessage.error(T('OperationFailed'))
+      }
       return
     }
     userStore.saveUserData(res.data)
     useAppStore().loadConfig()
-    ElMessage.success('Submit')
+    ElMessage.success(T('RegisterSuccess'))
     router.push('/')
   }
   const toLogin = () => {

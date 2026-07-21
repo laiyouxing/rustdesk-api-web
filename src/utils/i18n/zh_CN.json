@@ -1060,5 +1060,71 @@
   },
   "ProcessTip": {
     "One": "提示"
+  },
+  "Invitation": {
+    "One": "邀请码管理"
+  },
+  "CreateInvitation": {
+    "One": "创建邀请码"
+  },
+  "CopyInviteLink": {
+    "One": "复制邀请链接"
+  },
+  "CopyLink": {
+    "One": "复制链接"
+  },
+  "LinkCopied": {
+    "One": "链接已复制到剪贴板"
+  },
+  "InviteCode": {
+    "One": "邀请码"
+  },
+  "InviteCodeRequired": {
+    "One": "请输入邀请码"
+  },
+  "InviteCodePlaceholder": {
+    "One": "留空自动生成"
+  },
+  "AutoGenerate": {
+    "One": "自动生成"
+  },
+  "MaxUsers": {
+    "One": "最大使用次数"
+  },
+  "MaxUsersPlaceholder": {
+    "One": "0 表示不限次数"
+  },
+  "MaxUsersFixedTip": {
+    "One": "限制每次只能使用一次"
+  },
+  "DefaultExpire1Day": {
+    "One": "默认 1 天后过期"
+  },
+  "ExpiredAt": {
+    "One": "过期时间"
+  },
+  "ExpiredAtPlaceholder": {
+    "One": "留空表示永不过期"
+  },
+  "ExpiredAtTip": {
+    "One": "留空表示永不过期"
+  },
+  "UsageCount": {
+    "One": "使用次数"
+  },
+  "Expired": {
+    "One": "已过期"
+  },
+  "UsedUp": {
+    "One": "已用完"
+  },
+  "Active": {
+    "One": "有效"
+  },
+  "AccountExpired": {
+    "One": "账户已过期，请联系管理员"
+  },
+  "RegisterSuccess": {
+    "One": "注册成功"
   }
 }

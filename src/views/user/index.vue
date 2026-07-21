@@ -18,6 +18,14 @@
         <el-table-column prop="username" :label="T('Username')" align="center"/>
         <el-table-column prop="email" :label="T('Email')" align="center"/>
         <el-table-column prop="nickname" :label="T('Nickname')" align="center"/>
+        <el-table-column prop="expired_at" :label="T('ExpiredAt')" width="180" align="center">
+          <template #default="{row}">
+            <span v-if="row.expired_at > 0 && row.expired_at * 1000 < Date.now()"
+                  style="color: red; font-weight: bold;">{{ formatDate(row.expired_at) }}</span>
+            <span v-else-if="row.expired_at > 0">{{ formatDate(row.expired_at) }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="T('Group')" align="center">
           <template #default="{row}">
             <span v-if="row.group_id"> <el-tag>{{ listRes.groups?.find(g => g.id === row.group_id)?.name }} </el-tag> </span>
@@ -67,6 +75,12 @@
   import { update, mfaReset } from '@/api/user'
   import { ElMessageBox, ElMessage } from 'element-plus'
   import { onMounted, watch } from 'vue'
+
+  const formatDate = (ts) => {
+    if (!ts || ts <= 0) return '-'
+    const d = new Date(ts * 1000)
+    return d.toLocaleString()
+  }
   //列表
   const {
     listRes,

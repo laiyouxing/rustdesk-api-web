@@ -1044,5 +1044,71 @@
   },
   "ProcessTip": {
     "One": "Tip"
+  },
+  "Invitation": {
+    "One": "Invitation"
+  },
+  "CreateInvitation": {
+    "One": "Create Invitation"
+  },
+  "CopyInviteLink": {
+    "One": "Copy Invite Link"
+  },
+  "CopyLink": {
+    "One": "Copy Link"
+  },
+  "LinkCopied": {
+    "One": "Link copied to clipboard"
+  },
+  "InviteCode": {
+    "One": "Invite Code"
+  },
+  "InviteCodeRequired": {
+    "One": "Invite code is required"
+  },
+  "InviteCodePlaceholder": {
+    "One": "Leave empty to auto-generate"
+  },
+  "AutoGenerate": {
+    "One": "Auto Generate"
+  },
+  "MaxUsers": {
+    "One": "Max Uses"
+  },
+  "MaxUsersPlaceholder": {
+    "One": "0 means unlimited"
+  },
+  "MaxUsersFixedTip": {
+    "One": "Single-use only"
+  },
+  "DefaultExpire1Day": {
+    "One": "Default expires in 1 day"
+  },
+  "ExpiredAt": {
+    "One": "Expires At"
+  },
+  "ExpiredAtPlaceholder": {
+    "One": "Leave empty for no expiry"
+  },
+  "ExpiredAtTip": {
+    "One": "Leave empty for no expiry"
+  },
+  "UsageCount": {
+    "One": "Used"
+  },
+  "Expired": {
+    "One": "Expired"
+  },
+  "UsedUp": {
+    "One": "Used Up"
+  },
+  "Active": {
+    "One": "Active"
+  },
+  "AccountExpired": {
+    "One": "Account has expired, please contact the administrator"
+  },
+  "RegisterSuccess": {
+    "One": "Registration successful"
   }
 }

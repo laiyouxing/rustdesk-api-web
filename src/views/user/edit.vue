@@ -35,6 +35,13 @@
                    :inactive-value="DISABLE_STATUS"
         ></el-switch>
       </el-form-item>
+      <el-form-item :label="T('ExpiredAt')" prop="expiredAtDate">
+        <el-date-picker v-model="form.expiredAtDate"
+                        type="datetime"
+                        value-format="x"
+                        :placeholder="T('ExpiredAtPlaceholder')"
+                        style="width:100%"/>
+      </el-form-item>
       <el-form-item :label="T('Remark')" prop="remark">
           <el-input v-model="form.remark"></el-input>
       </el-form-item>
