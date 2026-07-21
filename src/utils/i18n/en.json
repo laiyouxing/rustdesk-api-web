@@ -1067,7 +1067,7 @@
     "One": "Invite code is required"
   },
   "InviteCodePlaceholder": {
-    "One": "Leave empty to auto-generate"
+    "One": "Please contact admin to get one"
   },
   "AutoGenerate": {
     "One": "Auto Generate"
