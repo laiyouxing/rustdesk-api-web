@@ -1332,6 +1332,9 @@
   "UsedBy": {
     "One": "使用者"
   },
+  "UsedByName": {
+    "One": "使用账户"
+  },
   "Action": {
     "One": "操作"
   },

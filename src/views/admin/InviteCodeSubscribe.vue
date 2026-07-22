@@ -44,9 +44,9 @@
             <el-tag :type="statusTag(row.status)" size="small">{{ statusText(row.status) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="used_by" :label="T('UsedBy')" width="80" align="center">
+        <el-table-column prop="used_by_name" :label="T('UsedByName')" width="140" align="center">
           <template #default="{ row }">
-            {{ row.used_by || '-' }}
+            {{ row.used_by_name || '-' }}
           </template>
         </el-table-column>
         <el-table-column prop="expire_at" :label="T('ExpireAt')" width="170" align="center">
@@ -106,7 +106,7 @@
     </el-card>
 
     <!-- 手动生成弹窗 -->
-    <el-dialog v-model="showCreate" title="生成授权码" width="440px">
+    <el-dialog v-model="showCreate" title="生成授权码" width="520px">
       <el-form label-position="top">
         <el-form-item label="时长（选后自动填充天数）">
           <div class="plan-grid">
@@ -114,17 +114,23 @@
               v-for="p in planOptions"
               :key="p.key"
               class="plan-card"
-              :class="{ active: createForm.planKey === p.key }"
+              :class="{ active: createForm.planKey === p.key, forever: p.key === 'forever' }"
               @click="selectPlan(p)"
             >
-              <el-icon class="plan-icon"><el-icon-timer /></el-icon>
+              <el-icon class="plan-icon">
+                <el-icon-star-filled v-if="p.key === 'forever'" />
+                <el-icon-timer v-else />
+              </el-icon>
               <div class="plan-name">{{ p.name }}</div>
-              <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
+              <div class="plan-price" :class="{ 'forever-price': p.key === 'forever' }">
+                <template v-if="p.key === 'forever'">永久</template>
+                <template v-else>¥{{ (p.price_cents / 100).toFixed(2) }}</template>
+              </div>
             </div>
           </div>
         </el-form-item>
         <el-form-item label="有效天数">
-          <el-input-number v-model="createForm.expire_days" :min="1" :max="3650" style="width:100%" />
+          <el-input-number v-model="createForm.expire_days" :min="1" :max="99999" style="width:100%" />
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="createForm.remark" type="textarea" :rows="2" placeholder="可选" />
@@ -300,6 +306,9 @@ const handleExport = async () => {
 const selectPlan = (p) => {
   createForm.planKey = p.key
   createForm.expire_days = p.period_days
+  if (p.key === 'forever') {
+    createForm.expire_days = 99999
+  }
 }
 
 const submitBatchCreate = async () => {
@@ -359,6 +368,8 @@ onMounted(async () => {
       { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
     ]
   }
+  // 追加永久选项（仅管理员手动选择）
+  planOptions.value.push({ key: 'forever', name: '永久', price_cents: 0, period_days: 99999 })
 })
 </script>
 
@@ -382,8 +393,8 @@ onMounted(async () => {
 }
 .plan-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
 }
 .plan-card {
   border: 2px solid #e4e7ed;
@@ -402,6 +413,22 @@ onMounted(async () => {
 }
 .plan-card.active .plan-icon {
   color: #409eff;
+}
+.plan-card.forever {
+  border-color: #e6a23c;
+  background: linear-gradient(135deg, #fdf6ec 0%, #fefcef 100%);
+}
+.plan-card.forever.active {
+  border-color: #e6a23c;
+  background: linear-gradient(135deg, #faecd8 0%, #fef5e7 100%);
+  box-shadow: 0 0 12px rgba(230, 162, 60, 0.3);
+}
+.plan-card.forever .plan-icon {
+  font-size: 42px;
+  color: #e6a23c;
+}
+.plan-card.forever .plan-price {
+  color: #e6a23c;
 }
 .plan-icon {
   font-size: 36px;

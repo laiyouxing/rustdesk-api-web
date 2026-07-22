@@ -1316,6 +1316,9 @@
   "UsedBy": {
     "One": "Used By"
   },
+  "UsedByName": {
+    "One": "Used Account"
+  },
   "Action": {
     "One": "Action"
   },

@@ -38,7 +38,7 @@
               </el-descriptions-item>
               <el-descriptions-item :label="T('SubscribeDaysLeft')">
                 <span v-if="mine.status === 'active'" class="days-left" :class="{ urgent: mine.days_left <= 3 }">
-                  {{ mine.days_left }} {{ T('Days') }}
+                  {{ T('Days', { param: mine.days_left }) }}
                 </span>
                 <span v-else>-</span>
               </el-descriptions-item>
