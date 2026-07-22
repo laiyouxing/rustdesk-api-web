@@ -4,9 +4,9 @@
       <el-form inline label-width="80px">
         <el-form-item :label="T('Status')">
           <el-select v-model="filter.status" :placeholder="T('All')" clearable style="width:140px">
-            <el-option label="unused" value="unused" />
-            <el-option label="used" value="used" />
-            <el-option label="revoked" value="revoked" />
+            <el-option :label="T('StatusUnused')" value="unused" />
+            <el-option :label="T('StatusUsed')" value="used" />
+            <el-option :label="T('StatusRevoked')" value="revoked" />
           </el-select>
         </el-form-item>
         <el-form-item :label="T('Plan')">
@@ -41,7 +41,7 @@
         </el-table-column>
         <el-table-column prop="status" :label="T('Status')" width="100" align="center">
           <template #default="{ row }">
-            <el-tag :type="statusTag(row.status)" size="small">{{ row.status }}</el-tag>
+            <el-tag :type="statusTag(row.status)" size="small">{{ statusText(row.status) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="used_by" :label="T('UsedBy')" width="80" align="center">
@@ -117,6 +117,7 @@
               :class="{ active: createForm.planKey === p.key }"
               @click="selectPlan(p)"
             >
+              <el-icon class="plan-icon"><el-icon-timer /></el-icon>
               <div class="plan-name">{{ p.name }}</div>
               <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
             </div>
@@ -199,6 +200,10 @@ const batchResult = ref([])
 const statusTag = (s) => {
   const map = { unused: 'info', used: 'success', revoked: 'danger' }
   return map[s] || 'info'
+}
+const statusText = (s) => {
+  const map = { unused: '未使用', used: '已使用', revoked: '已失效' }
+  return map[s] || s
 }
 
 const formatTime = (t) => {
@@ -383,19 +388,28 @@ onMounted(async () => {
 .plan-card {
   border: 2px solid #e4e7ed;
   border-radius: 10px;
-  padding: 12px;
-  text-align: center;
+  padding: 16px 12px 14px;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 .plan-card.active {
   border-color: #409eff;
   background: #ecf5ff;
 }
+.plan-card.active .plan-icon {
+  color: #409eff;
+}
+.plan-icon {
+  font-size: 36px;
+  color: #909399;
+}
 .plan-name {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
 }
 .plan-price {
   font-size: 18px;

@@ -295,6 +295,18 @@
   "Export": {
     "One": "Export"
   },
+  "BatchCreate": {
+    "One": "Batch Create"
+  },
+  "StatusUnused": {
+    "One": "Unused"
+  },
+  "StatusUsed": {
+    "One": "Used"
+  },
+  "StatusRevoked": {
+    "One": "Revoked"
+  },
   "AddToAddressBook": {
     "One": "Add To Address Book"
   },
@@ -1046,10 +1058,10 @@
     "One": "Tip"
   },
   "Invitation": {
-    "One": "Invitation"
+    "One": "Authorization Code"
   },
   "CreateInvitation": {
-    "One": "Create Invitation"
+    "One": "Create Authorization Code"
   },
   "CopyInviteLink": {
     "One": "Copy Invite Link"
@@ -1069,9 +1081,7 @@
   "InviteCodePlaceholder": {
     "One": "Please contact admin to get one"
   },
-  "BatchCreateInvitation": {
-    "One": "Batch Generate Invite Codes"
-  },
+
   "GenerateCount": {
     "One": "Count"
   },
@@ -1295,7 +1305,7 @@
     "One": "Month"
   },
   "InviteCodeMgmt": {
-    "One": "Invite Codes (Subscription)"
+    "One": "Auth Code (Subscription)"
   },
   "All": {
     "One": "All"
@@ -1313,7 +1323,7 @@
     "One": "Pro · {days}d"
   },
   "AdminInviteCode": {
-    "One": "Invite Codes"
+    "One": "Authorization Code"
   },
   "SubscribeInviteCodes": {
     "One": "Auth Codes"

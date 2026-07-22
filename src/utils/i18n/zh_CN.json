@@ -287,6 +287,18 @@
   "Export": {
     "One": "导出"
   },
+  "BatchCreate": {
+    "One": "批量生成"
+  },
+  "StatusUnused": {
+    "One": "未使用"
+  },
+  "StatusUsed": {
+    "One": "已使用"
+  },
+  "StatusRevoked": {
+    "One": "已失效"
+  },
   "AddToAddressBook": {
     "One": "添加到地址簿"
   },
@@ -1062,10 +1074,10 @@
     "One": "提示"
   },
   "Invitation": {
-    "One": "邀请码管理"
+    "One": "授权码管理"
   },
   "CreateInvitation": {
-    "One": "创建邀请码"
+    "One": "创建授权码"
   },
   "CopyInviteLink": {
     "One": "复制邀请链接"
@@ -1077,17 +1089,15 @@
     "One": "链接已复制到剪贴板"
   },
   "InviteCode": {
-    "One": "邀请码"
+    "One": "授权码"
   },
   "InviteCodeRequired": {
-    "One": "请输入邀请码"
+    "One": "请输入授权码"
   },
   "InviteCodePlaceholder": {
     "One": "请联系管理员获取"
   },
-  "BatchCreateInvitation": {
-    "One": "批量生成邀请码"
-  },
+
   "GenerateCount": {
     "One": "生成数量"
   },
@@ -1095,13 +1105,13 @@
     "One": "最多 200 个"
   },
   "GeneratedCodes": {
-    "One": "生成的邀请码"
+    "One": "生成的授权码"
   },
   "CopyAll": {
     "One": "复制全部"
   },
   "AllCopied": {
-    "One": "已复制全部邀请码"
+    "One": "已复制全部授权码"
   },
   "AutoGenerate": {
     "One": "自动生成"
@@ -1131,7 +1141,7 @@
     "One": "用户过期时间"
   },
   "UserExpiredAtTip": {
-    "One": "留空表示该邀请码创建的用户永不过期"
+    "One": "留空表示该授权码创建的用户永不过期"
   },
   "UsageCount": {
     "One": "使用次数"
@@ -1209,10 +1219,10 @@
     "One": "支付成功！"
   },
   "SubscribeCodeTitle": {
-    "One": "您的邀请码如下，请妥善保管："
+    "One": "您的授权码如下，请妥善保管："
   },
   "SubscribeCodeHint": {
-    "One": "点击邀请码可复制，您也可以稍后在「我的订阅」中查看"
+    "One": "点击授权码可复制，您也可以稍后在「我的订阅」中查看"
   },
   "SubscribeSelectDuration": {
     "One": "选择时长"
@@ -1221,16 +1231,16 @@
     "One": "创建订单失败"
   },
   "SubscribeRedeemCode": {
-    "One": "兑换邀请码"
+    "One": "兑换授权码"
   },
   "SubscribeInputCode": {
-    "One": "请输入邀请码"
+    "One": "请输入授权码"
   },
   "SubscribeInputCodeFirst": {
-    "One": "请先输入邀请码"
+    "One": "请先输入授权码"
   },
   "SubscribeCodePlaceholder": {
-    "One": "32 位邀请码"
+    "One": "32 位授权码"
   },
   "SubscribeRedeem": {
     "One": "兑换"
@@ -1248,19 +1258,19 @@
     "One": "有效天数"
   },
   "CodeNotFound": {
-    "One": "邀请码不存在"
+    "One": "授权码不存在"
   },
   "CodeUsed": {
-    "One": "邀请码已被使用"
+    "One": "授权码已被使用"
   },
   "CodeRevoked": {
-    "One": "邀请码已被撤销"
+    "One": "授权码已被撤销"
   },
   "CodeExpired": {
-    "One": "邀请码已过期"
+    "One": "授权码已过期"
   },
   "GenerateInviteCode": {
-    "One": "生成邀请码"
+    "One": "生成授权码"
   },
   "Generate": {
     "One": "生成"
@@ -1311,7 +1321,7 @@
     "One": "月"
   },
   "InviteCodeMgmt": {
-    "One": "邀请码管理（订阅）"
+    "One": "授权码管理（订阅）"
   },
   "All": {
     "One": "全部"
@@ -1329,13 +1339,13 @@
     "One": "专业版 · {days}天"
   },
   "AdminInviteCode": {
-    "One": "邀请码管理"
+    "One": "授权码管理"
   },
   "SubscribeInviteCodes": {
     "One": "授权码"
   },
   "RegistrationInviteCodes": {
-    "One": "注册邀请码"
+    "One": "注册授权码"
   },
   "AdminOrder": {
     "One": "订单管理"

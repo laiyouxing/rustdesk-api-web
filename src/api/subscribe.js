@@ -35,7 +35,7 @@ export function queryOrder (outTradeNo) {
 }
 
 /**
- * 订单号认领邀请码（兜底）
+ * 订单号认领授权码（兜底）
  * @param {string} outTradeNo - 商户订单号
  */
 export function claimCode (outTradeNo) {
@@ -47,8 +47,8 @@ export function claimCode (outTradeNo) {
 }
 
 /**
- * 兑换邀请码
- * @param {string} code - 邀请码
+ * 兑换授权码
+ * @param {string} code - 授权码
  */
 export function redeemCode (code) {
   return request({
@@ -71,7 +71,7 @@ export function getMine () {
 // ========== 后台管理 ==========
 
 /**
- * 分页查询邀请码列表
+ * 分页查询授权码列表
  * @param {Object} params - { status, plan, page, size }
  */
 export function adminListCodes (params) {
@@ -83,7 +83,7 @@ export function adminListCodes (params) {
 }
 
 /**
- * 手动生成邀请码
+ * 手动生成授权码
  * @param {Object} req - { plan, expire_days, remark }
  */
 export function adminCreateCode (req) {
@@ -95,8 +95,8 @@ export function adminCreateCode (req) {
 }
 
 /**
- * 失效邀请码
- * @param {number} id - 邀请码 ID
+ * 失效授权码
+ * @param {number} id - 授权码 ID
  */
 export function adminRevokeCode (id) {
   return request({
@@ -106,8 +106,8 @@ export function adminRevokeCode (id) {
 }
 
 /**
- * 删除邀请码
- * @param {number} id - 邀请码 ID
+ * 删除授权码
+ * @param {number} id - 授权码 ID
  */
 export function adminDeleteCode (id) {
   return request({
@@ -117,7 +117,7 @@ export function adminDeleteCode (id) {
 }
 
 /**
- * 导出邀请码 CSV
+ * 导出授权码 CSV
  * @param {Object} params - { status, plan }
  */
 export function adminExportCodes (params) {
@@ -137,7 +137,7 @@ export function adminExportCodes (params) {
  */
 export function adminListOrders (params) {
   return request({
-    url: '/admin/orders/list',
+    url: '/orders/list',
     method: 'get',
     params,
   })
@@ -149,7 +149,7 @@ export function adminListOrders (params) {
  */
 export function adminConfirmOrder (id) {
   return request({
-    url: `/admin/orders/${id}/confirm`,
+    url: `/orders/${id}/confirm`,
     method: 'post',
   })
 }
@@ -160,7 +160,7 @@ export function adminConfirmOrder (id) {
  */
 export function adminCloseOrder (id) {
   return request({
-    url: `/admin/orders/${id}/close`,
+    url: `/orders/${id}/close`,
     method: 'post',
   })
 }
@@ -173,7 +173,7 @@ export function adminCloseOrder (id) {
  */
 export function adminListSubscriptions (params) {
   return request({
-    url: '/admin/subscriptions/list',
+    url: '/subscriptions/list',
     method: 'get',
     params,
   })
@@ -185,7 +185,7 @@ export function adminListSubscriptions (params) {
  */
 export function adminExtendSubscription (data) {
   return request({
-    url: '/admin/subscriptions/extend',
+    url: '/subscriptions/extend',
     method: 'post',
     data,
   })

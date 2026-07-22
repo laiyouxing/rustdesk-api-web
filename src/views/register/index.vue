@@ -86,7 +86,7 @@
   })
   const f = ref(null)
   const submit = async () => {
-    // 邀请模式下需要检查邀请码
+    // 邀请模式下需要检查授权码
     if (inviteOnly.value && !form.invite_code) {
       ElMessage.warning(T('InviteCodeRequired'))
       return

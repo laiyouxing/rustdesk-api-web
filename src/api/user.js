@@ -130,34 +130,25 @@ export function register (data) {
   })
 }
 
-// 邀请码管理
+// 授权码管理（新 InviteCode API）
 export function invitationList (params) {
   return request({
-    url: '/invitation/list',
+    url: '/invite-codes',
     params,
   })
 }
 
 export function invitationCreate (data) {
   return request({
-    url: '/invitation/create',
+    url: '/invite-codes',
     method: 'post',
     data,
   })
 }
 
-export function invitationDelete (data) {
+export function invitationRevoke (id) {
   return request({
-    url: '/invitation/delete',
+    url: `/invite-codes/${id}/revoke`,
     method: 'post',
-    data,
-  })
-}
-
-export function invitationBatchCreate (data) {
-  return request({
-    url: '/invitation/batchCreate',
-    method: 'post',
-    data,
   })
 }

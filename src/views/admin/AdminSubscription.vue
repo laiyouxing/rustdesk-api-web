@@ -79,6 +79,7 @@
               :class="{ active: extendSelectedKey === p.key }"
               @click="extendSelectedKey = p.key"
             >
+              <el-icon class="plan-icon"><el-icon-timer /></el-icon>
               <div class="plan-name">{{ p.name }}</div>
               <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
             </div>
@@ -216,19 +217,28 @@ onMounted(async () => {
 .plan-card {
   border: 2px solid #e4e7ed;
   border-radius: 10px;
-  padding: 12px;
-  text-align: center;
+  padding: 16px 12px 14px;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 .plan-card.active {
   border-color: #409eff;
   background: #ecf5ff;
 }
+.plan-card.active .plan-icon {
+  color: #409eff;
+}
+.plan-icon {
+  font-size: 36px;
+  color: #909399;
+}
 .plan-name {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
 }
 .plan-price {
   font-size: 18px;

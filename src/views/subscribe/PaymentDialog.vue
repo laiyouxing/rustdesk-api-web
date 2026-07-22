@@ -114,7 +114,7 @@
       </div>
     </template>
 
-    <!-- 步骤3：支付成功，展示邀请码 -->
+    <!-- 步骤3：支付成功，展示授权码 -->
     <template v-if="step === 'success'">
       <div class="success-section">
         <el-result icon="success" :title="T('SubscribeSuccess')">
