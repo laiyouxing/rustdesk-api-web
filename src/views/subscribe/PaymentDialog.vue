@@ -114,11 +114,8 @@ const showTag = computed(() => true)
 
 const qrImageSrc = computed(() => {
   if (!qrPayload.value) return ''
-  // 如果qrPayload已经是完整URL则直接显示，否则当成二维码文本内容生成
-  if (qrPayload.value.startsWith('http://') || qrPayload.value.startsWith('https://')) {
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrPayload.value)}`
-  }
-  return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrPayload.value)}`
+  // 后端返回的是收款码图片 URL，直接显示
+  return qrPayload.value
 })
 
 const formatAmount = (cents) => {
@@ -133,7 +130,7 @@ const handleCreateOrder = async () => {
   }
   creating.value = true
   try {
-    const res = await createOrder(channel.value, selectedPlan.value)
+    const res = await createOrder(channel.value)
     if (res.code) {
       ElMessage.error(res.message || T('SubscribeCreateFailed'))
       return

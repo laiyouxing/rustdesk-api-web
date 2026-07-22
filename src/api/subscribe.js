@@ -3,13 +3,12 @@ import request from '@/utils/request'
 /**
  * 创建订阅订单
  * @param {string} channel - 支付渠道: wechat | alipay
- * @param {string} plan - 套餐标识，缺省 "pro"
  */
-export function createOrder (channel, plan = 'pro') {
+export function createOrder (channel) {
   return request({
     url: '/subscribe/create-order',
     method: 'post',
-    data: { channel, plan },
+    data: { channel },
   })
 }
 
