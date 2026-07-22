@@ -1128,6 +1128,9 @@
   "DefaultExpire1Day": {
     "One": "默认 1 天后过期"
   },
+  "ExpireAt": {
+    "One": "过期时间"
+  },
   "ExpiredAt": {
     "One": "过期时间"
   },

@@ -1112,6 +1112,9 @@
   "DefaultExpire1Day": {
     "One": "Default expires in 1 day"
   },
+  "ExpireAt": {
+    "One": "Expires At"
+  },
   "ExpiredAt": {
     "One": "Expires At"
   },
