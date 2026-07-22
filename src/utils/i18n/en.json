@@ -1339,5 +1339,92 @@
   },
   "AdminSubscription": {
     "One": "Paid Members"
+  },
+  "ID": {
+    "One": "ID"
+  },
+  "Cpu": {
+    "One": "CPU"
+  },
+  "Total": {
+    "One": "Total"
+  },
+  "Highest": {
+    "One": "Highest"
+  },
+  "Avg": {
+    "One": "Avg"
+  },
+  "Speed": {
+    "One": "Speed"
+  },
+  "BlockList": {
+    "One": "Block List"
+  },
+  "BlackList": {
+    "One": "Black List"
+  },
+  "AlwaysUseRelay": {
+    "One": "Always Use Relay"
+  },
+  "Usage": {
+    "One": "Usage"
+  },
+  "WebClient": {
+    "One": "Web Client"
+  },
+  "ColumnSetting": {
+    "One": "Column Settings"
+  },
+  "SendToId": {
+    "One": "Send To ID Server"
+  },
+  "SendToRelay": {
+    "One": "Send To Relay Server"
+  },
+  "Cmd": {
+    "One": "Cmd"
+  },
+  "Option": {
+    "One": "Option"
+  },
+  "Explain": {
+    "One": "Explain"
+  },
+  "Target": {
+    "One": "Target"
+  },
+  "OrderStatusPending": {
+    "One": "Pending"
+  },
+  "OrderStatusPaid": {
+    "One": "Paid"
+  },
+  "OrderStatusClosed": {
+    "One": "Closed"
+  },
+  "SubscribePermanent": {
+    "One": "Permanent"
+  },
+  "Binding": {
+    "One": "Binding"
+  },
+  "NoData": {
+    "One": "No Data"
+  },
+  "Size": {
+    "One": "Size"
+  },
+  "More": {
+    "One": "More"
+  },
+  "Client": {
+    "One": "Client"
+  },
+  "Example": {
+    "One": "Example"
+  },
+  "PlatformUA": {
+    "One": "Platform/UA"
   }
 }

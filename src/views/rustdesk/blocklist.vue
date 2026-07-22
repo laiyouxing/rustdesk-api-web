@@ -2,7 +2,7 @@
   <el-card class="simple-card" shadow="hover" v-loading="form.loading">
     <template #header>
       <div class="card-header">
-        <span>BLOCK_LIST</span>
+        <span>{{ T('BlockList') }}</span>
       </div>
     </template>
     <el-form :disabled="!canSend">
@@ -17,7 +17,7 @@
     </el-form>
     <el-dialog v-model="form.form_visible" :title="form.form_type">
       <el-form label-width="100px">
-        <el-form-item label="IP">
+        <el-form-item :label="T('Ip')">
           <el-input v-model="form.form_input"></el-input>
           <div>多个IP以 | 分割</div>
           <div v-if="form.form_type==='delete'">, 全部填 <strong>all</strong></div>

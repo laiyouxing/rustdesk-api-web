@@ -27,7 +27,7 @@
     <el-card class="list-body" shadow="hover">
       <el-table :data="listRes.list" v-loading="listRes.loading" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" align="center"></el-table-column>
-        <el-table-column prop="id" label="ID" align="center" width="200">
+        <el-table-column prop="id" :label="T('ID')" align="center" width="200">
           <template #default="{row}">
             <div>
               <PlatformIcons :name="platformList.find(p=>p.label===row.platform)?.icon" style="width: 20px;height: 20px;display: inline-block" color="var(--basicBlack)"/>
@@ -56,7 +56,7 @@
         <el-table-column :label="T('Actions')" align="center" class-name="table-actions" width="600" fixed="right">
           <template #default="{row}">
             <el-button type="success" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
-            <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">Web Client</el-button>
+            <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">{{ T('WebClient') }}</el-button>
             <el-button v-if="appStore.setting.appConfig.web_client" type="primary" @click="toShowShare(row)">{{ T('ShareByWebClient') }}</el-button>
             <el-button @click="toEdit(row)">{{ T('Edit') }}</el-button>
             <el-button type="danger" @click="del(row)">{{ T('Delete') }}</el-button>
@@ -81,7 +81,7 @@
             <el-option v-for="c in collectionListResForUpdate.list" :key="c.id" :label="c.name" :value="c.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="ID" prop="id" required>
+        <el-form-item :label="T('ID')" prop="id" required>
           <el-input v-model="formData.id"></el-input>
         </el-form-item>
         <el-form-item :label="T('Username')" prop="username">

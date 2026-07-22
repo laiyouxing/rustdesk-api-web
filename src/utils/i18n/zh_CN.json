@@ -1355,5 +1355,92 @@
   },
   "AdminSubscription": {
     "One": "付费会员"
+  },
+  "ID": {
+    "One": "ID"
+  },
+  "Cpu": {
+    "One": "CPU"
+  },
+  "Total": {
+    "One": "总计"
+  },
+  "Highest": {
+    "One": "最高"
+  },
+  "Avg": {
+    "One": "平均"
+  },
+  "Speed": {
+    "One": "速率"
+  },
+  "BlockList": {
+    "One": "阻断列表"
+  },
+  "BlackList": {
+    "One": "黑名单"
+  },
+  "AlwaysUseRelay": {
+    "One": "始终使用中继"
+  },
+  "Usage": {
+    "One": "使用统计"
+  },
+  "WebClient": {
+    "One": "网页客户端"
+  },
+  "ColumnSetting": {
+    "One": "列设置"
+  },
+  "SendToId": {
+    "One": "发送到ID服务器"
+  },
+  "SendToRelay": {
+    "One": "发送到中继服务器"
+  },
+  "Cmd": {
+    "One": "命令"
+  },
+  "Option": {
+    "One": "选项"
+  },
+  "Explain": {
+    "One": "说明"
+  },
+  "Target": {
+    "One": "目标"
+  },
+  "OrderStatusPending": {
+    "One": "待支付"
+  },
+  "OrderStatusPaid": {
+    "One": "已支付"
+  },
+  "OrderStatusClosed": {
+    "One": "已关闭"
+  },
+  "SubscribePermanent": {
+    "One": "永久"
+  },
+  "Binding": {
+    "One": "绑定"
+  },
+  "NoData": {
+    "One": "暂无数据"
+  },
+  "Size": {
+    "One": "大小"
+  },
+  "More": {
+    "One": "更多"
+  },
+  "Client": {
+    "One": "客户端"
+  },
+  "Example": {
+    "One": "示例"
+  },
+  "PlatformUA": {
+    "One": "平台/UA"
   }
 }

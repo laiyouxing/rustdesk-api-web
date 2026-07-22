@@ -4,9 +4,9 @@
       <el-form inline label-width="80px">
         <el-form-item :label="T('Status')">
           <el-select v-model="filter.status" :placeholder="T('All')" clearable style="width:130px">
-            <el-option label="pending" value="pending" />
-            <el-option label="paid" value="paid" />
-            <el-option label="closed" value="closed" />
+            <el-option :label="T('OrderStatusPending')" value="pending" />
+            <el-option :label="T('OrderStatusPaid')" value="paid" />
+            <el-option :label="T('OrderStatusClosed')" value="closed" />
           </el-select>
         </el-form-item>
         <el-form-item :label="T('Keyword')">
@@ -20,7 +20,7 @@
 
     <el-card shadow="hover" class="list-card">
       <el-table :data="list" v-loading="loading" border stripe>
-        <el-table-column prop="id" label="ID" width="60" align="center" />
+        <el-table-column prop="id" :label="T('ID')" width="60" align="center" />
         <el-table-column prop="out_trade_no" label="订单号" min-width="220" />
         <el-table-column prop="username" label="用户" width="120" align="center" />
         <el-table-column label="时长" width="80" align="center">
@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
           <template #default="{ row }">
-            <el-tag :type="statusType(row.status)" size="small">{{ row.status }}</el-tag>
+            <el-tag :type="statusType(row.status)" size="small">{{ statusLabel(row.status) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="下单时间" width="170" align="center">
@@ -95,6 +95,12 @@ const statusType = (s) => {
   if (s === 'pending') return 'warning'
   if (s === 'closed') return 'info'
   return ''
+}
+const statusLabel = (s) => {
+  if (s === 'paid') return T('OrderStatusPaid')
+  if (s === 'pending') return T('OrderStatusPending')
+  if (s === 'closed') return T('OrderStatusClosed')
+  return s
 }
 
 const formatTime = (t) => {

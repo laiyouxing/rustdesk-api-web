@@ -7,7 +7,7 @@
         <el-button :type="quickFilter === 'offline' ? 'danger' : 'default'" size="small" @click="setQuickFilter('offline')">离线</el-button>
       </div>
       <el-form inline label-width="150px">
-        <el-form-item label="ID">
+        <el-form-item :label="T('ID')">
           <el-input v-model="listQuery.id" clearable/>
         </el-form-item>
         <el-form-item :label="T('Hostname')">
@@ -36,12 +36,12 @@
     <el-card class="list-body" shadow="hover">
       <el-table :data="listRes.list" v-loading="listRes.loading" border size="small" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column prop="id" label="ID" align="center" width="150">
+        <el-table-column prop="id" :label="T('ID')" align="center" width="150">
           <template #default="{row}">
             <span>{{ row.id }} <el-icon @click="handleClipboard(row.id, $event)"><CopyDocument/></el-icon></span>
           </template>
         </el-table-column>
-        <el-table-column prop="cpu" label="CPU" align="center" width="100" show-overflow-tooltip/>
+        <el-table-column prop="cpu" :label="T('Cpu')" align="center" width="100" show-overflow-tooltip/>
         <el-table-column prop="hostname" :label="T('Hostname')" align="center" width="120"/>
         <el-table-column prop="memory" :label="T('Memory')" align="center" width="120"/>
         <el-table-column prop="os" :label="T('Os')" align="center" width="120" show-overflow-tooltip/>
@@ -62,7 +62,7 @@
         <el-table-column :label="T('Actions')" align="center" width="500" class-name="table-actions" fixed="right">
           <template #default="{row}">
             <el-button type="success" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
-            <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">Web Client</el-button>
+            <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">{{ T('WebClient') }}</el-button>
             <el-button type="primary" @click="toAddressBook(row)">{{ T('AddToAddressBook') }}</el-button>
             <el-button @click="toView(row)">{{ T('View') }}</el-button>
             <!--            <el-button type="danger" @click="del(row)">{{ T('Delete') }}</el-button>-->
@@ -81,7 +81,7 @@
     </el-card>
     <el-dialog v-model="formVisible" :title="T('Information')" width="800" :style="{ textAlign: 'center' }">
       <el-form class="dialog-form" ref="form" :model="formData" label-width="120px">
-        <el-form-item label="ID" prop="id">
+        <el-form-item :label="T('ID')" prop="id">
           <el-input v-model="formData.id" disabled></el-input>
         </el-form-item>
         <el-form-item :label="T('Username')" prop="username">
@@ -90,7 +90,7 @@
         <el-form-item :label="T('Hostname')" prop="hostname">
           <el-input v-model="formData.hostname" disabled></el-input>
         </el-form-item>
-        <el-form-item label="CPU" prop="cpu">
+        <el-form-item :label="T('Cpu')" prop="cpu">
           <el-input v-model="formData.cpu" disabled></el-input>
         </el-form-item>
         <el-form-item :label="T('Memory')" prop="memory">
@@ -116,7 +116,7 @@
             <el-option v-for="c in collectionListResForUpdate.list" :key="c.id" :label="c.name" :value="c.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="ID" prop="id" required>
+        <el-form-item :label="T('ID')" prop="id" required>
           <el-input v-model="ABFormData.id"></el-input>
         </el-form-item>
         <el-form-item :label="T('Username')" prop="username">

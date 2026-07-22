@@ -10,7 +10,7 @@
     </el-card>
     <el-card class="list-body" shadow="hover">
       <el-table :data="listRes.list" v-loading="listRes.loading" border>
-        <el-table-column prop="id" label="ID" align="center"/>
+        <el-table-column prop="id" :label="T('ID')" align="center"/>
         <el-table-column prop="op" :label="T('IdP')" align="center"/>
         <el-table-column prop="oauth_type" :label="T('Type')" align="center"/>
         <el-table-column prop="auto_register" :label="T('AutoRegister')" align="center"/>
@@ -37,7 +37,7 @@
     </el-card>
     <el-dialog v-model="formVisible" :title="!formData.id?T('Create') :T('Update')" width="800">
       <el-form class="dialog-form" ref="form" :model="formData" :rules="rules" label-width="120px">
-        <el-form-item label="Type" prop="oauth_type">
+        <el-form-item :label="T('Type')" prop="oauth_type">
           <el-radio-group v-model="formData.oauth_type" :disabled="!!formData.id">
             <el-radio v-for="item in types" :key="item.value" :value="item.value" style="display: block">
               {{ item.label }}

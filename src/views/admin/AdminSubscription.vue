@@ -4,10 +4,10 @@
       <el-form inline label-width="100px">
         <el-form-item :label="T('Status')">
           <el-select v-model="filter.status" :placeholder="T('All')" clearable style="width:140px">
-            <el-option label="active" value="active" />
-            <el-option label="expired" value="expired" />
-            <el-option label="permanent" value="permanent" />
-            <el-option label="none" value="none" />
+            <el-option :label="T('SubscribeActive')" value="active" />
+            <el-option :label="T('SubscribeExpired')" value="expired" />
+            <el-option :label="T('SubscribePermanent')" value="permanent" />
+            <el-option :label="T('SubscribeNone')" value="none" />
           </el-select>
         </el-form-item>
         <el-form-item :label="T('Keyword')">
@@ -21,7 +21,7 @@
 
     <el-card shadow="hover" class="list-card">
       <el-table :data="list" v-loading="loading" border stripe>
-        <el-table-column prop="id" label="ID" width="60" align="center" />
+        <el-table-column prop="id" :label="T('ID')" width="60" align="center" />
         <el-table-column prop="username" label="用户名" width="150" />
         <el-table-column prop="subscription_plan" label="套餐" width="80" align="center">
           <template #default="{ row }">

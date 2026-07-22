@@ -7,7 +7,7 @@
         <el-button :type="quickFilter === 'offline' ? 'danger' : 'default'" size="small" @click="setQuickFilter('offline')">离线</el-button>
       </div>
       <el-form inline label-width="60px">
-        <el-form-item label="ID">
+        <el-form-item :label="T('ID')">
           <el-input v-model="listQuery.id" clearable/>
         </el-form-item>
         <el-form-item :label="T('Hostname')">
@@ -27,7 +27,7 @@
         <el-form-item :label="T('Username')">
           <el-input v-model="listQuery.username" clearable/>
         </el-form-item>
-        <el-form-item label="IP">
+        <el-form-item :label="T('Ip')">
           <el-input v-model="listQuery.ip" clearable/>
         </el-form-item>
         <el-form-item>
@@ -75,12 +75,12 @@
         <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border size="small" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center"/>
           <template v-for="c in visibleColumns.filter(cc => cc.visible)" :key="c">
-            <el-table-column v-if="c.name==='id'" prop="id" label="ID" align="center" width="150">
+            <el-table-column v-if="c.name==='id'" prop="id" :label="T('ID')" align="center" width="150">
               <template #default="{row}">
                 <span>{{ row.id }} <el-icon @click="handleClipboard(row.id, $event)"><CopyDocument/></el-icon></span>
               </template>
             </el-table-column>
-            <el-table-column v-if="c.name==='cpu'" prop="cpu" label="CPU" align="center" width="100" show-overflow-tooltip/>
+            <el-table-column v-if="c.name==='cpu'" prop="cpu" :label="T('Cpu')" align="center" width="100" show-overflow-tooltip/>
             <el-table-column v-if="c.name==='hostname'" prop="hostname" :label="T('Hostname')" align="center" width="120"/>
             <el-table-column v-if="c.name==='memory'" prop="memory" :label="T('Memory')" align="center" width="120"/>
             <el-table-column v-if="c.name==='os'" prop="os" :label="T('Os')" align="center" width="120" show-overflow-tooltip/>
@@ -109,7 +109,7 @@
           <el-table-column :label="T('Actions')" align="center" width="500" class-name="table-actions" fixed="right">
             <template #default="{row}">
               <el-button type="success" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
-              <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">Web Client</el-button>
+              <el-button v-if="appStore.setting.appConfig.web_client" type="success" @click="toWebClientLink(row)">{{ T('WebClient') }}</el-button>
               <el-button type="primary" @click="toAddressBook(row)">{{ T('AddToAddressBook') }}</el-button>
               <el-button @click="toEdit(row)">{{ T('Edit') }}</el-button>
               <el-button type="danger" @click="del(row)">{{ T('Delete') }}</el-button>
@@ -130,12 +130,12 @@
             <span class="meta-item">{{ row.username || '-' }}</span>
             <span v-if="row.group_id" class="meta-item"><el-tag size="small">{{ groupListRes.list?.find(g => g.id === row.group_id)?.name }}</el-tag></span>
             <span class="meta-item">{{ row.version || '-' }}</span>
-            <span class="meta-item">IP: {{ row.last_online_ip || '-' }}</span>
+            <span class="meta-item">{{ T('Ip') }}: {{ row.last_online_ip || '-' }}</span>
             <span class="meta-item">{{ row.last_online_time ? timeAgo(row.last_online_time * 1000) : '-' }}</span>
           </div>
           <div class="card-actions">
             <el-button type="success" size="small" @click="connectByClient(row.id)">{{ T('Link') }}</el-button>
-            <el-button v-if="appStore.setting.appConfig.web_client" type="success" size="small" @click="toWebClientLink(row)">Web Client</el-button>
+            <el-button v-if="appStore.setting.appConfig.web_client" type="success" size="small" @click="toWebClientLink(row)">{{ T('WebClient') }}</el-button>
             <el-button type="primary" size="small" @click="toAddressBook(row)">{{ T('AddToAddressBook') }}</el-button>
             <el-button size="small" @click="toEdit(row)">{{ T('Edit') }}</el-button>
             <el-button type="danger" size="small" @click="del(row)">{{ T('Delete') }}</el-button>
@@ -154,7 +154,7 @@
     </el-card>
     <el-dialog v-model="formVisible" :title="!formData.row_id?T('Create'):T('Update')" width="800">
       <el-form class="dialog-form" ref="form" :model="formData" label-width="120px">
-        <el-form-item label="ID" prop="id" required>
+        <el-form-item :label="T('ID')" prop="id" required>
           <el-input v-model="formData.id"></el-input>
         </el-form-item>
         <el-form-item :label="T('Group')" prop="group_id">
@@ -173,7 +173,7 @@
         <el-form-item :label="T('Hostname')" prop="hostname">
           <el-input v-model="formData.hostname"></el-input>
         </el-form-item>
-        <el-form-item label="CPU" prop="cpu">
+        <el-form-item :label="T('Cpu')" prop="cpu">
           <el-input v-model="formData.cpu"></el-input>
         </el-form-item>
         <el-form-item :label="T('Memory')" prop="memory">
@@ -237,7 +237,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog v-model="columnSettingVisible" title="Column Setting">
+    <el-dialog v-model="columnSettingVisible" :title="T('ColumnSetting')">
       <div v-for="(row, key) in visibleColumns" :key="key" style="margin-bottom: 10px;display: flex;align-items: center">
         <div style="width: 200px">
           <el-checkbox v-model="row.visible" :label="true">{{ T(row.label) }}</el-checkbox>
@@ -605,7 +605,7 @@ onActivated(() => {
 
   const columnSettingVisible = ref(false)
   const allColumns = ref([
-    { name: 'id', visible: true, label: 'Id' },
+    { name: 'id', visible: true, label: 'ID' },
     { name: 'cpu', visible: true, label: 'Cpu' },
     { name: 'hostname', visible: true, label: 'Hostname' },
     { name: 'memory', visible: true, label: 'Memory' },

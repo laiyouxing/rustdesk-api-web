@@ -15,7 +15,7 @@
       stripe
       style="width: 100%"
     >
-      <el-table-column label="ID" prop="id" width="60" />
+      <el-table-column :label="T('ID')" prop="id" width="60" />
       <el-table-column label="授权码" prop="code" min-width="160" />
       <el-table-column label="套餐" width="100">
         <template slot-scope="{ row }">

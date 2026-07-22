@@ -6,7 +6,7 @@
         <span style="font-size: 16px; font-weight: 500;">{{ T('PublishNewVersion') }}</span>
       </div>
       <el-form inline label-width="80px">
-        <el-form-item label="Version">
+        <el-form-item :label="T('Version')">
           <el-input v-model="form.version" placeholder="1.4.8.2" style="width: 140px"></el-input>
         </el-form-item>
         <el-form-item :label="T('Platform')">
@@ -45,8 +45,8 @@
 
     <el-card class="list-body" shadow="hover" style="margin-top: 16px;">
       <el-table :data="listRes.list" v-loading="listRes.loading" border>
-        <el-table-column prop="id" label="ID" width="60" align="center"></el-table-column>
-        <el-table-column prop="version" label="Version" width="120" align="center">
+        <el-table-column prop="id" :label="T('ID')" width="60" align="center"></el-table-column>
+        <el-table-column prop="version" :label="T('Version')" width="120" align="center">
           <template #default="{row}">
             <strong>{{ row.version }}</strong>
           </template>
