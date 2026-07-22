@@ -259,12 +259,6 @@ export const asyncRoutes = [
         component: () => import('@/views/rustdesk/process_monitor.vue'),
       },
       {
-        path: '/invitation',
-        name: 'Invitation',
-        meta: { title: 'Invitation', icon: 'Link' },
-        component: () => import('@/views/invitation/index.vue'),
-      },
-      {
         path: '/inviteCodes',
         name: 'AdminInviteCode',
         meta: { title: 'AdminInviteCode', icon: 'Key' },
