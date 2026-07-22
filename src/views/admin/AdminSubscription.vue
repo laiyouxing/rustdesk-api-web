@@ -27,7 +27,7 @@
             <el-tag size="small">{{ row.subscription_plan || '-' }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="100" align="center">
+        <el-table-column label="会员状态" width="100" align="center">
           <template #default="{ row }">
             <el-tag :type="statusType(row.status)" size="small">{{ row.status }}</el-tag>
           </template>
@@ -64,8 +64,8 @@
       </div>
     </el-card>
 
-    <!-- 延长订阅弹窗 -->
-    <el-dialog v-model="extendVisible" title="延长订阅" width="420px" :close-on-click-modal="false">
+    <!-- 延长会员弹窗 -->
+    <el-dialog v-model="extendVisible" title="延长会员" width="420px" :close-on-click-modal="false">
       <el-form label-position="top">
         <el-form-item label="用户">
           <el-input :model-value="extendUser?.username" disabled />
@@ -130,7 +130,7 @@ const getList = async () => {
     list.value = data.data.list || []
     total.value = data.data.total || 0
   } catch (e) {
-    ElMessage.error('获取订阅列表失败')
+    ElMessage.error('获取会员列表失败')
   } finally {
     loading.value = false
   }
@@ -160,7 +160,7 @@ const handleExtend = async () => {
       ElMessage.error(data.message || '延长失败')
       return
     }
-    ElMessage.success(`已为用户 ${extendUser.value.username} 延长 ${extendDays.value} 天`)
+    ElMessage.success(`已为用户 ${extendUser.value.username} 延长 ${extendDays.value} 天会员`)
     extendVisible.value = false
     await getList()
   } catch (e) {
