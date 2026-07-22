@@ -1,14 +1,25 @@
 import request from '@/utils/request'
 
 /**
+ * 获取可选时长的定价列表
+ */
+export function getPlans () {
+  return request({
+    url: '/subscribe/plans',
+    method: 'get',
+  })
+}
+
+/**
  * 创建订阅订单
  * @param {string} channel - 支付渠道: wechat | alipay
+ * @param {string} planKey - 时长 key: 1m / 3m / 6m / 12m
  */
-export function createOrder (channel) {
+export function createOrder (channel, planKey) {
   return request({
     url: '/subscribe/create-order',
     method: 'post',
-    data: { channel },
+    data: { channel, plan_key: planKey },
   })
 }
 

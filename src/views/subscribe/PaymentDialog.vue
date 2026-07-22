@@ -2,19 +2,26 @@
   <el-dialog
     :model-value="visible"
     :title="T('SubscribeUpgrade')"
-    width="480px"
+    width="520px"
     :close-on-click-modal="false"
     @update:model-value="$emit('update:visible', $event)"
     @closed="handleClosed"
   >
-    <!-- 步骤1：选择套餐和支付渠道 -->
+    <!-- 步骤1：选择时长和支付渠道 -->
     <template v-if="step === 'select'">
       <div class="plan-section">
-        <div class="plan-card" :class="{ active: selectedPlan === 'pro' }" @click="selectedPlan = 'pro'">
-          <div class="plan-name">Pro</div>
-          <div class="plan-price">{{ priceText }}</div>
-          <div class="plan-period">{{ T('SubscribeMonthly') }}</div>
-          <div class="plan-tag" v-if="showTag">{{ T('SubscribeRecommended') }}</div>
+        <div class="section-label">{{ T('SubscribeSelectDuration') }}</div>
+        <div class="plan-grid">
+          <div
+            v-for="p in plans"
+            :key="p.key"
+            class="plan-card"
+            :class="{ active: selectedPlanKey === p.key }"
+            @click="selectedPlanKey = p.key"
+          >
+            <div class="plan-name">{{ p.name }}</div>
+            <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
+          </div>
         </div>
       </div>
 
@@ -40,19 +47,18 @@
       </div>
     </template>
 
-    <!-- 步骤2：展示二维码/收银台链接 -->
+    <!-- 步骤2：展示收款码 -->
     <template v-if="step === 'qrcode'">
       <div class="qrcode-section">
         <div class="qrcode-hint">{{ T('SubscribeScanQR') }}</div>
         <div class="qrcode-wrapper" v-loading="!qrPayload">
           <img v-if="qrPayload" :src="qrImageSrc" alt="QR Code" class="qrcode-img" />
         </div>
-        <div v-if="cashierUrl" class="cashier-link">
-          <el-button link type="primary" @click="openCashier">{{ T('SubscribeOpenCashier') }}</el-button>
+        <div class="plan-selected-info">
+          {{ selectedPlanName }} · ¥{{ (selectedPrice / 100).toFixed(2) }}
         </div>
         <div class="order-info">
           <span>{{ T('OrderNo') }}: {{ orderInfo.out_trade_no }}</span>
-          <span class="order-amount">{{ formatAmount(orderInfo.amount_cents) }}</span>
         </div>
         <div class="polling-status" v-if="pollingSeconds > 0">
           <el-icon class="is-loading"><el-icon-loading /></el-icon>
@@ -85,10 +91,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { T } from '@/utils/i18n'
 import { ElMessage } from 'element-plus'
-import { createOrder, queryOrder } from '@/api/subscribe'
+import { createOrder, queryOrder, getPlans } from '@/api/subscribe'
 
 const props = defineProps({
   visible: Boolean,
@@ -96,48 +102,67 @@ const props = defineProps({
 const emit = defineEmits(['update:visible', 'activated'])
 
 const step = ref('select') // select | qrcode | success
-const selectedPlan = ref('pro')
+const plans = ref([])
+const selectedPlanKey = ref('1m')
 const channel = ref('alipay')
 const creating = ref(false)
 const orderInfo = ref({})
 const qrPayload = ref('')
-const cashierUrl = ref('')
 const inviteCode = ref('')
 const pollingSeconds = ref(0)
 let pollingTimer = null
 
-const priceText = computed(() => {
-  // 默认 ¥10/月
-  return '¥10.00 / ' + T('SubscribeMonth')
+const selectedPlanName = computed(() => {
+  const p = plans.value.find(x => x.key === selectedPlanKey.value)
+  return p ? p.name : ''
 })
-const showTag = computed(() => true)
+const selectedPrice = computed(() => {
+  const p = plans.value.find(x => x.key === selectedPlanKey.value)
+  return p ? p.price_cents : 0
+})
 
 const qrImageSrc = computed(() => {
   if (!qrPayload.value) return ''
-  // 后端返回的是收款码图片 URL，直接显示
   return qrPayload.value
 })
 
-const formatAmount = (cents) => {
-  if (!cents) return '¥0.00'
-  return '¥' + (cents / 100).toFixed(2)
-}
+// 加载可选时长
+onMounted(async () => {
+  try {
+    const res = await getPlans()
+    if (!res.code && Array.isArray(res.data) && res.data.length > 0) {
+      plans.value = res.data
+      selectedPlanKey.value = res.data[0].key
+    }
+  } catch (_) {
+    // 后端可能还没有计划列表接口，用默认值
+    plans.value = [
+      { key: '1m', name: '1个月', price_cents: 1000, period_days: 30 },
+      { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
+      { key: '6m', name: '6个月', price_cents: 5000, period_days: 180 },
+      { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
+    ]
+  }
+})
 
 const handleCreateOrder = async () => {
   if (!channel.value) {
     ElMessage.warning(T('SubscribeSelectChannelFirst'))
     return
   }
+  if (!selectedPlanKey.value) {
+    ElMessage.warning(T('SubscribeSelectDuration'))
+    return
+  }
   creating.value = true
   try {
-    const res = await createOrder(channel.value)
+    const res = await createOrder(channel.value, selectedPlanKey.value)
     if (res.code) {
       ElMessage.error(res.message || T('SubscribeCreateFailed'))
       return
     }
     orderInfo.value = res.data
     qrPayload.value = res.data.qr_payload || ''
-    cashierUrl.value = res.data.cashier_url || ''
     step.value = 'qrcode'
     startPolling(res.data.out_trade_no)
   } catch (e) {
@@ -148,10 +173,9 @@ const handleCreateOrder = async () => {
 }
 
 const startPolling = (outTradeNo) => {
-  let elapsed = 0
+  pollingSeconds.value = 0
   pollingTimer = setInterval(async () => {
-    elapsed += 3
-    pollingSeconds.value = elapsed
+    pollingSeconds.value += 3
     try {
       const res = await queryOrder(outTradeNo)
       if (res.code) return
@@ -169,12 +193,6 @@ const startPolling = (outTradeNo) => {
   }, 3000)
 }
 
-const openCashier = () => {
-  if (cashierUrl.value) {
-    window.open(cashierUrl.value, '_blank')
-  }
-}
-
 const copyCode = () => {
   if (!inviteCode.value) return
   navigator.clipboard.writeText(inviteCode.value).then(() => {
@@ -188,7 +206,6 @@ const handleClosed = () => {
   step.value = 'select'
   orderInfo.value = {}
   qrPayload.value = ''
-  cashierUrl.value = ''
   inviteCode.value = ''
   pollingSeconds.value = 0
   if (pollingTimer) {
@@ -212,57 +229,43 @@ onUnmounted(() => {
 
 <style scoped>
 .plan-section {
-  display: flex;
-  justify-content: center;
   margin-bottom: 20px;
 }
+.section-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #606266;
+}
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
 .plan-card {
-  width: 100%;
   border: 2px solid #e4e7ed;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 16px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
+  transition: all 0.2s;
 }
 .plan-card.active {
   border-color: #409eff;
   background: #ecf5ff;
 }
 .plan-name {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .plan-price {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: #409eff;
-  margin-bottom: 4px;
-}
-.plan-period {
-  font-size: 13px;
-  color: #909399;
-}
-.plan-tag {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #f56c6c;
-  color: #fff;
-  font-size: 12px;
-  padding: 2px 10px;
-  border-radius: 10px;
 }
 .channel-section {
   margin-bottom: 20px;
-}
-.section-label {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 10px;
-  color: #606266;
 }
 .channel-group {
   display: flex;
@@ -300,20 +303,16 @@ onUnmounted(() => {
   height: 200px;
   display: block;
 }
-.cashier-link {
-  margin-bottom: 12px;
+.plan-selected-info {
+  font-size: 15px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 8px;
 }
 .order-info {
   font-size: 13px;
   color: #909399;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
   margin-bottom: 8px;
-}
-.order-amount {
-  font-weight: 600;
-  color: #303133;
 }
 .polling-status {
   font-size: 13px;
