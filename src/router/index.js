@@ -271,6 +271,18 @@ export const asyncRoutes = [
         component: () => import('@/views/admin/InviteCode.vue'),
       },
       {
+        path: '/adminOrders',
+        name: 'AdminOrder',
+        meta: { title: 'AdminOrder', icon: 'List' },
+        component: () => import('@/views/admin/AdminOrder.vue'),
+      },
+      {
+        path: '/adminSubscriptions',
+        name: 'AdminSubscription',
+        meta: { title: 'AdminSubscription', icon: 'Timer' },
+        component: () => import('@/views/admin/AdminSubscription.vue'),
+      },
+      {
         path: '/shareRecord',
         name: 'ShareRecord',
         meta: { title: 'ShareRecord', icon: 'Share' },

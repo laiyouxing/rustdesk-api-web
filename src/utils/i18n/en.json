@@ -1311,5 +1311,11 @@
   },
   "AdminInviteCode": {
     "One": "Invite Codes"
+  },
+  "AdminOrder": {
+    "One": "Orders"
+  },
+  "AdminSubscription": {
+    "One": "Subscriptions"
   }
 }
