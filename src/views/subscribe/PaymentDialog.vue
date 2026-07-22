@@ -62,7 +62,13 @@
         <!-- 二维码区域 -->
         <div class="cashier-qr">
           <div class="qrcode-wrapper" v-loading="!qrPayload">
-            <img v-if="qrPayload" :src="qrImageSrc" alt="收款码" class="qrcode-img" />
+            <div class="qrcode-inner" :class="{ 'qr-expired': countdownExpired }">
+              <img v-if="qrPayload" :src="qrImageSrc" alt="收款码" class="qrcode-img" />
+              <div v-if="countdownExpired" class="qr-overlay">
+                <el-icon class="overlay-icon"><el-icon-circle-close-filled /></el-icon>
+                <span class="overlay-text">订单已过期</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -405,11 +411,44 @@ onUnmounted(() => {
   background: #fff;
   border: 1px solid #e4e7ed;
   border-radius: 8px;
+  position: relative;
+}
+.qrcode-inner {
+  position: relative;
+  width: 200px;
+  height: 200px;
 }
 .qrcode-img {
   width: 200px;
   height: 200px;
   display: block;
+}
+.qr-expired .qrcode-img {
+  filter: blur(4px);
+}
+.qr-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.6);
+  border-radius: 8px;
+  z-index: 2;
+}
+.overlay-icon {
+  font-size: 40px;
+  color: #c0c4cc;
+  margin-bottom: 8px;
+}
+.overlay-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #909399;
 }
 
 /* 倒计时 */
