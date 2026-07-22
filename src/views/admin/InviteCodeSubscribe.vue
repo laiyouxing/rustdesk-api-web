@@ -106,26 +106,32 @@
     </el-card>
 
     <!-- 手动生成弹窗 -->
-    <el-dialog
-      v-model="showCreate"
-      :title="T('GenerateInviteCode')"
-      width="420px"
-    >
+    <el-dialog v-model="showCreate" title="生成授权码" width="440px">
       <el-form label-position="top">
-        <el-form-item :label="T('Plan')">
-          <el-select v-model="createForm.plan" style="width:100%">
-            <el-option label="pro" value="pro" />
-          </el-select>
+        <el-form-item label="时长（选后自动填充天数）">
+          <div class="plan-grid">
+            <div
+              v-for="p in planOptions"
+              :key="p.key"
+              class="plan-card"
+              :class="{ active: createForm.planKey === p.key }"
+              @click="selectPlan(p)"
+            >
+              <div class="plan-name">{{ p.name }}</div>
+              <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
+            </div>
+          </div>
         </el-form-item>
-        <el-form-item :label="T('SubscribeExpireDays')">
-          <el-input-number v-model="createForm.expire_days" :min="1" :max="365" />
+        <el-form-item label="有效天数">
+          <el-input-number v-model="createForm.expire_days" :min="1" :max="3650" style="width:100%" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="createForm.remark" type="textarea" :rows="2" placeholder="可选" />
         </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="showCreate = false">{{ T('Cancel') }}</el-button>
-        <el-button type="primary" :loading="creating" @click="handleCreate">
-          {{ T('Generate') }}
-        </el-button>
+        <el-button type="primary" :loading="creating" @click="handleCreate">{{ T('Generate') }}</el-button>
       </template>
     </el-dialog>
 
@@ -170,7 +176,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { T } from '@/utils/i18n'
 import { ElMessage } from 'element-plus'
-import { adminListCodes, adminCreateCode, adminRevokeCode, adminExportCodes } from '@/api/subscribe'
+import { adminListCodes, adminCreateCode, adminRevokeCode, adminExportCodes, getPlans } from '@/api/subscribe'
 import { ElMessageBox } from 'element-plus'
 
 const loading = ref(false)
@@ -182,7 +188,8 @@ const filter = reactive({ status: '', plan: '' })
 const showCreate = ref(false)
 const creating = ref(false)
 const revokingId = ref(0)
-const createForm = reactive({ plan: 'pro', expire_days: 30 })
+const createForm = reactive({ planKey: '', expire_days: 30, remark: '' })
+const planOptions = ref([])
 
 const showBatchCreate = ref(false)
 const batchLoading = ref(false)
@@ -232,8 +239,9 @@ const handleCreate = async () => {
   creating.value = true
   try {
     const res = await adminCreateCode({
-      plan: createForm.plan,
+      plan: createForm.planKey || 'pro',
       expire_days: createForm.expire_days,
+      remark: createForm.remark || undefined,
     })
     if (!res.code) {
       ElMessage.success(T('GenerateSuccess'))
@@ -284,6 +292,11 @@ const handleExport = async () => {
   }
 }
 
+const selectPlan = (p) => {
+  createForm.planKey = p.key
+  createForm.expire_days = p.period_days
+}
+
 const submitBatchCreate = async () => {
   batchLoading.value = true
   batchResult.value = []
@@ -326,7 +339,22 @@ const copyAllCodes = () => {
   })
 }
 
-onMounted(getList)
+onMounted(async () => {
+  await getList()
+  try {
+    const res = await getPlans()
+    if (!res.code && Array.isArray(res.data)) {
+      planOptions.value = res.data
+    }
+  } catch (_) {
+    planOptions.value = [
+      { key: '1m', name: '1个月', price_cents: 1000, period_days: 30 },
+      { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
+      { key: '6m', name: '6个月', price_cents: 5000, period_days: 180 },
+      { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
+    ]
+  }
+})
 </script>
 
 <style scoped>
@@ -346,6 +374,33 @@ onMounted(getList)
   padding: 2px 8px;
   border-radius: 4px;
   letter-spacing: 1px;
+}
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.plan-card {
+  border: 2px solid #e4e7ed;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.plan-card.active {
+  border-color: #409eff;
+  background: #ecf5ff;
+}
+.plan-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.plan-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #409eff;
 }
 .order-id {
   font-size: 12px;
