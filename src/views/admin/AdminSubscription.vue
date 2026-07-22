@@ -97,6 +97,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { T } from '@/utils/i18n'
 import { ElMessage } from 'element-plus'
+import { adminListSubscriptions, adminExtendSubscription, getPlans } from '@/api/subscribe'
 
 const list = ref([])
 const loading = ref(false)
@@ -130,17 +131,18 @@ const formatTime = (t) => {
 const getList = async () => {
   loading.value = true
   try {
-    const params = { page: page.value, size: pageSize.value }
-    if (filter.status) params.status = filter.status
-    if (filter.keyword) params.keyword = filter.keyword
-    const res = await fetch(`/api/admin/subscriptions/list?${new URLSearchParams(params)}`)
-    const data = await res.json()
-    if (data.code) {
-      ElMessage.error(data.message)
+    const res = await adminListSubscriptions({
+      page: page.value,
+      size: pageSize.value,
+      status: filter.status || undefined,
+      keyword: filter.keyword || undefined,
+    })
+    if (res.code) {
+      ElMessage.error(res.message)
       return
     }
-    list.value = data.data.list || []
-    total.value = data.data.total || 0
+    list.value = res.data.list || []
+    total.value = res.data.total || 0
   } catch (e) {
     ElMessage.error('获取会员列表失败')
   } finally {
@@ -160,18 +162,13 @@ const handleExtend = async () => {
   if (!opt) return
   extending.value = true
   try {
-    const res = await fetch('/api/admin/subscriptions/extend', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_id: extendUser.value.id,
-        plan: extendUser.value.subscription_plan || 'pro',
-        plan_key: extendSelectedKey.value,
-      }),
+    const res = await adminExtendSubscription({
+      user_id: extendUser.value.id,
+      plan: extendUser.value.subscription_plan || 'pro',
+      plan_key: extendSelectedKey.value,
     })
-    const data = await res.json()
-    if (data.code) {
-      ElMessage.error(data.message || '延长失败')
+    if (res.code) {
+      ElMessage.error(res.message || '延长失败')
       return
     }
     ElMessage.success(`已为用户 ${extendUser.value.username} 延长 ${opt.name} 会员`)
@@ -186,12 +183,10 @@ const handleExtend = async () => {
 
 onMounted(async () => {
   await getList()
-  // 加载可选时长
   try {
-    const res = await fetch('/api/subscribe/plans')
-    const data = await res.json()
-    if (!data.code && Array.isArray(data.data)) {
-      planOptions.value = data.data
+    const res = await getPlans()
+    if (!res.code && Array.isArray(res.data)) {
+      planOptions.value = res.data
     }
   } catch (_) {
     planOptions.value = [

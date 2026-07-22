@@ -117,3 +117,65 @@ export function adminExportCodes (params) {
     responseType: 'blob',
   })
 }
+
+// ========== 后台订单管理 ==========
+
+/**
+ * 分页查询订单列表
+ * @param {Object} params - { status, keyword, page, size }
+ */
+export function adminListOrders (params) {
+  return request({
+    url: '/admin/orders/list',
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * 手动确认到账
+ * @param {number} id - 订单 ID
+ */
+export function adminConfirmOrder (id) {
+  return request({
+    url: `/admin/orders/${id}/confirm`,
+    method: 'post',
+  })
+}
+
+/**
+ * 关闭订单
+ * @param {number} id - 订单 ID
+ */
+export function adminCloseOrder (id) {
+  return request({
+    url: `/admin/orders/${id}/close`,
+    method: 'post',
+  })
+}
+
+// ========== 后台会员管理 ==========
+
+/**
+ * 分页查询会员列表
+ * @param {Object} params - { status, keyword, page, size }
+ */
+export function adminListSubscriptions (params) {
+  return request({
+    url: '/admin/subscriptions/list',
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * 延长会员
+ * @param {Object} data - { user_id, plan, plan_key }
+ */
+export function adminExtendSubscription (data) {
+  return request({
+    url: '/admin/subscriptions/extend',
+    method: 'post',
+    data,
+  })
+}

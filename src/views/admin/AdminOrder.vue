@@ -77,6 +77,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { T } from '@/utils/i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminListOrders, adminConfirmOrder, adminCloseOrder } from '@/api/subscribe'
 
 const list = ref([])
 const loading = ref(false)
@@ -104,17 +105,18 @@ const formatTime = (t) => {
 const getList = async () => {
   loading.value = true
   try {
-    const params = { page: page.value, size: pageSize.value }
-    if (filter.status) params.status = filter.status
-    if (filter.keyword) params.keyword = filter.keyword
-    const res = await fetch(`/api/admin/orders/list?${new URLSearchParams(params)}`)
-    const data = await res.json()
-    if (data.code) {
-      ElMessage.error(data.message)
+    const res = await adminListOrders({
+      page: page.value,
+      size: pageSize.value,
+      status: filter.status || undefined,
+      keyword: filter.keyword || undefined,
+    })
+    if (res.code) {
+      ElMessage.error(res.message)
       return
     }
-    list.value = data.data.list || []
-    total.value = data.data.total || 0
+    list.value = res.data.list || []
+    total.value = res.data.total || 0
   } catch (e) {
     ElMessage.error('获取订单列表失败')
   } finally {
@@ -128,18 +130,13 @@ const handleConfirm = async (row) => {
   } catch {
     return
   }
-  try {
-    const res = await fetch(`/api/admin/orders/${row.id}/confirm`, { method: 'POST' })
-    const data = await res.json()
-    if (data.code) {
-      ElMessage.error(data.message || '确认失败')
-      return
-    }
-    ElMessage.success('确认成功')
-    await getList()
-  } catch (e) {
-    ElMessage.error('确认失败')
+  const res = await adminConfirmOrder(row.id)
+  if (res.code) {
+    ElMessage.error(res.message || '确认失败')
+    return
   }
+  ElMessage.success('确认成功')
+  await getList()
 }
 
 const handleClose = async (row) => {
@@ -148,18 +145,13 @@ const handleClose = async (row) => {
   } catch {
     return
   }
-  try {
-    const res = await fetch(`/api/admin/orders/${row.id}/close`, { method: 'POST' })
-    const data = await res.json()
-    if (data.code) {
-      ElMessage.error(data.message || '关闭失败')
-      return
-    }
-    ElMessage.success('已关闭')
-    await getList()
-  } catch (e) {
-    ElMessage.error('关闭失败')
+  const res = await adminCloseOrder(row.id)
+  if (res.code) {
+    ElMessage.error(res.message || '关闭失败')
+    return
   }
+  ElMessage.success('已关闭')
+  await getList()
 }
 
 onMounted(getList)
