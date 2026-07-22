@@ -6,6 +6,7 @@
           <el-select v-model="filter.status" :placeholder="T('All')" clearable style="width:140px">
             <el-option label="active" value="active" />
             <el-option label="expired" value="expired" />
+            <el-option label="permanent" value="permanent" />
             <el-option label="none" value="none" />
           </el-select>
         </el-form-item>
@@ -27,21 +28,25 @@
             <el-tag size="small">{{ row.subscription_plan || '-' }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="会员状态" width="100" align="center">
+        <el-table-column label="会员状态" width="110" align="center">
           <template #default="{ row }">
-            <el-tag :type="statusType(row.status)" size="small">{{ row.status }}</el-tag>
+            <el-tag :type="statusType(row.status)" size="small">
+              {{ row.status === 'permanent' ? '永久' : row.status }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="剩余天数" width="100" align="center">
           <template #default="{ row }">
-            <span :style="{ color: row.days_left > 0 && row.days_left <= 7 ? '#f56c6c' : '#303133' }">
+            <span v-if="row.days_left === -1" style="color:#67c23a;font-weight:600">永久</span>
+            <span v-else :style="{ color: row.days_left > 0 && row.days_left <= 7 ? '#f56c6c' : '#303133' }">
               {{ row.days_left > 0 ? row.days_left + '天' : '-' }}
             </span>
           </template>
         </el-table-column>
         <el-table-column label="到期时间" width="170" align="center">
           <template #default="{ row }">
-            {{ formatTime(row.subscription_expire_at) }}
+            <span v-if="row.days_left === -1" style="color:#67c23a">—</span>
+            <span v-else>{{ formatTime(row.subscription_expire_at) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="T('Action')" width="160" align="center" fixed="right">
@@ -76,12 +81,13 @@
               v-for="p in planOptions"
               :key="p.key"
               class="plan-card"
-              :class="{ active: extendSelectedKey === p.key }"
+              :class="{ active: extendSelectedKey === p.key, 'forever-card': p.key === 'forever' }"
               @click="extendSelectedKey = p.key"
             >
-              <el-icon class="plan-icon"><el-icon-timer /></el-icon>
+              <el-icon v-if="p.key !== 'forever'" class="plan-icon"><el-icon-timer /></el-icon>
+              <el-icon v-else class="plan-icon forever-icon"><el-icon-star-filled /></el-icon>
               <div class="plan-name">{{ p.name }}</div>
-              <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
+              <div v-if="p.price_cents != null" class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
             </div>
           </div>
         </el-form-item>
@@ -119,6 +125,7 @@ const extending = ref(false)
 
 const statusType = (s) => {
   if (s === 'active') return 'success'
+  if (s === 'permanent') return 'success'
   if (s === 'expired') return 'danger'
   if (s === 'none') return 'info'
   return ''
@@ -195,6 +202,7 @@ onMounted(async () => {
       { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
       { key: '6m', name: '6个月', price_cents: 5000, period_days: 180 },
       { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
+      { key: 'forever', name: '永久', price_cents: null, period_days: 0 },
     ]
   }
 })
@@ -211,30 +219,57 @@ onMounted(async () => {
 }
 .plan-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
 }
 .plan-card {
   border: 2px solid #e4e7ed;
-  border-radius: 10px;
-  padding: 16px 12px 14px;
+  border-radius: 12px;
+  padding: 16px 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+.plan-card:hover {
+  border-color: #a6c8ff;
+  box-shadow: 0 2px 8px rgba(64,158,255,0.12);
+  transform: translateY(-2px);
 }
 .plan-card.active {
   border-color: #409eff;
   background: #ecf5ff;
+  box-shadow: 0 0 0 1px #409eff;
 }
 .plan-card.active .plan-icon {
   color: #409eff;
 }
 .plan-icon {
-  font-size: 36px;
+  font-size: 42px;
   color: #909399;
+  transition: color 0.25s;
+}
+/* 永久卡片 */
+.forever-card {
+  background: linear-gradient(135deg, #fdf6ec 0%, #fff 100%);
+  border-color: #e6a23c;
+}
+.forever-card:hover {
+  border-color: #e6a23c;
+  box-shadow: 0 2px 10px rgba(230,162,60,0.25);
+}
+.forever-card.active {
+  border-color: #e6a23c;
+  background: #fdf6ec;
+  box-shadow: 0 0 0 1px #e6a23c;
+}
+.forever-card .forever-icon {
+  color: #e6a23c;
+}
+.forever-card.active .forever-icon {
+  color: #d48806;
 }
 .plan-name {
   font-size: 14px;
