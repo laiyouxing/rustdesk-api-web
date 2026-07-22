@@ -17,6 +17,7 @@
         <el-form-item>
           <el-button type="primary" @click="getList">{{ T('Filter') }}</el-button>
           <el-button type="success" @click="showCreate = true">{{ T('Generate') }}</el-button>
+          <el-button type="success" @click="showBatchCreate = true">{{ T('BatchCreate') }}</el-button>
           <el-button @click="handleExport">{{ T('Export') }}</el-button>
         </el-form-item>
       </el-form>
@@ -64,7 +65,12 @@
             {{ formatTime(row.created_at) }}
           </template>
         </el-table-column>
-        <el-table-column :label="T('Action')" width="100" align="center" fixed="right">
+        <el-table-column prop="remark" label="备注" min-width="120" align="center">
+          <template #default="{ row }">
+            <span class="remark-text">{{ row.remark || '-' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="T('Action')" width="150" align="center" fixed="right">
           <template #default="{ row }">
             <el-button
               v-if="row.status === 'unused'"
@@ -74,6 +80,14 @@
               @click="handleRevoke(row.id)"
             >
               {{ T('Revoke') }}
+            </el-button>
+            <el-button
+              v-if="row.status === 'unused'"
+              type="warning"
+              size="small"
+              @click="handleDelete(row)"
+            >
+              删除
             </el-button>
             <span v-else>-</span>
           </template>
@@ -114,6 +128,41 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- 批量生成弹窗 -->
+    <el-dialog v-model="showBatchCreate" title="批量生成授权码" width="480px">
+      <el-form label-position="top">
+        <el-form-item label="生成数量">
+          <el-input-number v-model="batchForm.count" :min="1" :max="200" style="width:100%" />
+        </el-form-item>
+        <el-form-item label="套餐">
+          <el-select v-model="batchForm.plan" style="width:100%">
+            <el-option label="pro" value="pro" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="有效天数">
+          <el-input-number v-model="batchForm.expire_days" :min="1" :max="3650" style="width:100%" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="batchForm.remark" type="textarea" :rows="2" placeholder="可选" />
+        </el-form-item>
+      </el-form>
+      <div v-if="batchResult.length > 0" style="margin-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <strong>已生成（{{ batchResult.length }}）</strong>
+          <el-button size="small" type="primary" @click="copyAllCodes">复制全部</el-button>
+        </div>
+        <div style="max-height:200px;overflow-y:auto;border:1px solid #ebeef5;border-radius:4px;padding:8px;">
+          <el-tag v-for="item in batchResult" :key="item.code" style="margin:3px;font-family:monospace;font-size:12px;" type="info">
+            {{ item.code }}
+          </el-tag>
+        </div>
+      </div>
+      <template #footer>
+        <el-button @click="showBatchCreate = false">取消</el-button>
+        <el-button type="primary" :loading="batchLoading" @click="submitBatchCreate">生成</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -122,6 +171,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { T } from '@/utils/i18n'
 import { ElMessage } from 'element-plus'
 import { adminListCodes, adminCreateCode, adminRevokeCode, adminExportCodes } from '@/api/subscribe'
+import { ElMessageBox } from 'element-plus'
 
 const loading = ref(false)
 const list = ref([])
@@ -133,6 +183,11 @@ const showCreate = ref(false)
 const creating = ref(false)
 const revokingId = ref(0)
 const createForm = reactive({ plan: 'pro', expire_days: 30 })
+
+const showBatchCreate = ref(false)
+const batchLoading = ref(false)
+const batchForm = reactive({ count: 10, plan: 'pro', expire_days: 30, remark: '' })
+const batchResult = ref([])
 
 const statusTag = (s) => {
   const map = { unused: 'info', used: 'success', revoked: 'danger' }
@@ -227,6 +282,48 @@ const handleExport = async () => {
   } catch (_) {
     ElMessage.error(T('ExportFailed'))
   }
+}
+
+const submitBatchCreate = async () => {
+  batchLoading.value = true
+  batchResult.value = []
+  try {
+    const codes = []
+    for (let i = 0; i < batchForm.count; i++) {
+      const res = await adminCreateCode({
+        plan: batchForm.plan,
+        expire_days: batchForm.expire_days,
+        remark: batchForm.remark || undefined,
+      })
+      if (!res.code && res.data?.code) {
+        codes.push(res.data)
+      }
+    }
+    batchResult.value = codes
+    ElMessage.success(`成功生成 ${codes.length} 个授权码`)
+    getList()
+  } catch (_) {
+    ElMessage.error('批量生成失败')
+  } finally {
+    batchLoading.value = false
+  }
+}
+
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm(`删除授权码 ${row.code}？`, '确认')
+  } catch {
+    return
+  }
+}
+
+const copyAllCodes = () => {
+  const text = batchResult.value.map(i => i.code).join('\n')
+  navigator.clipboard.writeText(text).then(() => {
+    ElMessage.success(T('CopySuccess'))
+  }).catch(() => {
+    ElMessage.warning(T('CopyFailed'))
+  })
 }
 
 onMounted(getList)

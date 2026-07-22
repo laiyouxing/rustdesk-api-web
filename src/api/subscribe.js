@@ -84,7 +84,7 @@ export function adminListCodes (params) {
 
 /**
  * 手动生成邀请码
- * @param {Object} req - { plan, expire_days }
+ * @param {Object} req - { plan, expire_days, remark }
  */
 export function adminCreateCode (req) {
   return request({
@@ -102,6 +102,17 @@ export function adminRevokeCode (id) {
   return request({
     url: `/invite-codes/${id}/revoke`,
     method: 'post',
+  })
+}
+
+/**
+ * 删除邀请码
+ * @param {number} id - 邀请码 ID
+ */
+export function adminDeleteCode (id) {
+  return request({
+    url: `/invite-codes/${id}`,
+    method: 'delete',
   })
 }
 
