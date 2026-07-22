@@ -65,13 +65,24 @@
     </el-card>
 
     <!-- 延长会员弹窗 -->
-    <el-dialog v-model="extendVisible" title="延长会员" width="420px" :close-on-click-modal="false">
+    <el-dialog v-model="extendVisible" title="延长会员" width="440px" :close-on-click-modal="false">
       <el-form label-position="top">
         <el-form-item label="用户">
           <el-input :model-value="extendUser?.username" disabled />
         </el-form-item>
-        <el-form-item label="延长天数">
-          <el-input-number v-model="extendDays" :min="1" :max="3650" />
+        <el-form-item label="延长时长">
+          <div class="plan-grid">
+            <div
+              v-for="p in planOptions"
+              :key="p.key"
+              class="plan-card"
+              :class="{ active: extendSelectedKey === p.key }"
+              @click="extendSelectedKey = p.key"
+            >
+              <div class="plan-name">{{ p.name }}</div>
+              <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -100,7 +111,8 @@ const filter = reactive({
 
 const extendVisible = ref(false)
 const extendUser = ref(null)
-const extendDays = ref(30)
+const extendSelectedKey = ref('1m')
+const planOptions = ref([])
 const extending = ref(false)
 
 const statusType = (s) => {
@@ -138,12 +150,14 @@ const getList = async () => {
 
 const showExtend = (row) => {
   extendUser.value = row
-  extendDays.value = 30
+  extendSelectedKey.value = '1m'
   extendVisible.value = true
 }
 
 const handleExtend = async () => {
-  if (!extendUser.value || extendDays.value <= 0) return
+  if (!extendUser.value || !extendSelectedKey.value) return
+  const opt = planOptions.value.find(p => p.key === extendSelectedKey.value)
+  if (!opt) return
   extending.value = true
   try {
     const res = await fetch('/api/admin/subscriptions/extend', {
@@ -152,7 +166,7 @@ const handleExtend = async () => {
       body: JSON.stringify({
         user_id: extendUser.value.id,
         plan: extendUser.value.subscription_plan || 'pro',
-        period_days: extendDays.value,
+        plan_key: extendSelectedKey.value,
       }),
     })
     const data = await res.json()
@@ -160,7 +174,7 @@ const handleExtend = async () => {
       ElMessage.error(data.message || '延长失败')
       return
     }
-    ElMessage.success(`已为用户 ${extendUser.value.username} 延长 ${extendDays.value} 天会员`)
+    ElMessage.success(`已为用户 ${extendUser.value.username} 延长 ${opt.name} 会员`)
     extendVisible.value = false
     await getList()
   } catch (e) {
@@ -170,7 +184,24 @@ const handleExtend = async () => {
   }
 }
 
-onMounted(getList)
+onMounted(async () => {
+  await getList()
+  // 加载可选时长
+  try {
+    const res = await fetch('/api/subscribe/plans')
+    const data = await res.json()
+    if (!data.code && Array.isArray(data.data)) {
+      planOptions.value = data.data
+    }
+  } catch (_) {
+    planOptions.value = [
+      { key: '1m', name: '1个月', price_cents: 1000, period_days: 30 },
+      { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
+      { key: '6m', name: '6个月', price_cents: 5000, period_days: 180 },
+      { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
+    ]
+  }
+})
 </script>
 
 <style scoped>
@@ -181,5 +212,32 @@ onMounted(getList)
   margin-top: 16px;
   display: flex;
   justify-content: center;
+}
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.plan-card {
+  border: 2px solid #e4e7ed;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.plan-card.active {
+  border-color: #409eff;
+  background: #ecf5ff;
+}
+.plan-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.plan-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #409eff;
 }
 </style>
