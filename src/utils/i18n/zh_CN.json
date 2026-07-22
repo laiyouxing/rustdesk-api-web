@@ -1,93 +1,105 @@
 {
-  "Login": {
+  "TopTips": {
+    "One": "更多问题，请查阅 FAQ"
+  },
+  "IndexLogin": {
     "One": "登录"
   },
-  "Logout": {
-    "One": "退出登录"
-  },
-  "Register": {
+  "IndexRegister": {
     "One": "注册"
   },
-  "Confirm": {
-    "One": "确认"
+  "IndexOidcLogin": {
+    "One": "第三方登录登录"
   },
-  "Username": {
+  "IndexUsername": {
     "One": "用户名"
   },
-  "Password": {
+  "IndexPassword": {
     "One": "密码"
   },
-  "LoginSuccess": {
-    "One": "登录成功"
+  "IndexMfaCode": {
+    "One": "动态码"
   },
-  "ForgotPassword": {
-    "One": "忘记密码"
+  "IndexMfaLogin": {
+    "One": "MFA 动态码登录"
   },
-  "ResetPassword": {
-    "One": "重置密码"
+  "IndexEmail": {
+    "One": "邮箱"
   },
-  "ChangePassword": {
-    "One": "修改密码"
+  "IndexTip0": {
+    "One": "未注册的用户将自动创建"
   },
-  "Userinfo": {
-    "One": "用户信息"
+  "IndexTip1": {
+    "One": "完成"
   },
-  "ParamRequired": {
-    "One": "{param} 是必须的"
+  "IndexRegisterSuccess": {
+    "One": "注册成功"
   },
-  "HasBind": {
-    "One": "已绑定"
+  "IndexLoginExpired": {
+    "One": "账户已过期，请联系管理员"
   },
-  "NoBind": {
-    "One": "未绑定"
+  "ConfirmPassword": {
+    "One": "确认密码"
   },
-  "UnBind": {
-    "One": "解绑"
+  "InviteCode": {
+    "One": "邀请码"
   },
-  "ToBind": {
-    "One": "绑定"
+  "InviteCodeRequired": {
+    "One": "请输入邀请码（当前仅限邀请注册）"
   },
-  "Confirm?": {
-    "One": "确定{param}?"
+  "NavFaq": {
+    "One": "FAQ"
   },
-  "ConfirmRestartWithCountdown": {
-    "One": "确定{param}？请确认操作后果（{seconds} 秒后可确认）"
+  "NavDocument": {
+    "One": "文档"
+  },
+  "NavGateway": {
+    "One": "控制台"
+  },
+  "AccountExpiredAlert": {
+    "One": "账户已过期，请联系管理员"
+  },
+  "SessionExpired": {
+    "One": "登录过期，请重新登录"
+  },
+  "NeedLogin": {
+    "One": "未登录"
+  },
+  "RoutePermissionDenied": {
+    "One": "权限不足"
+  },
+  "Toast": {
+    "One": "提示"
+  },
+  "Confirm": {
+    "One": "确定"
   },
   "Cancel": {
     "One": "取消"
   },
-  "Platform": {
-    "One": "平台"
+  "Submit": {
+    "One": "提交"
   },
-  "Status": {
-    "One": "状态"
+  "Reset": {
+    "One": "重置"
   },
-  "Actions": {
-    "One": "操作"
+  "Delete": {
+    "One": "删除"
   },
-  "Filter": {
-    "One": "筛选"
+  "DeleteConfirm": {
+    "One": "确认删除？"
+  },
+  "Search": {
+    "One": "搜索"
   },
   "Add": {
     "One": "添加"
   },
-  "Hostname": {
-    "One": "主机名"
-  },
-  "Alias": {
-    "One": "别名"
-  },
-  "Hash": {
-    "One": "哈希"
-  },
-  "Tags": {
-    "One": "标签"
-  },
   "Edit": {
     "One": "编辑"
   },
-  "Delete": {
-    "One": "删除"
+  "Back": {
+    "One": "返回"
   },
   "Create": {
     "One": "创建"
@@ -95,1042 +107,215 @@
   "Update": {
     "One": "更新"
   },
-  "LoginName": {
-    "One": "登录名"
+  "Select": {
+    "One": "选择"
   },
-  "Submit": {
-    "One": "提交"
+  "Operation": {
+    "One": "操作"
   },
   "OperationSuccess": {
     "One": "操作成功"
   },
-  "Owner": {
-    "One": "所有者"
-  },
-  "Name": {
-    "One": "名称"
-  },
-  "Color": {
-    "One": "颜色"
-  },
-  "CreatedAt": {
-    "One": "发布时间"
-  },
-  "UpdatedAt": {
-    "One": "更新时间"
-  },
-  "Memory": {
-    "One": "内存"
-  },
-  "Os": {
-    "One": "操作系统"
-  },
-  "Uuid": {
-    "One": "UUID"
-  },
-  "Version": {
-    "One": "版本"
-  },
-  "Type": {
-    "One": "类型"
-  },
-  "Group": {
-    "One": "组"
-  },
-  "CommonGroup": {
-    "One": "普通组"
-  },
-  "CommonGroupNote": {
-    "One": "只有管理员才能查看群组成员及其设备"
-  },
-  "SharedGroup": {
-    "One": "共享组"
-  },
-  "SharedGroupNote": {
-    "One": "所有用户都可以查看群组成员及其设备"
-  },
-  "OrgStructure": {
-    "One": "组织架构"
-  },
-  "AllMembers": {
-    "One": "全部成员"
-  },
-  "AddRootDept": {
-    "One": "添加部门"
-  },
-  "AddChildDept": {
-    "One": "添加子部门"
-  },
-  "DepartmentName": {
-    "One": "部门名称"
-  },
-  "ParentDept": {
-    "One": "上级部门"
-  },
-  "Nickname": {
-    "One": "昵称"
-  },
-  "UserTags": {
-    "One": "用户标签"
-  },
-  "UserAddressBook": {
-    "One": "用户地址簿"
-  },
-  "IsAdmin": {
-    "One": "是否管理员"
-  },
-  "PleaseInputNewPassword": {
-    "One": "请输入新密码"
-  },
-  "AutoRegister": {
-    "One": "自动注册"
-  },
-  "AutoRegisterNote": {
-    "One": "如果启用，则当用户使用 OAuth 登录时，将自动注册一个帐户，而无需绑定现有帐户"
-  },
-  "ThirdName": {
-    "One": "第三方名称"
-  },
-  "Close": {
-    "One": "关闭"
-  },
-  "OauthBinding": {
-    "One": "您正在授权绑定"
-  },
-  "OauthLogining": {
-    "One": "您正在授权登录"
-  },
-  "OauthCloseNote": {
-    "One": "如不是您发起的授权，请直接关闭页面"
-  },
-  "OperationSuccessAndCloseAfter3Seconds": {
-    "One": "操作成功，3秒后将自动关闭页面"
-  },
-  "ConfirmOauth": {
-    "One": "确认授权"
-  },
-  "Device": {
-    "One": "设备"
-  },
-  "ChangeLang": {
-    "One": "ToEnglish"
-  },
-  "My": {
-    "One": "我的"
-  },
-  "Info": {
-    "One": "信息"
-  },
-  "AddressBooks": {
-    "One": "地址簿"
-  },
-  "System": {
-    "One": "系统"
-  },
-  "PeerManage": {
-    "One": "设备管理"
-  },
-  "AddressBookManage": {
-    "One": "地址簿管理"
-  },
-  "GroupManage": {
-    "One": "群组管理"
-  },
-  "UserManage": {
-    "One": "用户管理"
-  },
-  "UserAdd": {
-    "One": "用户添加"
-  },
-  "UserEdit": {
-    "One": "用户编辑"
-  },
-  "TagsManage": {
-    "One": "标签管理"
-  },
-  "OauthManage": {
-    "One": "Oauth管理"
-  },
-  "LoginLog": {
-    "One": "登录日志"
-  },
-  "LastOnlineTime": {
-    "One": "最后在线时间"
-  },
-  "JustNow": {
-    "One": "刚刚"
-  },
-  "MinutesAgo": {
-    "One": "{param} 分钟前"
-  },
-  "HoursAgo": {
-    "One": "{param} 小时前"
-  },
-  "DaysAgo": {
-    "One": "{param} 天前"
-  },
-  "MonthsAgo": {
-    "One": "{param} 月前"
-  },
-  "YearsAgo": {
-    "One": "{param} 年前"
-  },
-  "MinutesLess": {
-    "One": "{param} 分钟内"
-  },
-  "HoursLess": {
-    "One": "{param} 小时内"
-  },
-  "DaysLess": {
-    "One": "{param} 天内"
-  },
-  "Export": {
-    "One": "导出"
-  },
-  "AddToAddressBook": {
-    "One": "添加到地址簿"
-  },
-  "BatchDelete": {
-    "One": "批量删除"
-  },
-  "PleaseSelectData": {
-    "One": "请选择数据"
-  },
-  "PasswordType": {
-    "One": "密码类型"
-  },
-  "OncePassword": {
-    "One": "一次性密码"
-  },
-  "FixedPassword": {
-    "One": "固定密码"
-  },
-  "FixedPasswordWarning": {
-    "One": "固定密码可能存在泄露风险，请谨慎使用，建议使用一次性密码"
-  },
-  "ExpireTime": {
-    "One": "过期时间"
-  },
-  "ShareByWebClient": {
-    "One": "通过 Web Client 分享"
-  },
-  "Minutes": {
-    "One": "{param} 分钟"
-  },
-  "Hours": {
-    "One": "{param} 小时"
-  },
-  "Days": {
-    "One": "{param} 天"
-  },
-  "Weeks": {
-    "One": "{param} 周"
-  },
-  "Months": {
-    "One": "{param} 月"
-  },
-  "Forever": {
-    "One": "永久"
-  },
-  "Error": {
-    "One": "错误"
-  },
-  "IDNotExist": {
-    "One": "ID 不存在"
-  },
-  "RemoteDesktopOffline": {
-    "One": "远程电脑不在线"
-  },
-  "KeyMismatch": {
-    "One": "KEY不匹配"
-  },
-  "KeyOveruse": {
-    "One": "KEY使用过度"
-  },
-  "Link": {
-    "One": "链接"
-  },
-  "CopySuccess": {
-    "One": "复制成功"
-  },
-  "CopyFailed": {
-    "One": "复制失败"
-  },
-  "Timeout": {
-    "One": "超时"
-  },
-  "AuditConnLog": {
-    "One": "连接日志"
-  },
-  "Peer": {
-    "One": "设备"
-  },
-  "FromPeer": {
-    "One": "来源设备"
-  },
-  "FromName": {
-    "One": "来源名称"
-  },
-  "CloseTime": {
-    "One": "关闭时间"
-  },
-  "AuditFileLog": {
-    "One": "文件日志"
-  },
-  "Common": {
-    "One": "普通"
-  },
-  "File": {
-    "One": "文件"
-  },
-  "Num": {
-    "One": "数量"
-  },
-  "Ip": {
-    "One": "IP"
-  },
-  "FileName": {
-    "One": "文件名"
-  },
-  "FileInfo": {
-    "One": "文件信息"
-  },
-  "Path": {
-    "One": "路径"
-  },
-  "IndexNum": {
-    "One": "序号"
-  },
-  "ToRemote": {
-    "One": "到远程"
-  },
-  "ToLocal": {
-    "One": "到本地"
-  },
-  "AddressBookName": {
-    "One": "地址簿名称"
-  },
-  "AddressBookCollection": {
-    "One": "地址簿集"
-  },
-  "AddRule": {
-    "One": "添加规则"
-  },
-  "ShareRules": {
-    "One": "分享规则"
-  },
-  "Rule": {
-    "One": "规则"
-  },
-  "Read": {
-    "One": "已读"
-  },
-  "ReadWrite": {
-    "One": "读写"
-  },
-  "FullControl": {
-    "One": "完全控制"
-  },
-  "ShareTo": {
-    "One": "分享给"
-  },
-  "MyAddressBook": {
-    "One": "我的地址簿"
-  },
-  "AddressBook": {
-    "One": "地址簿"
-  },
-  "AddressBookNameManage": {
-    "One": "地址簿名称"
-  },
-  "MyAddressBookTips": {
-    "One": "\"我的地址簿\"是系统默认，不可修改、删除"
-  },
-  "LastOnlineIp": {
-    "One": "最后在线IP"
-  },
-  "or login in with": {
-    "One": "或使用以下登陆"
-  },
-  "Optional, default is": {
-    "One": "可选, 默认值是"
-  },
-  "Check your IdP docs, without": {
-    "One": "检查IdP的文档, 不包含"
-  },
-  "For OIDC login without a password, enter any 4-20 letters": {
-    "One": "如果通过 OIDC 登录且未设置密码，请输入任意 4-20 个字符"
-  },
-  "OldPassword": {
-    "One": "旧密码"
-  },
-  "NewPassword": {
-    "One": "新密码"
-  },
-  "NewPasswordEqualOldPassword": {
-    "One": "新密码不能与旧密码相同"
-  },
-  "ConfirmPassword": {
-    "One": "确认密码"
-  },
-  "PasswordNotMatchConfirmPassword": {
-    "One": "密码与确认密码不匹配"
-  },
-  "ToLogin": {
-    "One": "去登录"
-  },
-  "UserToken": {
-    "One": "用户Token"
-  },
-  "Email": {
-    "One": "邮箱"
-  },
-  "MyPeer": {
-    "One": "我的设备"
-  },
-  "View": {
-    "One": "查看"
-  },
-  "Information": {
-    "One": "信息"
-  },
-  "BatchAddToAB": {
-    "One": "批量添加到地址簿"
-  },
-  "BatchEditTags": {
-    "One": "批量编辑标签"
-  },
-  "User": {
-    "One": "用户"
-  },
-  "ShareRecord": {
-    "One": "分享记录"
-  },
-  "Second": {
-    "One": "秒"
-  },
-  "Captcha": {
-    "One": "验证码"
-  },
-  "ServerCmd": {
-    "One": "服务端命令"
-  },
-  "Simple": {
-    "One": "简单"
-  },
-  "Advanced": {
-    "One": "高级"
-  },
-  "Available": {
-    "One": "可用"
-  },
-  "NotAvailable": {
-    "One": "不可用"
-  },
-  "ServerCmdTips": {
-    "One": "此处功能为实验性质，请确保api和 hbbs/hbbr 处于同一回环地址下，更多说明请参考 {wiki}"
-  },
-  "Refresh": {
-    "One": "刷新"
+  "OperationFailed": {
+    "One": "操作失败"
   },
   "Save": {
     "One": "保存"
   },
-  "Reset": {
-    "One": "重置"
+  "SaveSuccess": {
+    "One": "保存成功"
   },
-  "SendCustom": {
-    "One": "发送自定义"
+  "ItemNotFound": {
+    "One": "内容不存在"
   },
-  "Send": {
-    "One": "发送"
+  "NodeNotFound": {
+    "One": "节点不存在"
   },
-  "SendCmd": {
-    "One": "发送命令"
+  "NoPermission": {
+    "One": "无操作权限"
   },
-  "Result": {
-    "One": "结果"
+  "ParamsError": {
+    "One": "参数错误"
   },
-  "DeviceGroupManage": {
-    "One": "设备组管理"
+  "All": {
+    "One": "全部"
   },
-  "Import": {
-    "One": "导入"
+  "Required": {
+    "One": "必填项"
   },
-  "Drop file here or click to upload": {
-    "One": "将文件拖到此处或单击上传"
+  "Id": {
+    "One": "ID"
   },
-  "Please upload csv file": {
-    "One": "请上传csv文件"
-  },
-  "Columns": {
-    "One": "列"
-  },
-  "You can reference export file": {
-    "One": "您可以参考导出文件"
-  },
-  "Remark": {
-    "One": "备注"
-  },
-  "VersionRelease": {
-    "One": "版本发布"
-  },
-  "PublishNewVersion": {
-    "One": "发布新版本"
-  },
-  "Publish": {
-    "One": "发布"
-  },
-  "DownloadUrl": {
-    "One": "下载地址"
-  },
-  "ReleaseNotes": {
-    "One": "更新说明"
-  },
-  "ReleaseNotesPlaceholder": {
-    "One": "修复了哪些问题..."
-  },
-  "TotalDevices": {
-    "One": "总设备数"
-  },
-  "Online": {
-    "One": "在线"
-  },
-  "Offline": {
-    "One": "离线"
-  },
-  "TodayConnections": {
-    "One": "今日连接"
-  },
-  "RecentDevices": {
-    "One": "最近离线设备"
-  },
-  "RecentConnections": {
-    "One": "最近连接记录"
-  },
-  "LastOnline": {
-    "One": "最后在线"
-  },
-  "Time": {
-    "One": "时间"
-  },
-  "AlertConfig": {
-    "One": "告警配置"
-  },
-  "AlertChannel": {
-    "One": "告警通道"
-  },
-  "ConfigFile": {
-    "One": "配置文件"
-  },
-  "ConfigFileTip": {
-    "One": "此处直接编辑后端 config.yaml 配置文件，保存后需重启服务生效。"
-  },
-  "ConfigFilePath": {
-    "One": "配置文件路径"
-  },
-  "RestartService": {
-    "One": "重启服务"
-  },
-  "ServiceRestartTip": {
-    "One": "修改配置保存后，点击此处重启后端服务进程使配置生效。"
-  },
-  "ServiceRestarting": {
-    "One": "服务正在重启，稍后将自动刷新页面"
-  },
-  "Channel": {
-    "One": "推送通道"
-  },
-  "WebhookUrl": {
-    "One": "Webhook 地址"
-  },
-  "SmtpHost": {
-    "One": "SMTP 服务器"
-  },
-  "SmtpPort": {
-    "One": "SMTP 端口"
-  },
-  "SmtpUser": {
-    "One": "SMTP 账号"
-  },
-  "SmtpPass": {
-    "One": "SMTP 授权码"
-  },
-  "SmtpTo": {
-    "One": "收件人"
-  },
-  "OfflineMin": {
-    "One": "离线阈值"
-  },
-  "StationMessages": {
-    "One": "站内消息"
-  },
-  "MarkAllRead": {
-    "One": "全部已读"
-  },
-  "MessageTitle": {
-    "One": "消息标题"
-  },
-  "ViewAll": {
-    "One": "查看全部"
-  },
-  "MarkRead": {
-    "One": "标记已读"
-  },
-  "Unread": {
-    "One": "未读"
-  },
-  "MonitorScope": {
-    "One": "监控范围"
-  },
-  "AllDevices": {
-    "One": "全部设备"
-  },
-  "SelectTargets": {
-    "One": "指定分组和设备"
-  },
-  "Scope": {
-    "One": "监控范围"
-  },
-  "LoadDevices": {
-    "One": "加载设备"
-  },
-  "NoCollections": {
-    "One": "暂无可用分组，请先在地址簿中添加"
-  },
-  "Home": {
-    "One": "首页"
-  },
-  "SendMessage": {
-    "One": "发送消息"
-  },
-  "Sender": {
-    "One": "发送人"
-  },
-  "Receiver": {
-    "One": "接收人"
-  },
-  "AutoRefresh": {
-    "One": "自动刷新"
-  },
-  "ClientType": {
-    "One": "客户端类型"
-  },
-  "DeviceManage": {
-    "One": "设备管理"
-  },
-  "UserMgmt": {
-    "One": "用户管理"
-  },
-  "AbMgmt": {
-    "One": "地址簿管理"
-  },
-  "SystemMgmt": {
-    "One": "系统管理"
-  },
-  "AuditMgmt": {
-    "One": "审计日志"
-  },
-  "Strategy": {
-    "One": "策略管理"
-  },
-  "MfaTitle": {
-    "One": "多因素认证 (MFA)"
-  },
-  "MfaSetup": {
-    "One": "设置 MFA"
-  },
-  "MfaEnable": {
-    "One": "启用 MFA"
-  },
-  "MfaDisable": {
-    "One": "关闭 MFA"
-  },
-  "MfaSecret": {
-    "One": "密钥"
-  },
-  "MfaCode": {
-    "One": "动态验证码"
-  },
-  "MfaVerify": {
-    "One": "验证并登录"
-  },
-  "MfaVerifyTip": {
-    "One": "请输入身份验证器（如 Google Authenticator）中的 6 位动态码"
-  },
-  "MfaCodeError": {
-    "One": "动态码错误，请重新输入"
-  },
-  "MfaTokenMissing": {
-    "One": "登录已失效，请重新输入账号密码"
-  },
-  "MfaScanTip": {
-    "One": "请用身份验证器 App 扫描下方二维码，或手动输入密钥"
-  },
-  "MfaRecoveryCodes": {
-    "One": "备用恢复码"
-  },
-  "MfaRecoveryTip": {
-    "One": "请妥善保存以下恢复码，每个仅可使用一次，无法获取动态码时用于登录。"
-  },
-  "MfaCodeRequired": {
-    "One": "请输入动态验证码"
-  },
-  "MfaEnabled": {
-    "One": "已启用"
-  },
-  "MfaDisabled": {
-    "One": "未启用"
-  },
-  "MfaDisableConfirm": {
-    "One": "关闭 MFA 需要验证登录密码"
-  },
-  "Copy": {
-    "One": "复制"
-  },
-  "Back": {
-    "One": "返回"
-  },
-  "IdP": {
-    "One": "身份提供商"
-  },
-  "Loading": {
-    "One": "加载中..."
-  },
-  "ServerStatus": {
-    "One": "服务器状态"
-  },
-  "Hbbs": {
-    "One": "HBBS"
-  },
-  "HbbsDesc": {
-    "One": "ID / 注册服务器"
-  },
-  "Hbbr": {
-    "One": "HBBR"
-  },
-  "HbbrDesc": {
-    "One": "中继服务器"
-  },
-  "HbbrLoad": {
-    "One": "HBBR 负载 / 连接数"
-  },
-  "HbbrStatsUnavailable": {
-    "One": "无法获取 HBBR 负载数据"
-  },
-  "ConnectionCount": {
-    "One": "中继连接数"
-  },
-  "CurrentSpeed": {
-    "One": "当前总速率"
-  },
-  "HighestSpeed": {
-    "One": "峰值速率"
-  },
-  "TotalTraffic": {
-    "One": "累计流量"
-  },
-  "ClientAddr": {
-    "One": "客户端地址"
-  },
-  "Duration": {
-    "One": "时长"
-  },
-  "Traffic": {
-    "One": "流量"
-  },
-  "AvgSpeed": {
-    "One": "平均速率"
-  },
-  "ServerUp": {
-    "One": "运行中"
-  },
-  "ServerDown": {
-    "One": "不可达"
-  },
-  "ServerNotConfigured": {
-    "One": "未配置"
-  },
-  "ServerHost": {
-    "One": "地址"
-  },
-  "Latency": {
-    "One": "延迟"
-  },
-  "ServerError": {
-    "One": "错误信息"
-  },
-  "ServerStatusTip": {
-    "One": "自定义服务器地址并实时 TCP 探测连通性与延迟（超时 3 秒，每 10 秒自动刷新）。可添加多个服务器。"
-  },
-  "AddServer": {
-    "One": "添加服务器"
-  },
-  "EditServer": {
-    "One": "编辑服务器"
-  },
-  "ServerName": {
+  "Name": {
     "One": "名称"
   },
-  "ServerAddress": {
-    "One": "地址"
-  },
-  "ServerHost": {
-    "One": "主机 / IP"
-  },
-  "ServerPort": {
-    "One": "端口"
-  },
-  "ServerHostPlaceholder": {
-    "One": "请输入主机或 IP，如 192.0.2.1 或 hbbs.example.com"
-  },
-  "ServerPortPlaceholder": {
-    "One": "端口（可选，0 表示仅探测主机）"
-  },
-  "ServerNamePlaceholder": {
-    "One": "请输入服务器显示名称"
-  },
-  "ServerNameHostRequired": {
-    "One": "名称和主机地址不能为空"
-  },
-  "NoServer": {
-    "One": "尚未添加任何服务器，点击右上角“添加服务器”"
-  },
-  "ConfirmDeleteServer": {
-    "One": "确认删除该服务器监控项？"
-  },
-  "Saved": {
-    "One": "已保存"
-  },
-  "Deleted": {
-    "One": "已删除"
+  "Status": {
+    "One": "状态"
   },
   "Enabled": {
     "One": "启用"
   },
-  "AutoRefresh": {
-    "One": "自动刷新"
+  "Disabled": {
+    "One": "禁用"
   },
-  "MfaRecoveryCode": {
-    "One": "恢复码"
+  "Sort": {
+    "One": "排序"
   },
-  "MfaUseCode": {
-    "One": "使用动态验证码"
+  "Username": {
+    "One": "用户名"
   },
-  "MfaUseRecovery": {
-    "One": "使用恢复码登录"
+  "Password": {
+    "One": "密码"
   },
-  "MfaReset": {
-    "One": "重置 MFA"
+  "Nickname": {
+    "One": "昵称"
   },
-  "MfaResetConfirm": {
-    "One": "确认重置用户 {username} 的多因素认证(MFA)？此操作将清除其 MFA 密钥与恢复码，使其可用密码重新登录。"
+  "Email": {
+    "One": "邮箱"
   },
-  "OperationFailed": {
-    "One": "操作失败"
+  "Mobile": {
+    "One": "手机号"
   },
-  "ProcessMonitor": {
-    "One": "进程监控"
+  "Avatar": {
+    "One": "头像"
   },
-  "ProcessMonitorTip": {
-    "One": "集中配置需要监控的进程或端口，客户端定时上报运行状态；进程/端口停止超过阈值将触发告警。"
+  "IsAdmin": {
+    "One": "是否管理员"
   },
-  "ProcessStatusTip": {
-    "One": "各设备监控项实时运行状态（由客户端上报）"
+  "Remark": {
+    "One": "备注"
   },
-  "ProcessTargetMode": {
-    "One": "配置方式"
+  "LoginTime": {
+    "One": "登录时间"
   },
-  "ProcessModeManual": {
-    "One": "手动输入"
+  "LoginIp": {
+    "One": "登录IP"
   },
-  "ProcessModeDeviceGroup": {
-    "One": "按设备组"
+  "CreatedAt": {
+    "One": "创建时间"
   },
-  "ProcessModeAbTags": {
-    "One": "按地址簿标签"
-  },
-  "ProcessSelectDeviceGroup": {
-    "One": "选择设备组（将为组内所有设备批量创建）"
-  },
-  "ProcessSelectAbTags": {
-    "One": "选择地址簿标签（将为含所选标签的设备批量创建）"
-  },
-  "ProcessBatchResult": {
-    "One": "批量创建完成：新增 {created} 条，跳过 {skipped} 条（已存在）"
-  },
-  "ProcessSourceGroup": {
-    "One": "设备组"
-  },
-  "ProcessSourceTag": {
-    "One": "地址簿标签"
-  },
-  "ProcessDeviceCount": {
-    "One": "设备数"
-  },
-  "ProcessPeers": {
-    "One": "设备列表"
-  },
-  "ProcessPeerOverride": {
-    "One": "单独配置"
-  },
-  "ProcessInherit": {
-    "One": "继承父规则"
-  },
-  "ProcessPeerId": {
-    "One": "设备ID"
-  },
-  "ProcessPeerIdTip": {
-    "One": "填写需要监控的设备 peer id（可在设备管理页查看）"
-  },
-  "ProcessName": {
-    "One": "监控名称"
-  },
-  "ProcessType": {
-    "One": "类型"
-  },
-  "ProcessProcess": {
-    "One": "进程"
-  },
-  "ProcessPort": {
-    "One": "端口"
-  },
-  "ProcessTarget": {
-    "One": "目标"
-  },
-  "ProcessTargetTip": {
-    "One": "进程名(如 notepad.exe) 或端口号(如 8080)"
-  },
-  "ProcessInterval": {
-    "One": "检测间隔(秒)"
-  },
-  "ProcessDownThreshold": {
-    "One": "停止阈值(秒)"
-  },
-  "ProcessAlertRule": {
-    "One": "告警规则"
-  },
-  "ProcessAlertRuleTip": {
-    "One": "关联已有告警配置，停止时发送通知；不选则不告警"
-  },
-  "ProcessEnabled": {
-    "One": "启用"
-  },
-  "ProcessOperation": {
-    "One": "操作"
-  },
-  "ProcessAdd": {
-    "One": "新增规则"
-  },
-  "ProcessEdit": {
-    "One": "编辑"
-  },
-  "ProcessDelete": {
-    "One": "删除"
-  },
-  "ProcessRefresh": {
-    "One": "刷新"
-  },
-  "ProcessRunning": {
-    "One": "运行状态"
-  },
-  "ProcessUp": {
-    "One": "正常"
-  },
-  "ProcessDown": {
-    "One": "停止"
-  },
-  "ProcessDownSince": {
-    "One": "停止起始"
-  },
-  "ProcessCancel": {
-    "One": "取消"
-  },
-  "ProcessSave": {
-    "One": "保存"
-  },
-  "ProcessSaved": {
-    "One": "已保存"
-  },
-  "ProcessDeleted": {
-    "One": "已删除"
-  },
-  "ProcessConfirmDelete": {
-    "One": "确认删除该监控规则？"
-  },
-  "ProcessTip": {
-    "One": "提示"
-  },
-  "Invitation": {
-    "One": "邀请码管理"
-  },
-  "CreateInvitation": {
-    "One": "创建邀请码"
-  },
-  "CopyInviteLink": {
-    "One": "复制邀请链接"
-  },
-  "CopyLink": {
-    "One": "复制链接"
-  },
-  "LinkCopied": {
-    "One": "链接已复制到剪贴板"
-  },
-  "InviteCode": {
-    "One": "邀请码"
-  },
-  "InviteCodeRequired": {
-    "One": "请输入邀请码"
-  },
-  "InviteCodePlaceholder": {
-    "One": "请联系管理员获取"
-  },
-  "AutoGenerate": {
-    "One": "自动生成"
-  },
-  "MaxUsers": {
-    "One": "最大使用次数"
-  },
-  "MaxUsersPlaceholder": {
-    "One": "0 表示不限次数"
-  },
-  "MaxUsersFixedTip": {
-    "One": "限制每次只能使用一次"
-  },
-  "DefaultExpire1Day": {
-    "One": "默认 1 天后过期"
+  "UpdatedAt": {
+    "One": "更新时间"
   },
   "ExpiredAt": {
     "One": "过期时间"
   },
   "ExpiredAtPlaceholder": {
-    "One": "留空表示永不过期"
+    "One": "留空则不限制"
   },
-  "ExpiredAtTip": {
-    "One": "留空表示永不过期"
+  "DefaultExpire1Day": {
+    "One": "留空默认 24 小时后过期"
   },
   "UserExpiredAt": {
-    "One": "用户过期时间"
+    "One": "注册用户过期时间"
   },
   "UserExpiredAtTip": {
-    "One": "留空表示该邀请码创建的用户永不过期"
+    "One": "使用该邀请码注册的用户将在过期后无法登录"
   },
-  "UsageCount": {
-    "One": "使用次数"
+  "Page": {
+    "One": "第"
   },
-  "Expired": {
+  "PageTotal": {
+    "One": "共"
+  },
+  "PageItem": {
+    "One": "条"
+  },
+  "LoginLog": {
+    "One": "登录日志"
+  },
+  "UserList": {
+    "One": "用户列表"
+  },
+  "UserCreate": {
+    "One": "创建用户"
+  },
+  "UserEdit": {
+    "One": "编辑用户"
+  },
+  "UserOnline": {
+    "One": "在线用户"
+  },
+  "UserOnlinePeer": {
+    "One": "在线设备"
+  },
+  "GroupList": {
+    "One": "分组列表"
+  },
+  "GroupCreate": {
+    "One": "创建分组"
+  },
+  "GroupEdit": {
+    "One": "编辑分组"
+  },
+  "GroupDetail": {
+    "One": "分组详情"
+  },
+  "GroupName": {
+    "One": "分组名称"
+  },
+  "GroupParent": {
+    "One": "父级分组"
+  },
+  "DeviceGroupList": {
+    "One": "设备组列表"
+  },
+  "DeviceGroupCreate": {
+    "One": "创建设备组"
+  },
+  "DeviceGroupEdit": {
+    "One": "编辑设备组"
+  },
+  "DeviceGroupName": {
+    "One": "设备组名称"
+  },
+  "CreateInvitation": {
+    "One": "创建邀请码"
+  },
+  "BatchCreateInvitation": {
+    "One": "批量生成邀请码"
+  },
+  "CopyInviteLink": {
+    "One": "复制邀请链接"
+  },
+  "CopySuccess": {
+    "One": "复制成功"
+  },
+  "InvitationCode": {
+    "One": "邀请码"
+  },
+  "InvitationUsed": {
+    "One": "已使用"
+  },
+  "InvitationExpired": {
     "One": "已过期"
   },
-  "UsedUp": {
-    "One": "已用完"
-  },
-  "Active": {
+  "InvitationValid": {
     "One": "有效"
   },
-  "AccountExpired": {
-    "One": "账户已过期，请联系管理员"
+  "MaxUsers": {
+    "One": "最大使用次数"
   },
-  "RegisterSuccess": {
-    "One": "注册成功"
-  }
+  "UsedUsers": {
+    "One": "已使用"
+  },
+  "GenerateCount": {
+    "One": "生成数量"
+  },
+  "GenerateCountPlaceholder": {
+    "One": "最多 200 个"
+  },
+  "GeneratedCodes": {
+    "One": "生成的邀请码"
+  },
+  "CopyAll": {
+    "One": "复制全部"
+  },
+  "AllCopied": {
+    "One": "已复制全部邀请码"
+  },
+  "AutoGenerate": {
+    "One": "自动生成"
+  },
+  ...
 }

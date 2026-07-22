@@ -1,154 +1,206 @@
 import request from '@/utils/request'
 
-export function login (data) {
+export function userLogin(data) {
   return request({
     url: '/login',
     method: 'post',
     data,
   })
 }
-
-export function current () {
+export function userMfaLogin(data) {
+  return request({
+    url: '/login/mfa',
+    method: 'post',
+    data,
+  })
+}
+export function userInfo(data) {
   return request({
     url: '/user/current',
     method: 'get',
+    data,
   })
 }
-
-export function list (params) {
+export function userLogout(data) {
   return request({
-    url: '/user/list',
-    params,
-  })
-}
-
-export function detail (id) {
-  return request({
-    url: `/user/detail/${id}`,
-  })
-}
-
-export function create (data) {
-  return request({
-    url: '/user/create',
+    url: '/logout',
     method: 'post',
     data,
   })
 }
-
-export function update (data) {
+export function userCaptcha(data) {
   return request({
-    url: '/user/update',
-    method: 'post',
+    url: '/captcha',
+    method: 'get',
     data,
   })
 }
-
-export function remove (data) {
+export function userLoginOptions(data) {
   return request({
-    url: '/user/delete',
-    method: 'post',
+    url: '/login-options',
+    method: 'get',
     data,
   })
 }
-
-export function changePwd (data) {
-  return request({
-    url: '/user/changePwd',
-    method: 'post',
-    data,
-  })
-}
-
-export function changeCurPwd (data) {
+export function changeCurPwd(data) {
   return request({
     url: '/user/changeCurPwd',
     method: 'post',
     data,
   })
 }
-
-export function myOauth () {
-  return request({
-    url: '/user/myOauth',
-    method: 'post',
-  })
-}
-
-export function mfaSetup () {
-  return request({
-    url: '/user/mfa/setup',
-    method: 'post',
-  })
-}
-
-export function mfaEnable (data) {
-  return request({
-    url: '/user/mfa/enable',
-    method: 'post',
-    data,
-  })
-}
-
-export function mfaDisable (data) {
-  return request({
-    url: '/user/mfa/disable',
-    method: 'post',
-    data,
-  })
-}
-
-export function mfaStatus () {
-  return request({
-    url: '/user/mfa/status',
-    method: 'get',
-  })
-}
-
-// 管理员强制重置指定用户的 MFA（救援：用户丢失验证器/恢复码时）
-export function mfaReset (data) {
-  return request({
-    url: '/user/mfa/reset',
-    method: 'post',
-    data,
-  })
-}
-
-export function groupUsers (data) {
+export function groupUsersList(data) {
   return request({
     url: '/user/groupUsers',
     method: 'post',
     data,
   })
 }
-
-export function register (data) {
+export function getUserList(data) {
+  return request({
+    url: '/user/list',
+    method: 'get',
+    data,
+  })
+}
+export function getUserDetail(id) {
+  return request({
+    url: '/user/detail/' + id,
+    method: 'get',
+  })
+}
+export function userCreate(data) {
+  return request({
+    url: '/user/create',
+    method: 'post',
+    data,
+  })
+}
+export function userUpdate(data) {
+  return request({
+    url: '/user/update',
+    method: 'post',
+    data,
+  })
+}
+export function userDelete(data) {
+  return request({
+    url: '/user/delete',
+    method: 'post',
+    data,
+  })
+}
+export function changePwd(data) {
+  return request({
+    url: '/user/changePwd',
+    method: 'post',
+    data,
+  })
+}
+export function userMyOauth(data) {
+  return request({
+    url: '/user/myOauth',
+    method: 'post',
+    data,
+  })
+}
+export function userRegister(data) {
   return request({
     url: '/user/register',
     method: 'post',
     data,
   })
 }
-
-// 邀请码管理
-export function invitationList (params) {
+export function mfaSetup(data) {
   return request({
-    url: '/invitation/list',
+    url: '/user/mfa/setup',
+    method: 'post',
+    data,
+  })
+}
+export function mfaEnable(data) {
+  return request({
+    url: '/user/mfa/enable',
+    method: 'post',
+    data,
+  })
+}
+export function mfaDisable(data) {
+  return request({
+    url: '/user/mfa/disable',
+    method: 'post',
+    data,
+  })
+}
+export function mfaReset(data) {
+  return request({
+    url: '/user/mfa/reset',
+    method: 'post',
+    data,
+  })
+}
+export function mfaStatus(data) {
+  return request({
+    url: '/user/mfa/status',
+    method: 'get',
+    data,
+  })
+}
+export function userTokenBatchDelete(data) {
+  return request({
+    url: '/user_tokens/batchDelete',
+    method: 'post',
+    data,
+  })
+}
+
+export function loginOptions(data) {
+  return request({
+    url: '/login-options',
+    method: 'get',
+    data,
+  })
+}
+
+export function oidcAuth(data) {
+  return request({
+    url: '/oidc/auth',
+    method: 'post',
+    data,
+  })
+}
+export function oidcAuthQuery(params) {
+  return request({
+    url: '/oidc/auth-query',
+    method: 'get',
     params,
   })
 }
 
-export function invitationCreate (data) {
+export function invitationList(data) {
+  return request({
+    url: '/invitation/list',
+    method: 'get',
+    data,
+  })
+}
+export function invitationCreate(data) {
   return request({
     url: '/invitation/create',
     method: 'post',
     data,
   })
 }
-
-export function invitationDelete (data) {
+export function invitationDelete(data) {
   return request({
     url: '/invitation/delete',
+    method: 'post',
+    data,
+  })
+}
+export function invitationBatchCreate(data) {
+  return request({
+    url: '/invitation/batchCreate',
     method: 'post',
     data,
   })
