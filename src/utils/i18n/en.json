@@ -866,7 +866,7 @@
     "One": "Port"
   },
   "ServerHostPlaceholder": {
-    "One": "Enter host or IP, e.g. 192.168.1.10 or hbbs.example.com"
+    "One": "Enter host or IP, e.g. 192.0.2.1 or hbbs.example.com"
   },
   "ServerPortPlaceholder": {
     "One": "Port (optional, 0 means host only)"

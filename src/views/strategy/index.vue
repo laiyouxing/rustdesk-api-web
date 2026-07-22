@@ -97,7 +97,7 @@
         </el-form-item>
         <el-form-item label="配置项">
           <el-input v-model="form.config_items" type="textarea" :rows="10"
-            placeholder="每行一个配置项，格式: key=value&#10;例如:&#10;force_relay=Y&#10;enable-udp-punch=N&#10;enable-clipboard=N&#10;custom-rendezvous-server=192.168.1.100:21116"
+            placeholder="每行一个配置项，格式: key=value&#10;例如:&#10;force_relay=Y&#10;enable-udp-punch=N&#10;enable-clipboard=N&#10;custom-rendezvous-server=192.0.2.1:21116"
             style="width: 100%">
           </el-input>
           <div class="hint-text" style="font-size:12px;margin-top:4px;">

@@ -882,7 +882,7 @@
     "One": "端口"
   },
   "ServerHostPlaceholder": {
-    "One": "请输入主机或 IP，如 192.168.1.10 或 hbbs.example.com"
+    "One": "请输入主机或 IP，如 192.0.2.1 或 hbbs.example.com"
   },
   "ServerPortPlaceholder": {
     "One": "端口（可选，0 表示仅探测主机）"
