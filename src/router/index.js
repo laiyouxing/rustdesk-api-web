@@ -98,6 +98,12 @@ export const asyncRoutes = [
         meta: { title: 'LoginLog', icon: 'List' },
         component: () => import('@/views/my/login_log/index.vue'),
       },
+      {
+        path: 'subscription',
+        name: 'MySubscription',
+        meta: { title: 'MySubscription', icon: 'CollectionTag' },
+        component: () => import('@/views/subscribe/MySubscription.vue'),
+      },
     ],
   },
   // ========== 设备管理 ==========
@@ -257,6 +263,12 @@ export const asyncRoutes = [
         name: 'Invitation',
         meta: { title: 'Invitation', icon: 'Link' },
         component: () => import('@/views/invitation/index.vue'),
+      },
+      {
+        path: '/inviteCodes',
+        name: 'AdminInviteCode',
+        meta: { title: 'AdminInviteCode', icon: 'Key' },
+        component: () => import('@/views/admin/InviteCode.vue'),
       },
       {
         path: '/shareRecord',

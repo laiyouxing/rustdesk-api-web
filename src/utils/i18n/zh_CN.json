@@ -1150,5 +1150,182 @@
   },
   "RegisterSuccess": {
     "One": "注册成功"
+  },
+  "MySubscription": {
+    "One": "我的订阅"
+  },
+  "SubscribeUpgrade": {
+    "One": "升级订阅"
+  },
+  "SubscribeUpgradeNow": {
+    "One": "立即升级"
+  },
+  "SubscribeActive": {
+    "One": "已激活"
+  },
+  "SubscribeExpired": {
+    "One": "已过期"
+  },
+  "SubscribeNone": {
+    "One": "未订阅"
+  },
+  "SubscribeNoSubscription": {
+    "One": "您尚未开通任何订阅"
+  },
+  "SubscribeExpireAt": {
+    "One": "订阅过期时间"
+  },
+  "SubscribeDaysLeft": {
+    "One": "剩余天数"
+  },
+  "SubscribeExpiringSoon": {
+    "One": "您的订阅即将过期，请及时续费"
+  },
+  "SubscribeMonthly": {
+    "One": "月"
+  },
+  "SubscribeRecommended": {
+    "One": "推荐"
+  },
+  "SubscribeSelectChannel": {
+    "One": "选择支付渠道"
+  },
+  "SubscribeSelectChannelFirst": {
+    "One": "请先选择支付渠道"
+  },
+  "SubscribePayNow": {
+    "One": "立即支付"
+  },
+  "SubscribeScanQR": {
+    "One": "请使用手机扫码支付"
+  },
+  "SubscribeOpenCashier": {
+    "One": "打开支付页面"
+  },
+  "SubscribePolling": {
+    "One": "等待支付结果"
+  },
+  "SubscribeSuccess": {
+    "One": "支付成功！"
+  },
+  "SubscribeCodeTitle": {
+    "One": "您的邀请码如下，请妥善保管："
+  },
+  "SubscribeCodeHint": {
+    "One": "点击邀请码可复制，您也可以稍后在「我的订阅」中查看"
+  },
+  "SubscribeCreateFailed": {
+    "One": "创建订单失败"
+  },
+  "SubscribeRedeemCode": {
+    "One": "兑换邀请码"
+  },
+  "SubscribeInputCode": {
+    "One": "请输入邀请码"
+  },
+  "SubscribeInputCodeFirst": {
+    "One": "请先输入邀请码"
+  },
+  "SubscribeCodePlaceholder": {
+    "One": "24 位邀请码"
+  },
+  "SubscribeRedeem": {
+    "One": "兑换"
+  },
+  "SubscribeRedeemSuccess": {
+    "One": "兑换成功"
+  },
+  "SubscribeRedeemSuccessDesc": {
+    "One": "订阅已激活，感谢您的支持！"
+  },
+  "SubscribeRedeemFailed": {
+    "One": "兑换失败"
+  },
+  "SubscribeExpireDays": {
+    "One": "有效天数"
+  },
+  "CodeNotFound": {
+    "One": "邀请码不存在"
+  },
+  "CodeUsed": {
+    "One": "邀请码已被使用"
+  },
+  "CodeRevoked": {
+    "One": "邀请码已被撤销"
+  },
+  "CodeExpired": {
+    "One": "邀请码已过期"
+  },
+  "GenerateInviteCode": {
+    "One": "生成邀请码"
+  },
+  "Generate": {
+    "One": "生成"
+  },
+  "GenerateSuccess": {
+    "One": "生成成功"
+  },
+  "GenerateFailed": {
+    "One": "生成失败"
+  },
+  "Revoke": {
+    "One": "撤销"
+  },
+  "RevokeSuccess": {
+    "One": "撤销成功"
+  },
+  "RevokeFailed": {
+    "One": "撤销失败"
+  },
+  "ExportSuccess": {
+    "One": "导出成功"
+  },
+  "ExportFailed": {
+    "One": "导出失败"
+  },
+  "LoadFailed": {
+    "One": "加载失败"
+  },
+  "OrderNo": {
+    "One": "订单号"
+  },
+  "OrderNotFound": {
+    "One": "订单不存在"
+  },
+  "OrderNotPaid": {
+    "One": "订单未支付"
+  },
+  "Plan": {
+    "One": "套餐"
+  },
+  "Alipay": {
+    "One": "支付宝"
+  },
+  "WechatPay": {
+    "One": "微信支付"
+  },
+  "SubscribeMonth": {
+    "One": "月"
+  },
+  "InviteCodeMgmt": {
+    "One": "邀请码管理（订阅）"
+  },
+  "All": {
+    "One": "全部"
+  },
+  "UsedBy": {
+    "One": "使用者"
+  },
+  "Action": {
+    "One": "操作"
+  },
+  "GotIt": {
+    "One": "知道了"
+  },
+  "SubscribeExpireSoon": {
+    "One": "专业版 · {days}天"
+  },
+  "AdminInviteCode": {
+    "One": "邀请码管理"
   }
 }

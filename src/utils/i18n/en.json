@@ -1134,5 +1134,182 @@
   },
   "RegisterSuccess": {
     "One": "Registration successful"
+  },
+  "MySubscription": {
+    "One": "My Subscription"
+  },
+  "SubscribeUpgrade": {
+    "One": "Upgrade Subscription"
+  },
+  "SubscribeUpgradeNow": {
+    "One": "Upgrade Now"
+  },
+  "SubscribeActive": {
+    "One": "Active"
+  },
+  "SubscribeExpired": {
+    "One": "Expired"
+  },
+  "SubscribeNone": {
+    "One": "None"
+  },
+  "SubscribeNoSubscription": {
+    "One": "You don't have an active subscription"
+  },
+  "SubscribeExpireAt": {
+    "One": "Expires At"
+  },
+  "SubscribeDaysLeft": {
+    "One": "Days Left"
+  },
+  "SubscribeExpiringSoon": {
+    "One": "Your subscription is expiring soon, please renew"
+  },
+  "SubscribeMonthly": {
+    "One": "Month"
+  },
+  "SubscribeRecommended": {
+    "One": "Recommended"
+  },
+  "SubscribeSelectChannel": {
+    "One": "Payment Method"
+  },
+  "SubscribeSelectChannelFirst": {
+    "One": "Please select a payment method"
+  },
+  "SubscribePayNow": {
+    "One": "Pay Now"
+  },
+  "SubscribeScanQR": {
+    "One": "Scan the QR code to pay"
+  },
+  "SubscribeOpenCashier": {
+    "One": "Open Payment Page"
+  },
+  "SubscribePolling": {
+    "One": "Waiting for payment result"
+  },
+  "SubscribeSuccess": {
+    "One": "Payment Successful!"
+  },
+  "SubscribeCodeTitle": {
+    "One": "Your invite code:"
+  },
+  "SubscribeCodeHint": {
+    "One": "Click to copy. You can also view it later in My Subscription."
+  },
+  "SubscribeCreateFailed": {
+    "One": "Failed to create order"
+  },
+  "SubscribeRedeemCode": {
+    "One": "Redeem Code"
+  },
+  "SubscribeInputCode": {
+    "One": "Enter Invite Code"
+  },
+  "SubscribeInputCodeFirst": {
+    "One": "Please enter the invite code first"
+  },
+  "SubscribeCodePlaceholder": {
+    "One": "24-digit invite code"
+  },
+  "SubscribeRedeem": {
+    "One": "Redeem"
+  },
+  "SubscribeRedeemSuccess": {
+    "One": "Redemption Successful"
+  },
+  "SubscribeRedeemSuccessDesc": {
+    "One": "Subscription activated. Thank you for your support!"
+  },
+  "SubscribeRedeemFailed": {
+    "One": "Redemption Failed"
+  },
+  "SubscribeExpireDays": {
+    "One": "Valid Days"
+  },
+  "CodeNotFound": {
+    "One": "Code not found"
+  },
+  "CodeUsed": {
+    "One": "Code already used"
+  },
+  "CodeRevoked": {
+    "One": "Code has been revoked"
+  },
+  "CodeExpired": {
+    "One": "Code has expired"
+  },
+  "GenerateInviteCode": {
+    "One": "Generate Invite Code"
+  },
+  "Generate": {
+    "One": "Generate"
+  },
+  "GenerateSuccess": {
+    "One": "Generation successful"
+  },
+  "GenerateFailed": {
+    "One": "Generation failed"
+  },
+  "Revoke": {
+    "One": "Revoke"
+  },
+  "RevokeSuccess": {
+    "One": "Revoked successfully"
+  },
+  "RevokeFailed": {
+    "One": "Revocation failed"
+  },
+  "ExportSuccess": {
+    "One": "Export successful"
+  },
+  "ExportFailed": {
+    "One": "Export failed"
+  },
+  "LoadFailed": {
+    "One": "Load failed"
+  },
+  "OrderNo": {
+    "One": "Order No."
+  },
+  "OrderNotFound": {
+    "One": "Order not found"
+  },
+  "OrderNotPaid": {
+    "One": "Order not paid"
+  },
+  "Plan": {
+    "One": "Plan"
+  },
+  "Alipay": {
+    "One": "Alipay"
+  },
+  "WechatPay": {
+    "One": "WeChat Pay"
+  },
+  "SubscribeMonth": {
+    "One": "Month"
+  },
+  "InviteCodeMgmt": {
+    "One": "Invite Codes (Subscription)"
+  },
+  "All": {
+    "One": "All"
+  },
+  "UsedBy": {
+    "One": "Used By"
+  },
+  "Action": {
+    "One": "Action"
+  },
+  "GotIt": {
+    "One": "Got It"
+  },
+  "SubscribeExpireSoon": {
+    "One": "Pro · {days}d"
+  },
+  "AdminInviteCode": {
+    "One": "Invite Codes"
   }
 }
