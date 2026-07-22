@@ -153,3 +153,11 @@ export function invitationDelete (data) {
     data,
   })
 }
+
+export function invitationBatchCreate (data) {
+  return request({
+    url: '/invitation/batchCreate',
+    method: 'post',
+    data,
+  })
+}

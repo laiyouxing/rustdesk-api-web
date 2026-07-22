@@ -4,10 +4,71 @@
       <el-form inline label-width="80px">
         <el-form-item>
           <el-button type="primary" @click="showCreate = true">{{ T('CreateInvitation') }}</el-button>
-          <el-button type="success" @click="copyInviteLink" :disabled="!selectedCode">{{ T('CopyInviteLink') }}</el-button>
+          <el-button type="success" @click="showBatchCreate = true">{{ T('BatchCreateInvitation') }}</el-button>
+          <el-button type="info" @click="copyInviteLink" :disabled="!selectedCode">{{ T('CopyInviteLink') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
+
+    <!-- 批量生成邀请码对话框 -->
+    <el-dialog :title="T('BatchCreateInvitation')" v-model="showBatchCreate" width="600px" @close="batchCreateForm.count = 10">
+      <el-form :model="batchCreateForm" label-width="120px">
+        <el-form-item :label="T('GenerateCount')">
+          <el-input-number v-model="batchCreateForm.count" :min="1" :max="200" style="width:200px"/>
+          <span style="margin-left:8px;color:#909399;">{{ T('GenerateCountPlaceholder') }}</span>
+        </el-form-item>
+        <el-form-item :label="T('ExpiredAt')">
+          <el-date-picker v-model="batchCreateForm.expiredAtDate"
+                          type="datetime"
+                          :placeholder="T('ExpiredAtPlaceholder')"
+                          value-format="x"
+                          style="width:100%"/>
+          <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap;">
+            <el-button size="small" @click="batchSetExpiredAt(30)">1个月</el-button>
+            <el-button size="small" @click="batchSetExpiredAt(90)">3个月</el-button>
+            <el-button size="small" @click="batchSetExpiredAt(365)">1年</el-button>
+            <el-button size="small" @click="batchSetExpiredAt(3650)">10年</el-button>
+            <el-button size="small" @click="batchSetExpiredAt(-1)">永久</el-button>
+          </div>
+          <span class="el-form-item__tip">{{ T('DefaultExpire1Day') }}</span>
+        </el-form-item>
+        <el-form-item :label="T('UserExpiredAt')">
+          <el-date-picker v-model="batchCreateForm.userExpiredAtDate"
+                          type="datetime"
+                          :placeholder="T('ExpiredAtPlaceholder')"
+                          value-format="x"
+                          style="width:100%"/>
+          <div style="margin-top:6px; display:flex; gap:4px; flex-wrap:wrap;">
+            <el-button size="small" @click="batchSetUserExpiredAt(30)">1个月</el-button>
+            <el-button size="small" @click="batchSetUserExpiredAt(90)">3个月</el-button>
+            <el-button size="small" @click="batchSetUserExpiredAt(365)">1年</el-button>
+            <el-button size="small" @click="batchSetUserExpiredAt(3650)">10年</el-button>
+            <el-button size="small" @click="batchSetUserExpiredAt(-1)">永久</el-button>
+          </div>
+          <span class="el-form-item__tip">{{ T('UserExpiredAtTip') }}</span>
+        </el-form-item>
+        <el-form-item :label="T('Remark')">
+          <el-input v-model="batchCreateForm.remark" type="textarea" :rows="2"/>
+        </el-form-item>
+      </el-form>
+      <!-- 生成结果展示 -->
+      <div v-if="batchResult.length > 0" style="margin-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <strong>{{ T('GeneratedCodes') }}（{{ batchResult.length }}）</strong>
+          <el-button size="small" type="primary" @click="copyAllCodes">{{ T('CopyAll') }}</el-button>
+        </div>
+        <div style="max-height:300px;overflow-y:auto;border:1px solid #ebeef5;border-radius:4px;padding:8px;">
+          <el-tag v-for="item in batchResult" :key="item.code"
+                  style="margin:3px;font-family:monospace;font-size:12px;" type="info">
+            {{ item.code }}
+          </el-tag>
+        </div>
+      </div>
+      <template #footer>
+        <el-button @click="showBatchCreate = false">{{ T('Cancel') }}</el-button>
+        <el-button type="primary" @click="submitBatchCreate" :loading="batchLoading">{{ T('Submit') }}</el-button>
+      </template>
+    </el-dialog>
 
     <!-- 创建邀请码对话框 -->
     <el-dialog :title="T('CreateInvitation')" v-model="showCreate" width="500px">
@@ -121,9 +182,12 @@
   import { ref, onMounted, watch, reactive } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import { T } from '@/utils/i18n'
-  import { invitationList, invitationCreate, invitationDelete } from '@/api/user'
+  import { invitationList, invitationCreate, invitationDelete, invitationBatchCreate } from '@/api/user'
 
   const showCreate = ref(false)
+  const showBatchCreate = ref(false)
+  const batchLoading = ref(false)
+  const batchResult = ref([])
   const loading = ref(false)
   const list = ref([])
   const total = ref(0)
@@ -142,6 +206,12 @@
     expired_at: 0,
     userExpiredAtDate: null, // 用户过期时间，默认永久
     user_expired_at: 0,
+    remark: '',
+  })
+  const batchCreateForm = reactive({
+    count: 10,
+    expiredAtDate: Date.now() + 86400000, // 默认1天后
+    userExpiredAtDate: null,
     remark: '',
   })
   const createRules = {
@@ -260,6 +330,53 @@
   const copyInviteLink = () => {
     if (!selectedCode.value) return
     copySingleLink({ code: selectedCode.value })
+  }
+
+  // 批量生成
+  const batchSetExpiredAt = (days) => {
+    if (days < 0) {
+      batchCreateForm.expiredAtDate = null
+    } else {
+      batchCreateForm.expiredAtDate = Date.now() + days * 86400000
+    }
+  }
+  const batchSetUserExpiredAt = (days) => {
+    if (days < 0) {
+      batchCreateForm.userExpiredAtDate = null
+    } else {
+      batchCreateForm.userExpiredAtDate = Date.now() + days * 86400000
+    }
+  }
+  const submitBatchCreate = async () => {
+    batchLoading.value = true
+    batchResult.value = []
+    const payload = {
+      count: batchCreateForm.count,
+      expired_at: batchCreateForm.expiredAtDate ? Math.floor(batchCreateForm.expiredAtDate / 1000) : 0,
+      user_expired_at: batchCreateForm.userExpiredAtDate ? Math.floor(batchCreateForm.userExpiredAtDate / 1000) : 0,
+      remark: batchCreateForm.remark,
+    }
+    const res = await invitationBatchCreate(payload).catch(_ => false)
+    batchLoading.value = false
+    if (res && res.code === 0) {
+      batchResult.value = res.data.list || []
+      ElMessage.success(T('OperationSuccess'))
+      getList()
+    }
+  }
+  const copyAllCodes = () => {
+    const codes = batchResult.value.map(item => item.code).join('\n')
+    navigator.clipboard.writeText(codes).then(() => {
+      ElMessage.success(T('AllCopied'))
+    }).catch(() => {
+      const ta = document.createElement('textarea')
+      ta.value = codes
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      document.body.removeChild(ta)
+      ElMessage.success(T('AllCopied'))
+    })
   }
 
   onMounted(getList)

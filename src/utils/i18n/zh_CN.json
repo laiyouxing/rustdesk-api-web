@@ -1085,6 +1085,24 @@
   "InviteCodePlaceholder": {
     "One": "请联系管理员获取"
   },
+  "BatchCreateInvitation": {
+    "One": "批量生成邀请码"
+  },
+  "GenerateCount": {
+    "One": "生成数量"
+  },
+  "GenerateCountPlaceholder": {
+    "One": "最多 200 个"
+  },
+  "GeneratedCodes": {
+    "One": "生成的邀请码"
+  },
+  "CopyAll": {
+    "One": "复制全部"
+  },
+  "AllCopied": {
+    "One": "已复制全部邀请码"
+  },
   "AutoGenerate": {
     "One": "自动生成"
   },

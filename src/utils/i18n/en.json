@@ -1069,6 +1069,24 @@
   "InviteCodePlaceholder": {
     "One": "Please contact admin to get one"
   },
+  "BatchCreateInvitation": {
+    "One": "Batch Generate Invite Codes"
+  },
+  "GenerateCount": {
+    "One": "Count"
+  },
+  "GenerateCountPlaceholder": {
+    "One": "Max 200"
+  },
+  "GeneratedCodes": {
+    "One": "Generated Codes"
+  },
+  "CopyAll": {
+    "One": "Copy All"
+  },
+  "AllCopied": {
+    "One": "All codes copied to clipboard"
+  },
   "AutoGenerate": {
     "One": "Auto Generate"
   },
