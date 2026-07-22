@@ -1230,7 +1230,7 @@
     "One": "请先输入邀请码"
   },
   "SubscribeCodePlaceholder": {
-    "One": "24 位邀请码"
+    "One": "32 位邀请码"
   },
   "SubscribeRedeem": {
     "One": "兑换"

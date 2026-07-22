@@ -1214,7 +1214,7 @@
     "One": "Please enter the invite code first"
   },
   "SubscribeCodePlaceholder": {
-    "One": "24-digit invite code"
+    "One": "32-digit invite code"
   },
   "SubscribeRedeem": {
     "One": "Redeem"
