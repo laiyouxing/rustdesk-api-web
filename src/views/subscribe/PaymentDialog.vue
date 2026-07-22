@@ -47,22 +47,63 @@
       </div>
     </template>
 
-    <!-- 步骤2：展示收款码 -->
+    <!-- 步骤2：展示收款码（收银台） -->
     <template v-if="step === 'qrcode'">
-      <div class="qrcode-section">
-        <div class="qrcode-hint">{{ T('SubscribeScanQR') }}</div>
-        <div class="qrcode-wrapper" v-loading="!qrPayload">
-          <img v-if="qrPayload" :src="qrImageSrc" alt="QR Code" class="qrcode-img" />
+      <div class="cashier">
+        <!-- 商品信息 -->
+        <div class="cashier-header">
+          <div class="cashier-product">{{ selectedPlanName }} · RustDesk 订阅</div>
+          <div class="cashier-amount">
+            <span class="amount-symbol">¥</span>
+            <span class="amount-value">{{ displayAmount }}</span>
+          </div>
         </div>
-        <div class="plan-selected-info">
-          {{ selectedPlanName }} · ¥{{ (selectedPrice / 100).toFixed(2) }}
+
+        <!-- 二维码区域 -->
+        <div class="cashier-qr">
+          <div class="qrcode-wrapper" v-loading="!qrPayload">
+            <img v-if="qrPayload" :src="qrImageSrc" alt="收款码" class="qrcode-img" />
+          </div>
         </div>
-        <div class="order-info">
-          <span>{{ T('OrderNo') }}: {{ orderInfo.out_trade_no }}</span>
+
+        <!-- 倒计时 -->
+        <div class="cashier-timer" :class="{ expired: countdownExpired }">
+          <template v-if="!countdownExpired">
+            <el-icon><el-icon-alarm-clock /></el-icon>
+            二维码有效时间：
+            <span class="timer-value">{{ timerMin }}</span>分
+            <span class="timer-value">{{ timerSec }}</span>秒
+            ，失效勿付
+          </template>
+          <template v-else>
+            <span class="timer-expired">订单二维码已过期</span>
+          </template>
         </div>
-        <div class="polling-status" v-if="pollingSeconds > 0">
-          <el-icon class="is-loading"><el-icon-loading /></el-icon>
-          {{ T('SubscribePolling') }} ({{ pollingSeconds }}s)
+
+        <!-- 金额提示（红色醒目） -->
+        <div class="cashier-warning">
+          <el-icon><el-icon-warning-filled /></el-icon>
+          请按上方金额 <strong>¥{{ displayAmount }}</strong> 付款，不要多付或少付
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="cashier-actions">
+          <el-button size="small" @click="copyAmount">
+            <el-icon><el-icon-copy-document /></el-icon>
+            复制金额 ¥{{ displayAmount }}
+          </el-button>
+        </div>
+
+        <!-- 订单信息 -->
+        <div class="cashier-footer">
+          <div class="footer-row">
+            <span class="footer-label">商户订单号</span>
+            <span class="footer-value">{{ orderInfo.out_trade_no }}</span>
+          </div>
+          <div class="footer-row">
+            <span class="footer-label">支付方式</span>
+            <span class="footer-value">{{ channel === 'alipay' ? '支付宝' : '微信支付' }}</span>
+          </div>
         </div>
       </div>
     </template>
@@ -101,6 +142,9 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:visible', 'activated'])
 
+// 倒计时参数
+const COUNTDOWN_SEC = 300 // 5 分钟
+
 const step = ref('select') // select | qrcode | success
 const plans = ref([])
 const selectedPlanKey = ref('1m')
@@ -109,7 +153,9 @@ const creating = ref(false)
 const orderInfo = ref({})
 const qrPayload = ref('')
 const inviteCode = ref('')
-const pollingSeconds = ref(0)
+const countdownLeft = ref(COUNTDOWN_SEC)
+const countdownExpired = ref(false)
+let countdownTimer = null
 let pollingTimer = null
 
 const selectedPlanName = computed(() => {
@@ -119,6 +165,17 @@ const selectedPlanName = computed(() => {
 const selectedPrice = computed(() => {
   const p = plans.value.find(x => x.key === selectedPlanKey.value)
   return p ? p.price_cents : 0
+})
+
+const displayAmount = computed(() => {
+  return (selectedPrice.value / 100).toFixed(2)
+})
+
+const timerMin = computed(() => {
+  return String(Math.floor(countdownLeft.value / 60)).padStart(2, '0')
+})
+const timerSec = computed(() => {
+  return String(countdownLeft.value % 60).padStart(2, '0')
 })
 
 const qrImageSrc = computed(() => {
@@ -135,7 +192,6 @@ onMounted(async () => {
       selectedPlanKey.value = res.data[0].key
     }
   } catch (_) {
-    // 后端可能还没有计划列表接口，用默认值
     plans.value = [
       { key: '1m', name: '1个月', price_cents: 1000, period_days: 30 },
       { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
@@ -164,6 +220,7 @@ const handleCreateOrder = async () => {
     orderInfo.value = res.data
     qrPayload.value = res.data.qr_payload || ''
     step.value = 'qrcode'
+    startCountdown()
     startPolling(res.data.out_trade_no)
   } catch (e) {
     ElMessage.error(T('SubscribeCreateFailed'))
@@ -172,10 +229,21 @@ const handleCreateOrder = async () => {
   }
 }
 
+const startCountdown = () => {
+  countdownLeft.value = COUNTDOWN_SEC
+  countdownExpired.value = false
+  countdownTimer = setInterval(() => {
+    countdownLeft.value--
+    if (countdownLeft.value <= 0) {
+      clearInterval(countdownTimer)
+      countdownTimer = null
+      countdownExpired.value = true
+    }
+  }, 1000)
+}
+
 const startPolling = (outTradeNo) => {
-  pollingSeconds.value = 0
   pollingTimer = setInterval(async () => {
-    pollingSeconds.value += 3
     try {
       const res = await queryOrder(outTradeNo)
       if (res.code) return
@@ -193,6 +261,15 @@ const startPolling = (outTradeNo) => {
   }, 3000)
 }
 
+const copyAmount = () => {
+  const text = displayAmount.value
+  navigator.clipboard.writeText(text).then(() => {
+    ElMessage.success(T('CopySuccess'))
+  }).catch(() => {
+    ElMessage.warning(T('CopyFailed'))
+  })
+}
+
 const copyCode = () => {
   if (!inviteCode.value) return
   navigator.clipboard.writeText(inviteCode.value).then(() => {
@@ -207,7 +284,12 @@ const handleClosed = () => {
   orderInfo.value = {}
   qrPayload.value = ''
   inviteCode.value = ''
-  pollingSeconds.value = 0
+  countdownLeft.value = COUNTDOWN_SEC
+  countdownExpired.value = false
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
   if (pollingTimer) {
     clearInterval(pollingTimer)
     pollingTimer = null
@@ -221,13 +303,13 @@ watch(() => props.visible, (val) => {
 })
 
 onUnmounted(() => {
-  if (pollingTimer) {
-    clearInterval(pollingTimer)
-  }
+  if (countdownTimer) clearInterval(countdownTimer)
+  if (pollingTimer) clearInterval(pollingTimer)
 })
 </script>
 
 <style scoped>
+/* ====== 步骤1：选择时长 ====== */
 .plan-section {
   margin-bottom: 20px;
 }
@@ -282,46 +364,122 @@ onUnmounted(() => {
   justify-content: flex-end;
   gap: 10px;
 }
-.qrcode-section {
+
+/* ====== 步骤2：收银台 ====== */
+.cashier {
   text-align: center;
 }
-.qrcode-hint {
+.cashier-header {
+  margin-bottom: 16px;
+}
+.cashier-product {
   font-size: 14px;
   color: #606266;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
+}
+.cashier-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+}
+.amount-symbol {
+  font-size: 20px;
+  color: #f56c6c;
+  font-weight: 600;
+}
+.amount-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: #f56c6c;
+  line-height: 1;
+}
+
+/* 二维码 */
+.cashier-qr {
+  margin-bottom: 12px;
 }
 .qrcode-wrapper {
   display: inline-block;
-  padding: 12px;
+  padding: 10px;
   background: #fff;
   border: 1px solid #e4e7ed;
   border-radius: 8px;
-  margin-bottom: 12px;
 }
 .qrcode-img {
   width: 200px;
   height: 200px;
   display: block;
 }
-.plan-selected-info {
-  font-size: 15px;
-  font-weight: 600;
-  color: #303133;
-  margin-bottom: 8px;
-}
-.order-info {
-  font-size: 13px;
-  color: #909399;
-  margin-bottom: 8px;
-}
-.polling-status {
-  font-size: 13px;
-  color: #909399;
+
+/* 倒计时 */
+.cashier-timer {
+  font-size: 14px;
+  color: #606266;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
 }
+.timer-value {
+  color: #f56c6c;
+  font-size: 22px;
+  font-weight: 700;
+}
+.cashier-timer.expired .timer-value {
+  color: #909399;
+}
+.timer-expired {
+  color: #909399;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* 金额提示（红色醒目） */
+.cashier-warning {
+  background: #fef0f0;
+  color: #f56c6c;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.cashier-warning strong {
+  font-size: 15px;
+}
+
+/* 操作按钮 */
+.cashier-actions {
+  margin-bottom: 14px;
+}
+
+/* 订单信息 */
+.cashier-footer {
+  background: #f5f7fa;
+  border-radius: 6px;
+  padding: 10px 14px;
+  text-align: left;
+}
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 3px 0;
+}
+.footer-label {
+  color: #909399;
+}
+.footer-value {
+  color: #303133;
+  font-family: monospace;
+}
+
+/* ====== 步骤3：成功 ====== */
 .success-section {
   text-align: center;
 }
