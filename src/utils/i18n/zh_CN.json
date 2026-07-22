@@ -1214,6 +1214,9 @@
   "SubscribeCodeHint": {
     "One": "点击邀请码可复制，您也可以稍后在「我的订阅」中查看"
   },
+  "SubscribeSelectDuration": {
+    "One": "选择时长"
+  },
   "SubscribeCreateFailed": {
     "One": "创建订单失败"
   },

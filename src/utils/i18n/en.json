@@ -1198,6 +1198,9 @@
   "SubscribeCodeHint": {
     "One": "Click to copy. You can also view it later in My Subscription."
   },
+  "SubscribeSelectDuration": {
+    "One": "Select Duration"
+  },
   "SubscribeCreateFailed": {
     "One": "Failed to create order"
   },
