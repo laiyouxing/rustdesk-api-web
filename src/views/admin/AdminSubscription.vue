@@ -194,7 +194,8 @@ onMounted(async () => {
   try {
     const res = await getPlans()
     if (!res.code && Array.isArray(res.data)) {
-      planOptions.value = res.data
+      const opts = res.data.map(p => p.key === 'forever' ? { ...p, price_cents: null } : p)
+      planOptions.value = opts
     }
   } catch (_) {
     planOptions.value = [

@@ -16,14 +16,10 @@
             v-for="p in plans"
             :key="p.key"
             class="plan-card"
-            :class="{ active: selectedPlanKey === p.key, 'forever-card': p.key === 'forever' }"
-            :style="p.key === 'forever' ? { position: 'relative' } : {}"
+            :class="{ active: selectedPlanKey === p.key }"
             @click="selectedPlanKey = p.key"
           >
-            <div v-if="p.key === 'forever'" class="forever-badge">
-              <el-icon class="forever-star"><el-icon-star-filled /></el-icon>
-            </div>
-            <div v-else class="plan-icon-wrap">
+            <div class="plan-icon-wrap">
               <el-icon class="plan-icon-timer"><el-icon-timer /></el-icon>
             </div>
             <div class="plan-name">{{ p.name }}</div>
@@ -200,9 +196,12 @@ const qrImageSrc = computed(() => {
 onMounted(async () => {
   try {
     const res = await getPlans()
-    if (!res.code && Array.isArray(res.data) && res.data.length > 0) {
-      plans.value = res.data
-      selectedPlanKey.value = res.data[0].key
+    if (!res.code && Array.isArray(res.data)) {
+      const userPlans = res.data.filter(p => p.key !== 'forever')
+      if (userPlans.length > 0) {
+        plans.value = userPlans
+        selectedPlanKey.value = userPlans[0].key
+      }
     }
   } catch (_) {
     plans.value = [
@@ -210,7 +209,6 @@ onMounted(async () => {
       { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
       { key: '6m', name: '6个月', price_cents: 5000, period_days: 180 },
       { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
-      { key: 'forever', name: '永久', price_cents: 18800, period_days: 36500 },
     ]
   }
 })
