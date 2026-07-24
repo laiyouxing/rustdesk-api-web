@@ -16,9 +16,16 @@
             v-for="p in plans"
             :key="p.key"
             class="plan-card"
-            :class="{ active: selectedPlanKey === p.key }"
+            :class="{ active: selectedPlanKey === p.key, 'forever-card': p.key === 'forever' }"
+            :style="p.key === 'forever' ? { position: 'relative' } : {}"
             @click="selectedPlanKey = p.key"
           >
+            <div v-if="p.key === 'forever'" class="forever-badge">
+              <el-icon class="forever-star"><el-icon-star-filled /></el-icon>
+            </div>
+            <div v-else class="plan-icon-wrap">
+              <el-icon class="plan-icon-timer"><el-icon-timer /></el-icon>
+            </div>
             <div class="plan-name">{{ p.name }}</div>
             <div class="plan-price">¥{{ (p.price_cents / 100).toFixed(2) }}</div>
           </div>
@@ -203,6 +210,7 @@ onMounted(async () => {
       { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
       { key: '6m', name: '6个月', price_cents: 5000, period_days: 180 },
       { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
+      { key: 'forever', name: '永久', price_cents: 18800, period_days: 36500 },
     ]
   }
 })
@@ -326,21 +334,57 @@ onUnmounted(() => {
   color: #606266;
 }
 .plan-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
 }
 .plan-card {
   border: 2px solid #e4e7ed;
   border-radius: 10px;
-  padding: 16px;
+  padding: 14px 10px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
+  width: 140px;
+  flex-shrink: 0;
 }
 .plan-card.active {
   border-color: #409eff;
   background: #ecf5ff;
+}
+.plan-card.active .plan-icon-timer {
+  color: #409eff;
+}
+/* 永久卡片 */
+.forever-card {
+  background: linear-gradient(135deg, #fdf6ec 0%, #fff 100%);
+  border-color: #e6a23c;
+}
+.forever-card:hover {
+  border-color: #e6a23c;
+  box-shadow: 0 2px 10px rgba(230,162,60,0.2);
+}
+.forever-card.active {
+  border-color: #e6a23c;
+  background: #fdf6ec;
+}
+.forever-badge {
+  margin-bottom: 4px;
+}
+.forever-star {
+  font-size: 36px;
+  color: #e6a23c;
+}
+.plan-icon-wrap {
+  margin-bottom: 4px;
+}
+.plan-icon-timer {
+  font-size: 36px;
+  color: #909399;
+}
+.plan-card.active .forever-star {
+  color: #d48806;
 }
 .plan-name {
   font-size: 15px;
@@ -351,6 +395,9 @@ onUnmounted(() => {
   font-size: 22px;
   font-weight: 700;
   color: #409eff;
+}
+.forever-card .plan-price {
+  color: #e6a23c;
 }
 .channel-section {
   margin-bottom: 20px;

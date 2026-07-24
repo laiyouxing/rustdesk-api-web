@@ -218,20 +218,23 @@ onMounted(async () => {
   justify-content: center;
 }
 .plan-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
 }
 .plan-card {
   border: 2px solid #e4e7ed;
   border-radius: 12px;
-  padding: 16px 12px;
+  padding: 14px 8px;
   cursor: pointer;
   transition: all 0.25s;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  width: 110px;
+  flex-shrink: 0;
 }
 .plan-card:hover {
   border-color: #a6c8ff;
@@ -247,9 +250,15 @@ onMounted(async () => {
   color: #409eff;
 }
 .plan-icon {
-  font-size: 42px;
+  font-size: 38px;
   color: #909399;
   transition: color 0.25s;
+}
+.plan-card .plan-icon,
+.plan-card .forever-icon {
+  font-size: 38px !important;
+  width: 38px !important;
+  height: 38px !important;
 }
 /* 永久卡片 */
 .forever-card {
