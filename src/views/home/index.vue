@@ -137,6 +137,10 @@
         </el-card>
       </el-col>
     </el-row>
+    <!-- Version info -->
+    <div style="margin-top: 20px; text-align: center; font-size: 12px; color: var(--apple-gray);">
+      {{ T('Backend') }}: {{ backendVersion }}
+    </div>
   </div>
 </template>
 
@@ -152,6 +156,7 @@ const userStore = useUserStore()
 const isAdmin = computed(() => userStore.route_names?.includes('*'))
 
 const stats = ref({ total_peers: 0, online_peers: 0, offline_peers: 0, total_users: 0, today_connections: 0 })
+const backendVersion = ref('')
 const recentPeers = ref([])
 const loading = ref(false)
 const recentLogs = ref([])
@@ -249,8 +254,14 @@ const formatTime = (ts) => {
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+const fetchVersion = async () => {
+  const res = await request({ url: '/server/info' }).catch(_ => false)
+  if (res) backendVersion.value = res.backend_version || ''
+}
+
 onMounted(() => {
   now.value = Math.floor(Date.now() / 1000)
+  fetchVersion()
   fetchStats()
   fetchRecentPeers()
   fetchRecentLogs()
