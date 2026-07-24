@@ -182,8 +182,8 @@
   "UserAddressBook": {
     "One": "用户地址簿"
   },
-  "IsAdmin": {
-    "One": "是否管理员"
+  "Role": {
+    "One": "角色"
   },
   "PleaseInputNewPassword": {
     "One": "请输入新密码"

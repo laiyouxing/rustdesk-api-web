@@ -54,10 +54,10 @@
         <el-table-column :label="T('Group')">
           <template #default="{row}">{{ groupName(row.group_id) }}</template>
         </el-table-column>
-        <el-table-column :label="T('IsAdmin')" width="90" align="center">
+        <el-table-column :label="T('Role')" width="100" align="center">
           <template #default="{row}">
-            <el-tag v-if="row.is_admin" type="danger" size="small">Admin</el-tag>
-            <span v-else>-</span>
+            <el-tag v-if="row.role === 'admin'" type="danger" size="small">管理员</el-tag>
+            <span v-else>普通用户</span>
           </template>
         </el-table-column>
         <el-table-column :label="T('Status')" width="90" align="center">

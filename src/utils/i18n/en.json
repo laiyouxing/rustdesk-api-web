@@ -182,8 +182,8 @@
   "UserAddressBook": {
     "One": "User Address Book"
   },
-  "IsAdmin": {
-    "One": "Is Admin"
+  "Role": {
+    "One": "Role"
   },
   "PleaseInputNewPassword": {
     "One": "Please input new password"

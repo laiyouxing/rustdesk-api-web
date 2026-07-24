@@ -23,11 +23,11 @@
             style="width:100%"
         />
       </el-form-item>
-      <el-form-item :label="T('IsAdmin')" prop="is_admin">
-        <el-switch v-model="form.is_admin"
-                   :active-value="true"
-                   :inactive-value="false"
-        ></el-switch>
+      <el-form-item :label="T('Role')" prop="role">
+        <el-select v-model="form.role" style="width:100%">
+          <el-option label="普通用户" value="user" />
+          <el-option label="管理员" value="admin" />
+        </el-select>
       </el-form-item>
       <el-form-item :label="T('Status')" prop="status">
         <el-switch v-model="form.status"
@@ -61,6 +61,7 @@
 </template>
 
 <script setup>
+  import { onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import { useGetDetail, useSubmit } from '@/views/user/composables/edit'
   import { ENABLE_STATUS, DISABLE_STATUS } from '@/utils/common_options'
@@ -70,6 +71,13 @@
   const { form, item, getDetail, groupTreeData } = useGetDetail(route.params.id)
 
   const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id)
+
+  onMounted(() => {
+    // 新建用户默认角色为普通用户
+    if (!route.params.id || route.params.id == 0) {
+      form.value.role = 'user'
+    }
+  })
 
   const setExpiredAt = (days) => {
     if (days < 0) {
