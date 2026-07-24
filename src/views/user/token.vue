@@ -14,12 +14,14 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handlerQuery">{{ T('Filter') }}</el-button>
+          <el-checkbox v-model="selectAll" @change="toggleSelectAll" style="margin-right: 8px">{{ T('SelectAll') }}</el-checkbox>
           <el-button type="danger" @click="toBatchDelete">{{ T('BatchDelete') }}</el-button>
+          <el-button type="warning" @click="delExpired">{{ T('DeleteExpired') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
     <el-card class="list-body" shadow="hover">
-      <el-table class="list-table" :data="listRes.list" v-loading="listRes.loading" border @selection-change="handleSelectionChange">
+      <el-table ref="tableRef" class="list-table" :data="listRes.list" v-loading="listRes.loading" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50"/>
         <el-table-column prop="id" :label="T('ID')" align="center" width="100"/>
         <el-table-column :label="T('Owner')" align="center">
@@ -66,6 +68,17 @@
   const { allUsers, getAllUsers } = loadAllUsers()
   getAllUsers()
 
+  const tableRef = ref(null)
+  const selectAll = ref(false)
+  const toggleSelectAll = (val) => {
+    if (tableRef.value) {
+      tableRef.value.toggleAllSelection()
+    }
+    if (!val) {
+      selectAll.value = false
+    }
+  }
+
   const {
     listRes,
     listQuery,
@@ -73,6 +86,7 @@
     handlerQuery,
     del,
     batchDelete,
+    delExpired,
   } = useRepositories()
 
   onMounted(getList)

@@ -89,6 +89,9 @@
   "Delete": {
     "One": "删除"
   },
+  "DeleteExpired": {
+    "One": "删除过期"
+  },
   "Create": {
     "One": "创建"
   },
@@ -697,6 +700,9 @@
   },
   "AllDevices": {
     "One": "全部设备"
+  },
+  "SelectAll": {
+    "One": "全选"
   },
   "SelectTargets": {
     "One": "指定分组和设备"

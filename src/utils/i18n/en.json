@@ -89,6 +89,9 @@
   "Delete": {
     "One": "Delete"
   },
+  "DeleteExpired": {
+    "One": "Delete Expired"
+  },
   "Create": {
     "One": "Create"
   },
@@ -681,6 +684,9 @@
   },
   "AllDevices": {
     "One": "All Devices"
+  },
+  "SelectAll": {
+    "One": "Select All"
   },
   "SelectTargets": {
     "One": "Select Groups & Devices"
