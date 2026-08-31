@@ -114,7 +114,7 @@
               v-for="p in planOptions"
               :key="p.key"
               class="plan-card"
-              :class="{ active: createForm.planKey === p.key, forever: p.key === 'forever' }"
+              :class="{ active: createForm.planKey === p.key, 'forever-selected': createForm.planKey === p.key && p.key === 'forever' }"
               @click="selectPlan(p)"
             >
               <el-icon class="plan-icon">
@@ -368,8 +368,10 @@ onMounted(async () => {
       { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
     ]
   }
-  // 追加永久选项（仅管理员手动选择）
-  planOptions.value.push({ key: 'forever', name: '永久', price_cents: 0, period_days: 99999 })
+  // 确保永久选项存在（getPlans 已返回时避免重复追加）
+  if (!planOptions.value.some(p => p.key === 'forever')) {
+    planOptions.value.push({ key: 'forever', name: '永久', price_cents: 0, period_days: 99999 })
+  }
 })
 </script>
 
@@ -414,21 +416,17 @@ onMounted(async () => {
 .plan-card.active .plan-icon {
   color: #409eff;
 }
-.plan-card.forever {
-  border-color: #e6a23c;
-  background: linear-gradient(135deg, #fdf6ec 0%, #fefcef 100%);
-}
-.plan-card.forever.active {
-  border-color: #e6a23c;
-  background: linear-gradient(135deg, #faecd8 0%, #fef5e7 100%);
-  box-shadow: 0 0 12px rgba(230, 162, 60, 0.3);
-}
 .plan-card.forever .plan-icon {
   font-size: 42px;
   color: #e6a23c;
 }
 .plan-card.forever .plan-price {
   color: #e6a23c;
+}
+.plan-card.forever-selected {
+  border-color: #e6a23c;
+  background: linear-gradient(135deg, #faecd8 0%, #fef5e7 100%);
+  box-shadow: 0 0 12px rgba(230, 162, 60, 0.3);
 }
 .plan-icon {
   font-size: 36px;
