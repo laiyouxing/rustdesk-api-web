@@ -196,15 +196,15 @@ onMounted(async () => {
     if (!res.code && Array.isArray(res.data)) {
       const opts = res.data.map(p => p.key === 'forever' ? { ...p, price_cents: null } : p)
       planOptions.value = opts
+    } else {
+      planOptions.value = []
     }
   } catch (_) {
-    planOptions.value = [
-      { key: '1m', name: '1个月', price_cents: 1000, period_days: 30 },
-      { key: '3m', name: '3个月', price_cents: 2800, period_days: 90 },
-      { key: '6m', name: '6个月', price_cents: 5000, period_days: 180 },
-      { key: '12m', name: '12个月', price_cents: 8800, period_days: 365 },
-      { key: 'forever', name: '永久', price_cents: null, period_days: 0 },
-    ]
+    planOptions.value = []
+  }
+  // 管理员延长始终提供"永久"选项（不依赖后端 config 是否配置 forever）
+  if (!planOptions.value.some(p => p.key === 'forever')) {
+    planOptions.value.push({ key: 'forever', name: '永久', price_cents: null, period_days: 0 })
   }
 })
 </script>
