@@ -105,6 +105,14 @@ export function mfaStatus () {
   })
 }
 
+// admin 超级账户的 MFA 状态（新建/提升管理员二次确认时判断）
+export function adminMfaStatus () {
+  return request({
+    url: '/user/adminMfaStatus',
+    method: 'get',
+  })
+}
+
 // 管理员强制重置指定用户的 MFA（救援：用户丢失验证器/恢复码时）
 export function mfaReset (data) {
   return request({

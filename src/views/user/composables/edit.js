@@ -76,7 +76,7 @@ export function useSubmit (form, id, mfaEnabled, item) {
     return res.code === 0
   }
 
-  // 提交管理员账号（新建或提升）时校验二次确认信息
+  // 提交管理员账号（新建或提升）时校验 admin 授权信息
   const validateAdminConfirm = () => {
     const isNew = !id || id == 0
     const isAdmin = form.value.role === 'admin'
@@ -86,11 +86,11 @@ export function useSubmit (form, id, mfaEnabled, item) {
       return true
     }
     if (!form.value.verify_password) {
-      ElMessage.warning('请填写当前管理员密码以完成二次确认')
+      ElMessage.warning('请填写 admin 超级管理员账户的密码以完成授权')
       return false
     }
     if (mfaEnabled.value && !form.value.mfa_code) {
-      ElMessage.warning('当前管理员已开启 MFA，请填写动态码')
+      ElMessage.warning('admin 账户已开启 MFA，请填写其动态码')
       return false
     }
     return true

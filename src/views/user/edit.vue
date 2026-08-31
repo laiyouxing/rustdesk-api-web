@@ -30,14 +30,14 @@
         </el-select>
       </el-form-item>
       <template v-if="needConfirm">
-        <el-divider content-position="left">设置管理员需二次确认</el-divider>
-        <el-form-item label="当前管理员密码" prop="verify_password">
+        <el-divider content-position="left">设置管理员需 admin 授权</el-divider>
+        <el-form-item label="admin 密码" prop="verify_password">
           <el-input v-model="form.verify_password" type="password" show-password
-                    placeholder="请输入当前登录管理员的密码"></el-input>
+                    placeholder="请输入 admin 超级管理员账户的密码"></el-input>
         </el-form-item>
-        <el-form-item v-if="mfaEnabled" label="MFA 动态码" prop="mfa_code">
+        <el-form-item v-if="mfaEnabled" label="admin MFA 码" prop="mfa_code">
           <el-input v-model="form.mfa_code" type="password" show-password
-                    placeholder="当前管理员已开启 MFA，请输入动态码"></el-input>
+                    placeholder="admin 账户已开启 MFA，请输入其动态码"></el-input>
         </el-form-item>
       </template>
       <el-form-item :label="T('Status')" prop="status">
@@ -77,12 +77,12 @@
   import { useGetDetail, useSubmit } from '@/views/user/composables/edit'
   import { ENABLE_STATUS, DISABLE_STATUS } from '@/utils/common_options'
   import { T } from '@/utils/i18n'
-  import { mfaStatus } from '@/api/user'
+  import { adminMfaStatus } from '@/api/user'
 
   const route = useRoute()
   const { form, item, getDetail, groupTreeData } = useGetDetail(route.params.id)
 
-  // 当前登录管理员是否已开启 MFA（决定是否展示动态码输入框）
+  // admin 超级账户是否已开启 MFA（决定是否展示动态码输入框）
   const mfaEnabled = ref(false)
   const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id, mfaEnabled, item)
 
@@ -100,7 +100,7 @@
     if (!route.params.id || route.params.id == 0) {
       form.value.role = 'user'
     }
-    const res = await mfaStatus().catch(_ => false)
+    const res = await adminMfaStatus().catch(_ => false)
     if (res && res.data) {
       mfaEnabled.value = !!res.data.mfa_enabled
     }
