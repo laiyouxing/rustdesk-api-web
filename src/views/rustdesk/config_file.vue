@@ -38,6 +38,28 @@
         </el-button>
       </div>
     </el-card>
+
+    <!-- 修改配置文件：超级管理员授权确认 -->
+    <el-dialog v-model="authVisible" title="超级管理员授权" width="480px">
+      <el-alert type="warning" :closable="false" show-icon
+        title="修改配置文件属于高危操作，需超级管理员（最早创建的管理员，id=1）账号授权"
+        style="margin-bottom:12px" />
+      <el-form label-width="120px">
+        <el-form-item label="超级管理员账号">
+          <el-input v-model="authForm.verify_username" placeholder="请输入超级管理员用户名（不自动填充）" />
+        </el-form-item>
+        <el-form-item label="超级管理员密码">
+          <el-input v-model="authForm.verify_password" type="password" show-password placeholder="请输入超级管理员密码" />
+        </el-form-item>
+        <el-form-item label="MFA 动态码">
+          <el-input v-model="authForm.mfa_code" type="password" show-password placeholder="若超级管理员已开启 MFA 请填写其动态码" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="authVisible = false">{{ T('Cancel') }}</el-button>
+        <el-button type="primary" :loading="saving" @click="doSave">{{ T('Confirm') }}</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -53,6 +75,8 @@ const path = ref('')
 const loading = ref(false)
 const saving = ref(false)
 const restarting = ref(false)
+const authVisible = ref(false)
+const authForm = ref({ verify_username: '', verify_password: '', mfa_code: '' })
 
 const fetchConfig = async () => {
   loading.value = true
@@ -73,10 +97,25 @@ const save = async () => {
     ElMessage.warning('配置内容不能为空')
     return
   }
+  authForm.value = { verify_username: '', verify_password: '', mfa_code: '' }
+  authVisible.value = true
+}
+
+const doSave = async () => {
+  if (!authForm.value.verify_username || !authForm.value.verify_password) {
+    ElMessage.warning('请填写超级管理员账号和密码')
+    return
+  }
   saving.value = true
-  const res = await fileUpdate(content.value).catch(_ => false)
+  const res = await fileUpdate({
+    content: content.value,
+    verify_username: authForm.value.verify_username,
+    verify_password: authForm.value.verify_password,
+    mfa_code: authForm.value.mfa_code,
+  }).catch(_ => false)
   saving.value = false
   if (res) {
+    authVisible.value = false
     ElMessage.success(T('OperationSuccess'))
   }
 }

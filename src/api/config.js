@@ -29,12 +29,12 @@ export function fileGet () {
   })
 }
 
-// 保存后端配置文件（config.yaml）原始内容
-export function fileUpdate (content) {
+// 保存后端配置文件（config.yaml）原始内容，需超级管理员授权（用户名+密码+MFA）
+export function fileUpdate (data) {
   return request({
     url: '/config/file/update',
     method: 'post',
-    data: { content },
+    data,
   })
 }
 

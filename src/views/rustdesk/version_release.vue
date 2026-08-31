@@ -2,8 +2,11 @@
   <div>
 
     <el-card class="list-query" shadow="hover">
-      <div class="action-bar">
-        <span style="font-size: 16px; font-weight: 500;">{{ T('PublishNewVersion') }}</span>
+      <div class="action-bar" style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size: 16px; font-weight: 500;">
+          {{ editId ? T('Edit') + ' (ID: ' + editId + ')' : T('PublishNewVersion') }}
+        </span>
+        <el-button v-if="editId" size="small" @click="resetForm">取消编辑</el-button>
       </div>
       <el-form inline label-width="80px">
         <el-form-item :label="T('Version')">
@@ -28,7 +31,9 @@
           <span class="hint-text" style="font-size:12px;margin-left:8px;">开启后客户端静默下载安装，不弹提示</span>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :loading="submitting" @click="submitForm">{{ T('Publish') }}</el-button>
+          <el-button type="primary" :loading="submitting" @click="submitForm">
+            {{ editId ? T('Save') : T('Publish') }}
+          </el-button>
         </el-form-item>
       </el-form>
       <el-form inline label-width="80px">
@@ -79,8 +84,9 @@
             {{ row.created_at || '' }}
           </template>
         </el-table-column>
-        <el-table-column :label="T('Actions')" width="160" align="center" fixed="right">
+        <el-table-column :label="T('Actions')" width="230" align="center" fixed="right">
           <template #default="{row}">
+            <el-button size="small" @click="edit(row)">{{ T('Edit') }}</el-button>
             <el-button
               :type="row.status === 1 ? 'danger' : 'primary'"
               size="small"
@@ -119,7 +125,29 @@ const form = reactive({
   force_update: 0,
 })
 
+const editId = ref(0) // 0=新增，>0=编辑该条目
 const submitting = ref(false)
+
+const resetForm = () => {
+  editId.value = 0
+  form.version = ''
+  form.platform = 'windows'
+  form.status = 1
+  form.url = ''
+  form.note = ''
+  form.force_update = 0
+}
+
+const edit = (row) => {
+  editId.value = row.id
+  form.version = row.version
+  form.platform = row.platform
+  form.status = row.status
+  form.url = row.url
+  form.note = row.note
+  form.force_update = row.force_update
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 const submitForm = async () => {
   if (!form.version || !form.url) {
@@ -127,23 +155,24 @@ const submitForm = async () => {
     return
   }
   submitting.value = true
-  const res = await create({
+  const data = {
     version: form.version,
     platform: form.platform,
     status: form.status,
     url: form.url,
     note: form.note,
     force_update: form.force_update,
-  }).catch(e => {
+  }
+  const api = editId.value ? update : create
+  if (editId.value) data.id = editId.value
+  const res = await api(data).catch(e => {
     ElMessage.error((e && e.message) || T('OperationFailed'))
     return false
   })
   submitting.value = false
   if (res) {
     ElMessage.success(T('OperationSuccess'))
-    form.version = ''
-    form.url = ''
-    form.note = ''
+    resetForm()
     getList()
   }
 }
