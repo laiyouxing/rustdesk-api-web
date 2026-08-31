@@ -373,6 +373,9 @@
   "AccountOpLog": {
     "One": "Операции с аккаунтом"
   },
+  "AddressBookOpLog": {
+    "One": "Операции с адресной книгой"
+  },
   "Common": {
     "One": "Общий"
   },

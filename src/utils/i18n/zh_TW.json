@@ -359,6 +359,9 @@
   "AccountOpLog": {
     "One": "帳戶操作"
   },
+  "AddressBookOpLog": {
+    "One": "通訊錄操作"
+  },
   "Common": {
     "One": "普通"
   },

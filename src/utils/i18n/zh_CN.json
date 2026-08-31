@@ -398,6 +398,9 @@
   "AccountOpLog": {
     "One": "账户操作"
   },
+  "AddressBookOpLog": {
+    "One": "地址簿操作"
+  },
   "Common": {
     "One": "普通"
   },

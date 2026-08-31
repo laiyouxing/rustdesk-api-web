@@ -412,6 +412,9 @@
   "AccountOpLog": {
     "One": "Account Operations"
   },
+  "AddressBookOpLog": {
+    "One": "Address Book Operations"
+  },
   "Common": {
     "One": "Common"
   },

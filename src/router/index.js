@@ -316,6 +316,12 @@ export const asyncRoutes = [
         meta: { title: 'AccountOpLog', icon: 'User' },
         component: () => import('@/views/audit/accountOpList.vue'),
       },
+      {
+        path: 'addressBookOp',
+        name: 'AuditAddressBookOp',
+        meta: { title: 'AddressBookOpLog', icon: 'Notebook' },
+        component: () => import('@/views/audit/addressBookOpList.vue'),
+      },
     ],
   },
 ]

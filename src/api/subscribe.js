@@ -214,3 +214,15 @@ export function adminListAccountOpLogs (params) {
     params,
   })
 }
+
+/**
+ * 地址簿操作审计日志列表
+ * @param {Object} params - { page, page_size, keyword, action }
+ */
+export function adminListAddressBookOpLogs (params) {
+  return request({
+    url: '/address_book_op_log/list',
+    method: 'get',
+    params,
+  })
+}

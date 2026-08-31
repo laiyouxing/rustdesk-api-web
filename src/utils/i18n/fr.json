@@ -373,6 +373,9 @@
   "AccountOpLog": {
     "One": "Opérations du compte"
   },
+  "AddressBookOpLog": {
+    "One": "Opérations du carnet d'adresses"
+  },
   "Common": {
     "One": "Commun"
   },

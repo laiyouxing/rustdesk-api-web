@@ -359,6 +359,9 @@
   "AccountOpLog": {
     "One": "계정 작업"
   },
+  "AddressBookOpLog": {
+    "One": "주소록 작업"
+  },
   "Common": {
     "One": "일반"
   },
