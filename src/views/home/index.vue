@@ -256,7 +256,7 @@ const formatTime = (ts) => {
 
 const fetchVersion = async () => {
   const res = await request({ url: '/server/info' }).catch(_ => false)
-  if (res) backendVersion.value = res.backend_version || ''
+  if (res) backendVersion.value = res?.data?.backend_version || ''
 }
 
 onMounted(() => {

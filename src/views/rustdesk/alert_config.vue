@@ -86,12 +86,14 @@
       </template>
       <el-alert type="info" :closable="false" show-icon style="margin-bottom:12px">
         <template #title>离线告警逻辑说明</template>
-        <template #description>
+        <!-- Element Plus 的 el-alert 描述用默认插槽 #default（#description 不存在，会导致内容不渲染） -->
+        <template #default>
           <ul style="margin:4px 0 0;padding-left:18px;line-height:1.7;font-size:12px">
             <li>每 5 分钟检测一次设备在线状态。</li>
-            <li>设备离线（超过下方「离线阈值」时长）则权重 +1；权重累计达到 <b>10</b>（约离线 50 分钟）才推送离线告警邮件。</li>
+            <li>设备离线（超过「离线阈值」时长）则权重 +1；权重累计达到 <b>10</b>（约离线 50 分钟）才推送离线告警。</li>
+            <li>仅监控规则中「监控时间范围」内（默认最近 <b>30</b> 天）上线过的设备。</li>
             <li>权重每天自动重置。</li>
-            <li>同一设备每天最多推送 <b>3</b> 次。</li>
+            <li>同一设备每天最多推送次数可在规则中配置（默认 <b>3</b> 次）。</li>
             <li>连续 <b>3 天</b>触发告警后停止推送；设备重新上线后自动解除该限制。</li>
           </ul>
         </template>
@@ -122,6 +124,12 @@
         </el-table-column>
         <el-table-column :label="T('OfflineMin')" width="80" align="center">
           <template #default="{row}">{{ row.offline_min || 5 }}min</template>
+        </el-table-column>
+        <el-table-column label="监控范围" width="90" align="center">
+          <template #default="{row}">{{ row.active_days || 30 }}天</template>
+        </el-table-column>
+        <el-table-column label="每日上限" width="90" align="center">
+          <template #default="{row}">{{ row.max_notify_per_day || 3 }}次</template>
         </el-table-column>
         <el-table-column :label="T('Status')" width="70" align="center">
           <template #default="{row}">
@@ -180,6 +188,16 @@
           <div style="font-size:12px;color:var(--apple-gray);margin-top:4px;line-height:1.5">
             设备离线超过该时长后才开始累计离线权重（详见上方告警逻辑说明）
           </div>
+        </el-form-item>
+        <el-form-item label="监控时间范围">
+          <el-select v-model="ruleForm.active_days" style="width:260px">
+            <el-option v-for="d in [1,3,10,15,30]" :key="d" :label="`只关心最近 ${d} 天内有上线记录的设备`" :value="d" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="每天最多推送">
+          <el-select v-model="ruleForm.max_notify_per_day" style="width:260px">
+            <el-option v-for="n in [1,2,3]" :key="n" :label="`同一设备每天最多推送 ${n} 次`" :value="n" />
+          </el-select>
         </el-form-item>
         <el-form-item :label="T('Status')">
           <el-switch v-model="ruleForm.enabled" :active-value="1" :inactive-value="2"></el-switch>
@@ -256,7 +274,7 @@ const configs = ref([])
 const loading = ref(false)
 const ruleFormVisible = ref(false)
 const ruleEditId = ref(0)
-const ruleForm = reactive({ channel_id: null, monitor_all: 1, offline_min: 5, enabled: 1, recipients: '' })
+const ruleForm = reactive({ channel_id: null, monitor_all: 1, offline_min: 5, active_days: 30, max_notify_per_day: 3, enabled: 1, recipients: '' })
 
 // 监控目标
 const targetVisible = ref(false)
@@ -383,6 +401,8 @@ const showRuleForm = async (row) => {
   ruleForm.channel_id = row?.channel_id || null
   ruleForm.monitor_all = row?.monitor_all || 1
   ruleForm.offline_min = row?.offline_min || 5
+  ruleForm.active_days = row?.active_days || 30
+  ruleForm.max_notify_per_day = row?.max_notify_per_day || 3
   ruleForm.enabled = row?.enabled || 1
   ruleForm.recipients = row?.recipients || ''
   targetCollections.value = []
