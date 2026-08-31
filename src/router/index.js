@@ -310,6 +310,12 @@ export const asyncRoutes = [
         meta: { title: 'LoginLog', icon: 'List' },
         component: () => import('@/views/login/log.vue'),
       },
+      {
+        path: 'accountOp',
+        name: 'AuditAccountOp',
+        meta: { title: 'AccountOpLog', icon: 'User' },
+        component: () => import('@/views/audit/accountOpList.vue'),
+      },
     ],
   },
 ]

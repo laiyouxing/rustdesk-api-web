@@ -370,6 +370,9 @@
   "AuditFileLog": {
     "One": "Журнал файлов"
   },
+  "AccountOpLog": {
+    "One": "Операции с аккаунтом"
+  },
   "Common": {
     "One": "Общий"
   },

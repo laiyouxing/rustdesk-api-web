@@ -395,6 +395,9 @@
   "AuditFileLog": {
     "One": "文件日志"
   },
+  "AccountOpLog": {
+    "One": "账户操作"
+  },
   "Common": {
     "One": "普通"
   },

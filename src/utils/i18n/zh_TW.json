@@ -356,6 +356,9 @@
   "AuditFileLog": {
     "One": "檔案日誌"
   },
+  "AccountOpLog": {
+    "One": "帳戶操作"
+  },
   "Common": {
     "One": "普通"
   },

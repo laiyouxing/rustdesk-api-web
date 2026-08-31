@@ -409,6 +409,9 @@
   "AuditFileLog": {
     "One": "File Log"
   },
+  "AccountOpLog": {
+    "One": "Account Operations"
+  },
   "Common": {
     "One": "Common"
   },

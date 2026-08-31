@@ -356,6 +356,9 @@
   "AuditFileLog": {
     "One": "파일 로그"
   },
+  "AccountOpLog": {
+    "One": "계정 작업"
+  },
   "Common": {
     "One": "일반"
   },

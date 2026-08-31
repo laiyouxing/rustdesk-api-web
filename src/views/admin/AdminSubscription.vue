@@ -49,10 +49,18 @@
             <span v-else>{{ formatTime(row.subscription_expire_at) }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="T('Action')" width="160" align="center" fixed="right">
+        <el-table-column :label="T('Action')" width="220" align="center" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="showExtend(row)">
               延长
+            </el-button>
+            <el-button
+              type="danger"
+              size="small"
+              :disabled="row.status === 'none'"
+              @click="handleTerminate(row)"
+            >
+              终止
             </el-button>
           </template>
         </el-table-column>
@@ -103,8 +111,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { T } from '@/utils/i18n'
-import { ElMessage } from 'element-plus'
-import { adminListSubscriptions, adminExtendSubscription, getPlans } from '@/api/subscribe'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminListSubscriptions, adminExtendSubscription, adminTerminateSubscription, getPlans } from '@/api/subscribe'
 
 const list = ref([])
 const loading = ref(false)
@@ -186,6 +194,29 @@ const handleExtend = async () => {
     ElMessage.error('延长失败')
   } finally {
     extending.value = false
+  }
+}
+
+const handleTerminate = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定终止用户 ${row.username} 的会员时长吗？终止后立即生效，用户将无法远程连接。`,
+      '终止会员',
+      { type: 'warning', confirmButtonText: '终止', cancelButtonText: '取消' }
+    )
+  } catch (_) {
+    return
+  }
+  try {
+    const res = await adminTerminateSubscription({ user_id: row.id })
+    if (res.code) {
+      ElMessage.error(res.message || '终止失败')
+      return
+    }
+    ElMessage.success(`已终止用户 ${row.username} 的会员`)
+    await getList()
+  } catch (_) {
+    ElMessage.error('终止失败')
   }
 }
 

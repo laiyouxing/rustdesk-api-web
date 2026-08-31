@@ -190,3 +190,27 @@ export function adminExtendSubscription (data) {
     data,
   })
 }
+
+/**
+ * 终止会员
+ * @param {Object} data - { user_id }
+ */
+export function adminTerminateSubscription (data) {
+  return request({
+    url: '/subscriptions/terminate',
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 账户操作审计日志列表
+ * @param {Object} params - { page, page_size, keyword, action }
+ */
+export function adminListAccountOpLogs (params) {
+  return request({
+    url: '/account_op_log/list',
+    method: 'get',
+    params,
+  })
+}
