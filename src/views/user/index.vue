@@ -37,6 +37,7 @@
             <el-switch v-model="row.status"
                        :active-value="ENABLE_STATUS"
                        :inactive-value="DISABLE_STATUS"
+                       :disabled="row.id === 1"
                        @change="changeStatus(row)"
             ></el-switch>
           </template>
@@ -51,7 +52,7 @@
             <el-button @click="toEdit(row)">{{ T('Edit') }}</el-button>
             <el-button type="warning" @click="changePass(row)">{{ T('ResetPassword') }}</el-button>
             <el-button type="info" @click="resetMfa(row)">{{ T('MfaReset') }}</el-button>
-            <el-button type="danger" @click="remove(row)">{{ T('Delete') }}</el-button>
+            <el-button type="danger" :disabled="row.id === 1" @click="remove(row)">{{ T('Delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -24,10 +24,13 @@
         />
       </el-form-item>
       <el-form-item :label="T('Role')" prop="role">
-        <el-select v-model="form.role" style="width:100%">
+        <el-select v-model="form.role" style="width:100%" :disabled="isSuperAdmin">
           <el-option label="普通用户" value="user" />
           <el-option label="管理员" value="admin" />
         </el-select>
+        <div v-if="isSuperAdmin" style="margin-top:4px; font-size:12px; color:#909399;">
+          超级管理员（id=1）不可降级
+        </div>
       </el-form-item>
       <template v-if="needConfirm">
         <el-divider content-position="left">设置管理员需超级管理员授权</el-divider>
@@ -48,6 +51,7 @@
         <el-switch v-model="form.status"
                    :active-value="ENABLE_STATUS"
                    :inactive-value="DISABLE_STATUS"
+                   :disabled="isSuperAdmin"
         ></el-switch>
       </el-form-item>
       <el-form-item :label="T('ExpiredAt')" prop="expiredAtDate">
@@ -86,6 +90,11 @@
   const { form, item, getDetail, groupTreeData } = useGetDetail(route.params.id)
 
   const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id, item)
+
+  // id=1 的超级管理员账户：不可降级、不可禁用
+  const isSuperAdmin = computed(() => {
+    return !!item.value && item.value.id === 1
+  })
 
   // 是否需要管理员二次确认：新建管理员 或 将普通用户提升为管理员
   // （编辑已有管理员则不需要，因为其权限未变更）
