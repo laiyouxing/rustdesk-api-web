@@ -42,7 +42,7 @@ export function useGetDetail (id) {
   }
 }
 
-export function useSubmit (form, id, mfaEnabled, item) {
+export function useSubmit (form, id, item) {
   const root = ref(null)
   const router = useRouter()
   const rules = reactive({
@@ -76,7 +76,7 @@ export function useSubmit (form, id, mfaEnabled, item) {
     return res.code === 0
   }
 
-  // 提交管理员账号（新建或提升）时校验 admin 授权信息
+  // 提交管理员账号（新建或提升）时校验超级管理员授权信息
   const validateAdminConfirm = () => {
     const isNew = !id || id == 0
     const isAdmin = form.value.role === 'admin'
@@ -85,19 +85,21 @@ export function useSubmit (form, id, mfaEnabled, item) {
     if (!needConfirm) {
       return true
     }
+    if (!form.value.verify_username) {
+      ElMessage.warning('请填写超级管理员用户名以完成授权')
+      return false
+    }
     if (!form.value.verify_password) {
-      ElMessage.warning('请填写 admin 超级管理员账户的密码以完成授权')
+      ElMessage.warning('请填写超级管理员密码以完成授权')
       return false
     }
-    if (mfaEnabled.value && !form.value.mfa_code) {
-      ElMessage.warning('admin 账户已开启 MFA，请填写其动态码')
-      return false
-    }
+    // MFA 动态码选填：若超级管理员已开启 MFA，后端会强制校验
     return true
   }
 
   // 校验通过后清理敏感字段，避免残留到下一次编辑/复制
   const clearConfirmFields = () => {
+    delete form.value.verify_username
     delete form.value.verify_password
     delete form.value.mfa_code
   }

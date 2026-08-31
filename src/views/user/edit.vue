@@ -30,14 +30,18 @@
         </el-select>
       </el-form-item>
       <template v-if="needConfirm">
-        <el-divider content-position="left">设置管理员需 admin 授权</el-divider>
-        <el-form-item label="admin 密码" prop="verify_password">
-          <el-input v-model="form.verify_password" type="password" show-password
-                    placeholder="请输入 admin 超级管理员账户的密码"></el-input>
+        <el-divider content-position="left">设置管理员需超级管理员授权</el-divider>
+        <el-form-item label="超级管理员账号" prop="verify_username">
+          <el-input v-model="form.verify_username"
+                    placeholder="请输入超级管理员用户名（不自动填充）"></el-input>
         </el-form-item>
-        <el-form-item v-if="mfaEnabled" label="admin MFA 码" prop="mfa_code">
+        <el-form-item label="超级管理员密码" prop="verify_password">
+          <el-input v-model="form.verify_password" type="password" show-password
+                    placeholder="请输入超级管理员密码"></el-input>
+        </el-form-item>
+        <el-form-item label="MFA 动态码" prop="mfa_code">
           <el-input v-model="form.mfa_code" type="password" show-password
-                    placeholder="admin 账户已开启 MFA，请输入其动态码"></el-input>
+                    placeholder="若超级管理员已开启 MFA 请填写其动态码"></el-input>
         </el-form-item>
       </template>
       <el-form-item :label="T('Status')" prop="status">
@@ -72,19 +76,16 @@
 </template>
 
 <script setup>
-  import { computed, onMounted, ref } from 'vue'
+  import { computed, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import { useGetDetail, useSubmit } from '@/views/user/composables/edit'
   import { ENABLE_STATUS, DISABLE_STATUS } from '@/utils/common_options'
   import { T } from '@/utils/i18n'
-  import { adminMfaStatus } from '@/api/user'
 
   const route = useRoute()
   const { form, item, getDetail, groupTreeData } = useGetDetail(route.params.id)
 
-  // admin 超级账户是否已开启 MFA（决定是否展示动态码输入框）
-  const mfaEnabled = ref(false)
-  const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id, mfaEnabled, item)
+  const { root, rules, validate, submit, cancel } = useSubmit(form, route.params.id, item)
 
   // 是否需要管理员二次确认：新建管理员 或 将普通用户提升为管理员
   // （编辑已有管理员则不需要，因为其权限未变更）
@@ -95,14 +96,10 @@
     return isAdmin && (isNew || !wasAdmin)
   })
 
-  onMounted(async () => {
+  onMounted(() => {
     // 新建用户默认角色为普通用户
     if (!route.params.id || route.params.id == 0) {
       form.value.role = 'user'
-    }
-    const res = await adminMfaStatus().catch(_ => false)
-    if (res && res.data) {
-      mfaEnabled.value = !!res.data.mfa_enabled
     }
   })
 
