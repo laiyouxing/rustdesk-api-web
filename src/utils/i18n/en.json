@@ -1343,6 +1343,9 @@
   "SubscribeExpireSoon": {
     "One": "Pro · {days}d"
   },
+  "MembershipManage": {
+    "One": "Membership Management"
+  },
   "AdminInviteCode": {
     "One": "Authorization Code"
   },

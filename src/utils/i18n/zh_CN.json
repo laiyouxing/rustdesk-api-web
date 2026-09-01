@@ -1359,6 +1359,9 @@
   "SubscribeExpireSoon": {
     "One": "专业版 · {days}天"
   },
+  "MembershipManage": {
+    "One": "会员管理"
+  },
   "AdminInviteCode": {
     "One": "授权码管理"
   },

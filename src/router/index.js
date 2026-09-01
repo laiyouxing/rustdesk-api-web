@@ -259,11 +259,21 @@ export const asyncRoutes = [
         component: () => import('@/views/rustdesk/process_monitor.vue'),
       },
       {
-        path: '/inviteCodes',
-        name: 'AdminInviteCode',
-        meta: { title: 'AdminInviteCode', icon: 'Key' },
-        component: () => import('@/views/admin/InviteCode.vue'),
+        path: '/shareRecord',
+        name: 'ShareRecord',
+        meta: { title: 'ShareRecord', icon: 'Share' },
+        component: () => import('@/views/share_record/index.vue'),
       },
+    ],
+  },
+  // ========== 会员管理 ==========
+  {
+    path: '/membership',
+    name: 'MembershipMgmt',
+    redirect: '/adminOrders',
+    meta: { title: 'MembershipManage', icon: 'CreditCard' },
+    component: () => import('@/layout/index.vue'),
+    children: [
       {
         path: '/adminOrders',
         name: 'AdminOrder',
@@ -277,10 +287,10 @@ export const asyncRoutes = [
         component: () => import('@/views/admin/AdminSubscription.vue'),
       },
       {
-        path: '/shareRecord',
-        name: 'ShareRecord',
-        meta: { title: 'ShareRecord', icon: 'Share' },
-        component: () => import('@/views/share_record/index.vue'),
+        path: '/inviteCodes',
+        name: 'AdminInviteCode',
+        meta: { title: 'AdminInviteCode', icon: 'Key' },
+        component: () => import('@/views/admin/InviteCode.vue'),
       },
     ],
   },
