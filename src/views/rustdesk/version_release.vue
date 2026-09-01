@@ -111,7 +111,7 @@
 </template>
 
 <script setup>
-import { list, create, remove, setEnable } from '@/api/version'
+import { list, create, update, remove, setEnable } from '@/api/version'
 import { onMounted, reactive, ref } from 'vue'
 import { T } from '@/utils/i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
