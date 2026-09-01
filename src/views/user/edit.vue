@@ -23,6 +23,13 @@
             style="width:100%"
         />
       </el-form-item>
+      <el-form-item v-if="isNew" label="初始密码" prop="password">
+        <div style="display:flex; gap:8px; width:100%;">
+          <el-input v-model="form.password" type="password" show-password
+                    placeholder="必须输入密码才能登录"></el-input>
+          <el-button @click="genPassword">随机生成</el-button>
+        </div>
+      </el-form-item>
       <el-form-item :label="T('Role')" prop="role">
         <el-select v-model="form.role" style="width:100%" :disabled="isSuperAdmin">
           <el-option label="普通用户" value="user" />
@@ -95,6 +102,19 @@
   const isSuperAdmin = computed(() => {
     return !!item.value && item.value.id === 1
   })
+
+  // 新建用户：显示初始密码输入框（编辑时隐藏，不改密码）
+  const isNew = computed(() => !route.params.id || route.params.id == 0)
+
+  // 随机生成 16 位字符串密码（去除易混淆字符）
+  const genPassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'
+    let s = ''
+    for (let i = 0; i < 16; i++) {
+      s += chars[Math.floor(Math.random() * chars.length)]
+    }
+    form.value.password = s
+  }
 
   // 是否需要管理员二次确认：新建管理员 或 将普通用户提升为管理员
   // （编辑已有管理员则不需要，因为其权限未变更）

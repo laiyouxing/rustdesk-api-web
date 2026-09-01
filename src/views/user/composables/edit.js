@@ -51,6 +51,8 @@ export function useSubmit (form, id, item) {
     group_id: [{ required: true, message: T('ParamRequired', { param: T('Group') }) }],
     // nickname: [{ required: true, message: '昵称是必须的' }],
     status: [{ required: true, message: T('ParamRequired', { param: T('Status') }) }],
+    // 新建用户时密码必填（编辑时密码输入框隐藏，该规则不会触发）
+    password: [{ required: true, message: '必须输入密码才能登录' }],
   })
 
   const validate = async () => {
@@ -102,6 +104,7 @@ export function useSubmit (form, id, item) {
     delete form.value.verify_username
     delete form.value.verify_password
     delete form.value.mfa_code
+    delete form.value.password
   }
   const submitFunc = id > 0 ? submitUpdate : submitCreate
 
