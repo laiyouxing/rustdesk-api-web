@@ -1,6 +1,24 @@
 <template>
   <div>
 
+    <!-- 全局强制中继开关：一键控制所有客户端是否允许 P2P 直连 -->
+    <el-card class="list-query" shadow="hover" style="margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        <span style="font-size: 16px; font-weight: 500;">强制所有客户端走中继</span>
+        <el-switch v-model="forceRelayOn" :loading="forceRelaySaving" @change="toggleForceRelay"/>
+        <el-tag v-if="forceRelayOn" type="warning" size="small">已开启：禁止 P2P 直连</el-tag>
+        <el-tag v-else type="success" size="small">已关闭：允许直连</el-tag>
+      </div>
+      <div style="font-size: 12px; color: #999; margin-top: 8px; line-height: 1.7;">
+        开启后自动维护一条全局策略 <code>force-always-relay=Y</code>，所有客户端下次连接强制走中继
+        （不走中继前打洞、也不做 Phase3 换流）。关闭时写 <code>N</code> 而**不是**删除策略——
+        删除后心跳不再下发该策略，客户端会停留在上一次收到的 Y，等于关不掉。
+        <br/>
+        注意：若给个别用户/分组单独配了策略并显式设置了 <code>force-always-relay</code>，
+        那些策略的绑定优先级更高，会覆盖此全局开关。
+      </div>
+    </el-card>
+
     <el-card class="list-query" shadow="hover">
       <div class="action-bar">
         <span style="font-size: 16px; font-weight: 500;">策略管理</span>
@@ -97,11 +115,11 @@
         </el-form-item>
         <el-form-item label="配置项">
           <el-input v-model="form.config_items" type="textarea" :rows="10"
-            placeholder="每行一个配置项，格式: key=value&#10;例如:&#10;force_relay=Y&#10;enable-udp-punch=N&#10;enable-clipboard=N&#10;custom-rendezvous-server=192.0.2.1:21116"
+            placeholder="每行一个配置项，格式: key=value&#10;例如:&#10;force-always-relay=Y&#10;enable-udp-punch=N&#10;enable-clipboard=N&#10;custom-rendezvous-server=192.0.2.1:21116"
             style="width: 100%">
           </el-input>
           <div class="hint-text" style="font-size:12px;margin-top:4px;">
-            常见配置项：force_relay、enable-udp-punch、enable-ipv6-punch、enable-clipboard、enable-audio、enable-file-transfer、custom-rendezvous-server
+            常见配置项：force-always-relay、enable-udp-punch、enable-ipv6-punch、enable-clipboard、enable-audio、enable-file-transfer、custom-rendezvous-server
           </div>
         </el-form-item>
       </el-form>
@@ -116,7 +134,7 @@
       <div style="font-size: 14px; line-height: 1.8; font-family: 'Consolas', 'Courier New', monospace; background: #f8f9fa; padding: 16px; border-radius: 6px;">
         <div style="color: #999; margin-bottom: 4px;"># ====== 网络穿透 ======</div>
         <div style="color: #999;"># 是否强制走中继，Y=强制走中继不走P2P打洞，N=允许P2P</div>
-        <div style="margin-bottom: 4px;">force_relay=N</div>
+        <div style="margin-bottom: 4px;">force-always-relay=N</div>
         <div style="color: #999;"># 启用UDP打洞，N=关闭UDP打洞只走TCP中继</div>
         <div style="margin-bottom: 4px;">enable-udp-punch=Y</div>
         <div style="color: #999;"># 启用IPv6打洞，N=关闭IPv6穿透</div>
@@ -189,6 +207,104 @@ const editingId = ref(0)
 const dialogVisible = ref(false)
 const submitting = ref(false)
 const formRef = ref(null)
+
+// ===== 全局强制中继开关 =====
+// 用一个固定名称的全局策略承载：开启写 Y、关闭写 N。
+// 关键点：关闭时**不能删除策略**——心跳只在"找到启用的策略"时才下发，
+// 删掉之后客户端会停留在上一次收到的 Y，表现为开关关不掉。
+const FORCE_RELAY_STRATEGY_NAME = '系统策略-强制走中继'
+const FORCE_RELAY_KEY = 'force-always-relay'
+
+const forceRelayOn = ref(false)
+const forceRelaySaving = ref(false)
+let forceRelayStrategy = null
+
+// 在 key=value 多行文本里设置某个键（不存在则追加），其余行原样保留
+const setConfigItem = (items, key, value) => {
+  const lines = (items || '').split('\n')
+  let found = false
+  const out = lines.map(line => {
+    const t = line.trim()
+    if (!t || t.startsWith('#')) return line
+    const idx = t.indexOf('=')
+    if (idx <= 0) return line
+    const k = t.slice(0, idx).trim()
+    // 兼容早期误写成 force_relay 的配置，统一改写成标准键
+    if (k === key || (key === FORCE_RELAY_KEY && k === 'force_relay')) {
+      found = true
+      return `${key}=${value}`
+    }
+    return line
+  })
+  if (!found) out.push(`${key}=${value}`)
+  return out.join('\n').replace(/\n+$/, '')
+}
+
+const readForceRelay = (items) => {
+  for (const line of (items || '').split('\n')) {
+    const t = line.trim()
+    if (!t || t.startsWith('#')) continue
+    const idx = t.indexOf('=')
+    if (idx <= 0) continue
+    const k = t.slice(0, idx).trim()
+    if (k === FORCE_RELAY_KEY || k === 'force_relay') {
+      return t.slice(idx + 1).trim().toUpperCase() === 'Y'
+    }
+  }
+  return false
+}
+
+const loadForceRelay = async () => {
+  // 注意：后端 /strategy/list 目前忽略 name 过滤参数，只能整表拉取后本地匹配。
+  // 策略数量很少，page_size 取大值即可，避免依赖后端改动。
+  const res = await list({ page: 1, page_size: 9999 }).catch(_ => false)
+  if (!res) return
+  forceRelayStrategy = (res.data.list || []).find(s => s.name === FORCE_RELAY_STRATEGY_NAME) || null
+  forceRelayOn.value = forceRelayStrategy ? readForceRelay(forceRelayStrategy.config_items) : false
+}
+
+const toggleForceRelay = async (val) => {
+  forceRelaySaving.value = true
+  try {
+    const items = setConfigItem(
+      forceRelayStrategy ? forceRelayStrategy.config_items : '',
+      FORCE_RELAY_KEY,
+      val ? 'Y' : 'N',
+    )
+    const data = {
+      name: FORCE_RELAY_STRATEGY_NAME,
+      status: 1,
+      // 全局策略里取最高优先级，避免被其它全局策略按数值优先级盖掉
+      priority: 999,
+      bind_type: 'global',
+      bind_id: 0,
+      config_items: items,
+    }
+    let res
+    if (forceRelayStrategy) {
+      data.id = forceRelayStrategy.id
+      res = await update(data).catch(e => {
+        ElMessage.error((e && e.message) || '操作失败')
+        return false
+      })
+    } else {
+      res = await create(data).catch(e => {
+        ElMessage.error((e && e.message) || '操作失败')
+        return false
+      })
+    }
+    if (res) {
+      ElMessage.success(val ? '已开启：所有客户端将强制走中继' : '已关闭：允许客户端直连')
+      await loadForceRelay()
+      getList()
+    } else {
+      // 失败回滚开关状态，避免 UI 与实际配置不一致
+      forceRelayOn.value = !val
+    }
+  } finally {
+    forceRelaySaving.value = false
+  }
+}
 
 const submitForm = async () => {
   if (!form.name) {
@@ -277,6 +393,7 @@ const getList = async () => {
 }
 onMounted(async () => {
   getList()
+  loadForceRelay()
   // 预加载用户、分组、标签列表
   const [uRes, gRes, tRes] = await Promise.all([
     userList({ page_size: 9999 }).catch(() => ({ data: { list: [] } })),
