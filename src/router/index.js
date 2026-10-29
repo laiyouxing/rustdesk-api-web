@@ -247,6 +247,13 @@ export const asyncRoutes = [
         component: () => import('@/views/rustdesk/config_file.vue'),
       },
       {
+        // 保留策略：日志按天轮转保留天数 + 审计记录保留天数（保存后立即生效）
+        path: '/retention',
+        name: 'RetentionPolicy',
+        meta: { title: 'RetentionPolicy', icon: 'Timer' },
+        component: () => import('@/views/rustdesk/retention.vue'),
+      },
+      {
         path: '/serverStatus',
         name: 'ServerStatus',
         meta: { title: 'ServerStatus', icon: 'Monitor' },
