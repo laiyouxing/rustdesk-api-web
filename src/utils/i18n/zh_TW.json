@@ -356,6 +356,24 @@
   "AuditFileLog": {
     "One": "檔案日誌"
   },
+  "AuditDirectOkLog": {
+    "One": "直連上報"
+  },
+  "ToPeer": {
+    "One": "對端裝置"
+  },
+  "ConnType": {
+    "One": "連線方式"
+  },
+  "PublicAddr": {
+    "One": "公網位址"
+  },
+  "LanAddrs": {
+    "One": "內網位址"
+  },
+  "MacHash": {
+    "One": "MAC（雜湊）"
+  },
   "AccountOpLog": {
     "One": "帳戶操作"
   },

@@ -395,6 +395,24 @@
   "AuditFileLog": {
     "One": "文件日志"
   },
+  "AuditDirectOkLog": {
+    "One": "直连上报"
+  },
+  "ToPeer": {
+    "One": "对端设备"
+  },
+  "ConnType": {
+    "One": "连接方式"
+  },
+  "PublicAddr": {
+    "One": "公网地址"
+  },
+  "LanAddrs": {
+    "One": "内网地址"
+  },
+  "MacHash": {
+    "One": "MAC（哈希）"
+  },
   "AccountOpLog": {
     "One": "账户操作"
   },

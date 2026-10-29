@@ -409,6 +409,24 @@
   "AuditFileLog": {
     "One": "File Log"
   },
+  "AuditDirectOkLog": {
+    "One": "Direct Connection Report"
+  },
+  "ToPeer": {
+    "One": "To Peer"
+  },
+  "ConnType": {
+    "One": "Conn Type"
+  },
+  "PublicAddr": {
+    "One": "Public Addr"
+  },
+  "LanAddrs": {
+    "One": "LAN Addrs"
+  },
+  "MacHash": {
+    "One": "MAC (hashed)"
+  },
   "AccountOpLog": {
     "One": "Account Operations"
   },

@@ -315,6 +315,13 @@ export const asyncRoutes = [
         component: () => import('@/views/audit/fileList.vue'),
       },
       {
+        // 直连上报记录：客户端直连成功后上报的两端网络标识（合规审计）
+        path: 'directOk',
+        name: 'AuditDirectOk',
+        meta: { title: 'AuditDirectOkLog', icon: 'Link' },
+        component: () => import('@/views/audit/directOkList.vue'),
+      },
+      {
         path: '/loginLog',
         name: 'LoginLog',
         meta: { title: 'LoginLog', icon: 'List' },
