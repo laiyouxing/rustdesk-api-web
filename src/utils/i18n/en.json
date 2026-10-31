@@ -206,6 +206,12 @@
   "DatabaseAbnormal": {
     "One": "Database unavailable"
   },
+  "Get": {
+    "One": "Get"
+  },
+  "ClickGetToShow": {
+    "One": "Click \"Get\" to load the status"
+  },
   "Group": {
     "One": "Group"
   },

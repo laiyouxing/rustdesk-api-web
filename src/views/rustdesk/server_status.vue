@@ -51,73 +51,86 @@
       </el-table>
     </el-card>
 
-    <!-- api-server 自身运行状态 -->
-    <el-card shadow="hover" class="stats-card" v-if="apiStats">
+    <!-- api-server 自身运行状态（按需点击获取，不参与自动刷新） -->
+    <el-card shadow="hover" class="stats-card">
       <template #header>
         <div class="card-header">
           <b>{{ T('ApiServerSelfStatus') }}</b>
-          <span>{{ apiStats.api_addr || '-' }}</span>
+          <span style="display:flex; align-items:center; gap:12px;">
+            <span v-if="apiStats">{{ apiStats.api_addr || '-' }}</span>
+            <el-button size="small" type="primary" :loading="apiStatsLoading" @click="loadApiStats">
+              {{ apiStats ? T('Refresh') : T('Get') }}
+            </el-button>
+          </span>
         </div>
       </template>
 
-      <el-row :gutter="20" class="metrics">
-        <el-col :span="6">
-          <div class="metric">
-            <div class="metric-value">{{ fmtUptime(apiStats.uptime_seconds) }}</div>
-            <div class="metric-label">{{ T('Uptime') }}</div>
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="metric">
-            <div class="metric-value">{{ apiStats.version || '-' }}</div>
-            <div class="metric-label">{{ T('Version') }}</div>
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="metric">
-            <div class="metric-value">
-              <el-tag v-if="apiStats.db_available" type="success" effect="dark">{{ T('Normal') }}</el-tag>
-              <el-tag v-else type="danger" effect="dark">{{ T('Abnormal') }}</el-tag>
-            </div>
-            <div class="metric-label">{{ T('Database') }}</div>
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="metric">
-            <div class="metric-value">{{ apiStats.peer_online }} / {{ apiStats.peer_total }}</div>
-            <div class="metric-label">{{ T('DeviceOnlineTotal') }}</div>
-          </div>
-        </el-col>
-      </el-row>
-
-      <el-descriptions :column="3" border size="small" style="margin-top:12px">
-        <el-descriptions-item :label="T('MemoryUsage')">
-          {{ fmtMB2(apiStats.memory_alloc_mb) }} / {{ fmtMB2(apiStats.memory_sys_mb) }}
-        </el-descriptions-item>
-        <el-descriptions-item :label="T('Goroutines')">{{ apiStats.goroutines }}</el-descriptions-item>
-        <el-descriptions-item :label="T('GcCount')">
-          {{ apiStats.gc_count }}（{{ (apiStats.gc_pause_ms || 0).toFixed(0) }}ms）
-        </el-descriptions-item>
-        <el-descriptions-item :label="T('GoVersion')">{{ apiStats.go_version }}</el-descriptions-item>
-        <el-descriptions-item :label="T('CpuCores')">{{ apiStats.num_cpu }}</el-descriptions-item>
-        <el-descriptions-item :label="T('UserTotal')">{{ apiStats.user_total }}</el-descriptions-item>
-        <el-descriptions-item :label="T('DbConnections')">
-          {{ T('InUse') }} {{ apiStats.db_in_use }} / {{ T('Idle') }} {{ apiStats.db_idle }} /
-          {{ T('Open') }} {{ apiStats.db_open_conns }}
-        </el-descriptions-item>
-        <el-descriptions-item :label="T('DbWaitCount')">{{ apiStats.db_wait_count }}</el-descriptions-item>
-        <el-descriptions-item :label="T('StartTime')">{{ fmtUnix(apiStats.start_time) }}</el-descriptions-item>
-      </el-descriptions>
-
-      <el-alert
-        v-if="apiStats.db_available === false"
-        :title="T('DatabaseAbnormal')"
-        type="error"
-        :description="apiStats.db_error || ''"
-        :closable="false"
-        show-icon
-        style="margin-top:12px"
+      <el-empty
+        v-if="!apiStats"
+        :description="T('ClickGetToShow')"
+        :image-size="70"
       />
+
+      <template v-else>
+        <el-row :gutter="20" class="metrics">
+          <el-col :span="6">
+            <div class="metric">
+              <div class="metric-value">{{ fmtUptime(apiStats.uptime_seconds) }}</div>
+              <div class="metric-label">{{ T('Uptime') }}</div>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="metric">
+              <div class="metric-value">{{ apiStats.version || '-' }}</div>
+              <div class="metric-label">{{ T('Version') }}</div>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="metric">
+              <div class="metric-value">
+                <el-tag v-if="apiStats.db_available" type="success" effect="dark">{{ T('Normal') }}</el-tag>
+                <el-tag v-else type="danger" effect="dark">{{ T('Abnormal') }}</el-tag>
+              </div>
+              <div class="metric-label">{{ T('Database') }}</div>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="metric">
+              <div class="metric-value">{{ apiStats.peer_online }} / {{ apiStats.peer_total }}</div>
+              <div class="metric-label">{{ T('DeviceOnlineTotal') }}</div>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-descriptions :column="3" border size="small" style="margin-top:12px">
+          <el-descriptions-item :label="T('MemoryUsage')">
+            {{ fmtMB2(apiStats.memory_alloc_mb) }} / {{ fmtMB2(apiStats.memory_sys_mb) }}
+          </el-descriptions-item>
+          <el-descriptions-item :label="T('Goroutines')">{{ apiStats.goroutines }}</el-descriptions-item>
+          <el-descriptions-item :label="T('GcCount')">
+            {{ apiStats.gc_count }}（{{ (apiStats.gc_pause_ms || 0).toFixed(0) }}ms）
+          </el-descriptions-item>
+          <el-descriptions-item :label="T('GoVersion')">{{ apiStats.go_version }}</el-descriptions-item>
+          <el-descriptions-item :label="T('CpuCores')">{{ apiStats.num_cpu }}</el-descriptions-item>
+          <el-descriptions-item :label="T('UserTotal')">{{ apiStats.user_total }}</el-descriptions-item>
+          <el-descriptions-item :label="T('DbConnections')">
+            {{ T('InUse') }} {{ apiStats.db_in_use }} / {{ T('Idle') }} {{ apiStats.db_idle }} /
+            {{ T('Open') }} {{ apiStats.db_open_conns }}
+          </el-descriptions-item>
+          <el-descriptions-item :label="T('DbWaitCount')">{{ apiStats.db_wait_count }}</el-descriptions-item>
+          <el-descriptions-item :label="T('StartTime')">{{ fmtUnix(apiStats.start_time) }}</el-descriptions-item>
+        </el-descriptions>
+
+        <el-alert
+          v-if="apiStats.db_available === false"
+          :title="T('DatabaseAbnormal')"
+          type="error"
+          :description="apiStats.db_error || ''"
+          :closable="false"
+          show-icon
+          style="margin-top:12px"
+        />
+      </template>
     </el-card>
 
     <!-- HBBR 负载 / 连接数（仅 api-server 与 hbbr 同机时可用） -->
@@ -216,6 +229,7 @@
   import { ref, onMounted, onUnmounted } from 'vue'
   import {
     serverStatus,
+    apiServerStats,
     serverStatusCreate,
     serverStatusUpdate,
     serverStatusDelete,
@@ -225,7 +239,9 @@
 
   const servers = ref([])
   const hbbrStats = ref(null)
+  // api-server 自身状态：按需获取，不参与自动刷新，初始为空（显示"点击获取"）
   const apiStats = ref(null)
+  const apiStatsLoading = ref(false)
   const loading = ref(false)
   const saving = ref(false)
   const autoRefresh = ref(true)
@@ -284,7 +300,17 @@
     if (res) {
       servers.value = res.data.list || []
       hbbrStats.value = res.data.hbbr_stats
-      apiStats.value = res.data.api_stats || null
+    }
+  }
+
+  // 只在用户点击时获取 api-server 自身状态；不放进 load()，
+  // 避免跟随自动刷新反复请求。
+  const loadApiStats = async () => {
+    apiStatsLoading.value = true
+    const res = await apiServerStats().catch(_ => false)
+    apiStatsLoading.value = false
+    if (res) {
+      apiStats.value = res.data || null
     }
   }
 

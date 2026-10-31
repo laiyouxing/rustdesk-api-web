@@ -206,6 +206,12 @@
   "DatabaseAbnormal": {
     "One": "数据库不可用"
   },
+  "Get": {
+    "One": "获取"
+  },
+  "ClickGetToShow": {
+    "One": "点击「获取」查看状态"
+  },
   "Group": {
     "One": "组"
   },

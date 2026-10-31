@@ -8,6 +8,14 @@ export function serverStatus () {
   })
 }
 
+// 获取 api-server 自身运行状态（按需点击获取，不参与列表自动刷新）
+export function apiServerStats () {
+  return request({
+    url: '/server_status/api_stats',
+    method: 'get',
+  })
+}
+
 // 列出当前用户的服务器条目
 export function serverStatusList () {
   return request({
