@@ -37,8 +37,23 @@
         </el-form-item>
       </el-form>
       <el-form inline label-width="80px">
-        <el-form-item :label="T('DownloadUrl')" style="width: 500px">
-          <el-input v-model="form.url" placeholder="https://github.com/.../rustdesk-1.4.8.2-x86_64.exe"></el-input>
+        <el-form-item :label="T('DownloadUrl')" style="width: 620px">
+          <el-input v-model="form.url"
+                    placeholder="留空即可：自动使用 GitHub Releases 里相同版本、相同平台的产物">
+          </el-input>
+          <div style="font-size: 12px; color: #909399; line-height: 1.6; margin-top: 6px;">
+            <div>
+              <b>留空</b>时客户端会用 <code>GitHub Releases</code> 里<b>同一版本</b>、<b>对应平台</b>的产物下载，
+              无需在此重复填写。
+            </div>
+            <div style="margin-top: 2px;">
+              填写后优先使用此链接（可指向自有镜像）。
+            </div>
+            <div style="margin-top: 2px;">
+              自动解析的产物名示例：Windows <code>rustdesk-{version}-x86_64.exe</code>、
+              macOS <code>-aarch64.dmg</code>、Linux <code>-x86_64.deb</code>、Android <code>-universal.apk</code>。
+            </div>
+          </div>
         </el-form-item>
       </el-form>
       <el-form label-width="80px">
@@ -150,8 +165,11 @@ const edit = (row) => {
 }
 
 const submitForm = async () => {
-  if (!form.version || !form.url) {
-    ElMessage.error(T('ParamRequired', { param: 'Version & URL' }))
+  // 下载链接可以留空：留空时客户端会自动回落到 GitHub Releases 里
+  // 同一版本、对应平台的产物（见 client 的 github_release_url）。
+  // 因此这里只校验版本号必填。
+  if (!form.version) {
+    ElMessage.error(T('ParamRequired', { param: T('Version') }))
     return
   }
   submitting.value = true
