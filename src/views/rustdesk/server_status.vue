@@ -51,6 +51,75 @@
       </el-table>
     </el-card>
 
+    <!-- api-server 自身运行状态 -->
+    <el-card shadow="hover" class="stats-card" v-if="apiStats">
+      <template #header>
+        <div class="card-header">
+          <b>{{ T('ApiServerSelfStatus') }}</b>
+          <span>{{ apiStats.api_addr || '-' }}</span>
+        </div>
+      </template>
+
+      <el-row :gutter="20" class="metrics">
+        <el-col :span="6">
+          <div class="metric">
+            <div class="metric-value">{{ fmtUptime(apiStats.uptime_seconds) }}</div>
+            <div class="metric-label">{{ T('Uptime') }}</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="metric">
+            <div class="metric-value">{{ apiStats.version || '-' }}</div>
+            <div class="metric-label">{{ T('Version') }}</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="metric">
+            <div class="metric-value">
+              <el-tag v-if="apiStats.db_available" type="success" effect="dark">{{ T('Normal') }}</el-tag>
+              <el-tag v-else type="danger" effect="dark">{{ T('Abnormal') }}</el-tag>
+            </div>
+            <div class="metric-label">{{ T('Database') }}</div>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="metric">
+            <div class="metric-value">{{ apiStats.peer_online }} / {{ apiStats.peer_total }}</div>
+            <div class="metric-label">{{ T('DeviceOnlineTotal') }}</div>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-descriptions :column="3" border size="small" style="margin-top:12px">
+        <el-descriptions-item :label="T('MemoryUsage')">
+          {{ fmtMB2(apiStats.memory_alloc_mb) }} / {{ fmtMB2(apiStats.memory_sys_mb) }}
+        </el-descriptions-item>
+        <el-descriptions-item :label="T('Goroutines')">{{ apiStats.goroutines }}</el-descriptions-item>
+        <el-descriptions-item :label="T('GcCount')">
+          {{ apiStats.gc_count }}（{{ (apiStats.gc_pause_ms || 0).toFixed(0) }}ms）
+        </el-descriptions-item>
+        <el-descriptions-item :label="T('GoVersion')">{{ apiStats.go_version }}</el-descriptions-item>
+        <el-descriptions-item :label="T('CpuCores')">{{ apiStats.num_cpu }}</el-descriptions-item>
+        <el-descriptions-item :label="T('UserTotal')">{{ apiStats.user_total }}</el-descriptions-item>
+        <el-descriptions-item :label="T('DbConnections')">
+          {{ T('InUse') }} {{ apiStats.db_in_use }} / {{ T('Idle') }} {{ apiStats.db_idle }} /
+          {{ T('Open') }} {{ apiStats.db_open_conns }}
+        </el-descriptions-item>
+        <el-descriptions-item :label="T('DbWaitCount')">{{ apiStats.db_wait_count }}</el-descriptions-item>
+        <el-descriptions-item :label="T('StartTime')">{{ fmtUnix(apiStats.start_time) }}</el-descriptions-item>
+      </el-descriptions>
+
+      <el-alert
+        v-if="apiStats.db_available === false"
+        :title="T('DatabaseAbnormal')"
+        type="error"
+        :description="apiStats.db_error || ''"
+        :closable="false"
+        show-icon
+        style="margin-top:12px"
+      />
+    </el-card>
+
     <!-- HBBR 负载 / 连接数（仅 api-server 与 hbbr 同机时可用） -->
     <el-card shadow="hover" class="stats-card" v-if="hbbrStats">
       <template #header>
@@ -156,6 +225,7 @@
 
   const servers = ref([])
   const hbbrStats = ref(null)
+  const apiStats = ref(null)
   const loading = ref(false)
   const saving = ref(false)
   const autoRefresh = ref(true)
@@ -185,6 +255,24 @@
     if (n >= 1024) return (n / 1024).toFixed(2) + ' GB'
     return n.toFixed(2) + ' MB'
   }
+  // 内存值本身已是 MB，不需要再换算 GB
+  const fmtMB2 = (v) => (Number(v) || 0).toFixed(1) + ' MB'
+  // 运行时长：秒 → 天/时/分
+  const fmtUptime = (sec) => {
+    const s = Math.max(0, Number(sec) || 0)
+    const d = Math.floor(s / 86400)
+    const h = Math.floor((s % 86400) / 3600)
+    const m = Math.floor((s % 3600) / 60)
+    if (d > 0) return `${d}d ${h}h`
+    if (h > 0) return `${h}h ${m}m`
+    return `${m}m`
+  }
+  const fmtUnix = (ts) => {
+    if (!ts) return '-'
+    const d = new Date(Number(ts) * 1000)
+    const p = (n) => String(n).padStart(2, '0')
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`
+  }
 
   const load = async () => {
     loading.value = true
@@ -196,6 +284,7 @@
     if (res) {
       servers.value = res.data.list || []
       hbbrStats.value = res.data.hbbr_stats
+      apiStats.value = res.data.api_stats || null
     }
   }
 

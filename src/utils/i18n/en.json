@@ -152,6 +152,60 @@
   "OfflineOverYear": {
     "One": "Offline > 1 year"
   },
+  "ApiServerSelfStatus": {
+    "One": "API server status"
+  },
+  "Uptime": {
+    "One": "Uptime"
+  },
+  "Normal": {
+    "One": "Normal"
+  },
+  "Abnormal": {
+    "One": "Abnormal"
+  },
+  "Database": {
+    "One": "Database"
+  },
+  "DeviceOnlineTotal": {
+    "One": "Devices (online/total)"
+  },
+  "MemoryUsage": {
+    "One": "Memory (in use / total)"
+  },
+  "Goroutines": {
+    "One": "Goroutines"
+  },
+  "GcCount": {
+    "One": "GC count (total pause)"
+  },
+  "GoVersion": {
+    "One": "Go version"
+  },
+  "CpuCores": {
+    "One": "CPU cores"
+  },
+  "UserTotal": {
+    "One": "Users"
+  },
+  "DbConnections": {
+    "One": "DB connections"
+  },
+  "InUse": {
+    "One": "in use"
+  },
+  "Idle": {
+    "One": "idle"
+  },
+  "Open": {
+    "One": "open"
+  },
+  "DbWaitCount": {
+    "One": "DB wait count"
+  },
+  "DatabaseAbnormal": {
+    "One": "Database unavailable"
+  },
   "Group": {
     "One": "Group"
   },

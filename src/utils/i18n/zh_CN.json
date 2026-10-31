@@ -152,6 +152,60 @@
   "OfflineOverYear": {
     "One": "离线超过1年"
   },
+  "ApiServerSelfStatus": {
+    "One": "API 服务器自身状态"
+  },
+  "Uptime": {
+    "One": "运行时长"
+  },
+  "Normal": {
+    "One": "正常"
+  },
+  "Abnormal": {
+    "One": "异常"
+  },
+  "Database": {
+    "One": "数据库"
+  },
+  "DeviceOnlineTotal": {
+    "One": "设备(在线/总数)"
+  },
+  "MemoryUsage": {
+    "One": "内存(已用/占用)"
+  },
+  "Goroutines": {
+    "One": "协程数"
+  },
+  "GcCount": {
+    "One": "GC 次数(累计停顿)"
+  },
+  "GoVersion": {
+    "One": "Go 版本"
+  },
+  "CpuCores": {
+    "One": "CPU 核数"
+  },
+  "UserTotal": {
+    "One": "用户数"
+  },
+  "DbConnections": {
+    "One": "数据库连接"
+  },
+  "InUse": {
+    "One": "使用中"
+  },
+  "Idle": {
+    "One": "空闲"
+  },
+  "Open": {
+    "One": "总数"
+  },
+  "DbWaitCount": {
+    "One": "连接等待次数"
+  },
+  "DatabaseAbnormal": {
+    "One": "数据库不可用"
+  },
   "Group": {
     "One": "组"
   },
