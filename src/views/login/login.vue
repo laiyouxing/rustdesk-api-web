@@ -3,7 +3,15 @@
     <div class="login-card">
       <img src="@/assets/logo.png" alt="logo" class="login-logo"/>
 
-      <el-form v-if="!disablePwd && step === 'pwd'" label-position="top" class="login-form">
+      <!--
+        @submit.prevent 必须加：
+        el-form 渲染为原生 <form>，若不阻止默认行为，在输入框里按回车会触发
+        浏览器原生表单提交 → 整页刷新 → 正在进行的 /login 或 /login/mfa 请求被
+        abort（服务器日志里看不到），已下发的 Set-Cookie 也来不及生效。
+        表现就是"输入动态码后回到登录页、要再输一次 MFA"。
+      -->
+      <el-form v-if="!disablePwd && step === 'pwd'" label-position="top" class="login-form"
+               @submit.prevent>
         <el-form-item :label="T('Username')">
           <el-input v-model="form.username" type="username" class="login-input"></el-input>
         </el-form-item>
@@ -25,7 +33,8 @@
         </el-form-item>
       </el-form>
 
-      <el-form v-else-if="!disablePwd && step === 'mfa'" label-position="top" class="login-form">
+      <el-form v-else-if="!disablePwd && step === 'mfa'" label-position="top" class="login-form"
+               @submit.prevent>
         <el-alert :title="T('MfaVerifyTip')" type="warning" :closable="false" show-icon style="margin-bottom:12px" />
         <el-form-item :label="useRecovery ? T('MfaRecoveryCode') : T('MfaCode')">
           <el-input v-model="mfaInput" @keyup.enter.native="submitMfa" class="login-input"></el-input>
