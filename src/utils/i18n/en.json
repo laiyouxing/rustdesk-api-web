@@ -149,6 +149,9 @@
   "Today": {
     "One": "Today"
   },
+  "OfflineOverYear": {
+    "One": "Offline > 1 year"
+  },
   "Group": {
     "One": "Group"
   },

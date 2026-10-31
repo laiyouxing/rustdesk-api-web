@@ -5,6 +5,9 @@
         <el-button :type="quickFilter === 'all' ? 'primary' : 'default'" size="small" @click="setQuickFilter('all')">全部</el-button>
         <el-button :type="quickFilter === 'online' ? 'success' : 'default'" size="small" @click="setQuickFilter('online')">在线</el-button>
         <el-button :type="quickFilter === 'offline' ? 'danger' : 'default'" size="small" @click="setQuickFilter('offline')">离线</el-button>
+        <el-button :type="quickFilter === 'offline_year' ? 'danger' : 'default'" size="small" @click="setQuickFilter('offline_year')">
+          {{ T('OfflineOverYear') }}
+        </el-button>
       </div>
       <el-form inline label-width="60px">
         <el-form-item :label="T('ID')">
@@ -284,6 +287,12 @@
   const appStore = useAppStore()
   const route = useRoute()
 
+  // 离线超过 1 年（秒）。与后端 PeerQuery.TimeAgo 语义一致：
+  // time_ago > 0 → last_online_time < now - time_ago。
+  // 注意：last_online_time = 0（从未上线过）也满足该条件，会一并筛出，
+  // 这正是"长期不用、可清理"的目标集合。
+  const OFFLINE_OVER_YEAR_SECONDS = 365 * 24 * 3600
+
   const quickFilter = ref('all')
 
   function setQuickFilter(v) {
@@ -294,6 +303,8 @@
       listQuery.time_ago = -300
     } else if (v === 'offline') {
       listQuery.time_ago = 300
+    } else if (v === 'offline_year') {
+      listQuery.time_ago = OFFLINE_OVER_YEAR_SECONDS
     }
     handlerQuery()
   }
@@ -306,6 +317,9 @@
     if (ta < 0) {
       listQuery.time_ago = ta
       quickFilter.value = 'online'
+    } else if (ta === OFFLINE_OVER_YEAR_SECONDS) {
+      listQuery.time_ago = ta
+      quickFilter.value = 'offline_year'
     } else if (ta > 0) {
       listQuery.time_ago = ta
       quickFilter.value = 'offline'
@@ -460,7 +474,9 @@ onActivated(() => {
     { text: T('HoursAgo', { param: 1 }, 1), value: 3600 },
     { text: T('DaysAgo', { param: 1 }, 1), value: 86400 },
     { text: T('MonthsAgo', { param: 1 }, 1), value: 2592000 },
-    // { text: T('YearsAgo', { param: 1 }, 1), value: 31536000 },
+    { text: T('MonthsAgo', { param: 3 }, 1), value: 7776000 },
+    { text: T('MonthsAgo', { param: 6 }, 1), value: 15552000 },
+    { text: T('YearsAgo', { param: 1 }, 1), value: 31536000 },
   ])
 
   const toExport = async () => {

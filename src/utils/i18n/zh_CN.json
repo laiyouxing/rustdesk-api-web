@@ -149,6 +149,9 @@
   "Today": {
     "One": "今天"
   },
+  "OfflineOverYear": {
+    "One": "离线超过1年"
+  },
   "Group": {
     "One": "组"
   },
