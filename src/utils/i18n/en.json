@@ -1,4 +1,4 @@
-{
+﻿{
   "Login": {
     "One": "Login"
   },
@@ -644,7 +644,7 @@
     "One": "Config File"
   },
   "RetentionPolicy": {
-    "One": "Retention Policy"
+    "One": "Storage Management"
   },
   "ConfigFileTip": {
     "One": "Edit the backend config.yaml directly here. Changes take effect after restarting the service."

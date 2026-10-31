@@ -1,4 +1,4 @@
-{
+﻿{
   "Login": {
     "One": "登录"
   },
@@ -738,7 +738,7 @@
     "One": "配置文件"
   },
   "RetentionPolicy": {
-    "One": "保留策略"
+    "One": "存储管理"
   },
   "ConfigFileTip": {
     "One": "此处直接编辑后端 config.yaml 配置文件，保存后需重启服务生效。"

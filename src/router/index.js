@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+﻿import { createRouter, createWebHashHistory } from 'vue-router'
 
 const constantRoutes = [
   {
@@ -247,7 +247,7 @@ export const asyncRoutes = [
         component: () => import('@/views/rustdesk/config_file.vue'),
       },
       {
-        // 保留策略：日志按天轮转保留天数 + 审计记录保留天数（保存后立即生效）
+        // 存储管理：各类数据保留策略 + 占用统计（保存后立即生效）
         path: '/retention',
         name: 'RetentionPolicy',
         meta: { title: 'RetentionPolicy', icon: 'Timer' },
@@ -357,3 +357,4 @@ export const router = createRouter({
   history: createWebHashHistory(),
   routes: constantRoutes,
 })
+
