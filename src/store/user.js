@@ -27,6 +27,19 @@ export const useUserStore = defineStore({
       } catch (e) {
         // 即使请求失败也继续清理本地状态
       }
+      this.clearLocal()
+    },
+
+    // 只清理本地状态，**不调用后端 /logout**。
+    //
+    // 为什么必须区分：
+    // 后端 /logout 会删除 user_tokens 记录并清 Cookie —— 那是**销毁服务端会话**。
+    // 而"路由守卫判断登录态"时的失败原因很多是**临时的**：
+    //   - 页面刷新/跳转导致 in-flight 的 /user/current 请求被中断（浏览器 abort）
+    //   - 网络抖动、超时、多标签页互相影响导致某次请求没带 Cookie
+    // 这些情况下会话其实仍然有效。若一律走 logout()，就会把"一次临时失败"
+    // 升级成"真的被登出"，带 MFA 的账户被迫重新输一次动态码。
+    clearLocal () {
       removeToken()
       removeCode()
       this.$patch({
@@ -58,17 +71,32 @@ export const useUserStore = defineStore({
         return Promise.reject(res)
       }
     },
-    async info () {
-      const res = await current().catch(_ => false)
-      if (res) {
-        useAppStore().loadConfig()
-        const userData = res.data
-        // token 由后端通过 HttpOnly Cookie 下发，前端不再存储
-        this.$patch({
-          ...userData,
-        })
-        useRouteStore().addRoutes(userData.route_names)
-        return userData
+    // 读取当前登录用户。失败原因分两类，必须区别对待：
+    //   - 401：会话确实失效（Cookie 没有/过期/token 被删）→ 返回 false，交给守卫跳登录页
+    //   - 其它（请求被中断、网络抖动、超时、5xx）→ **重试**，不能当成未登录。
+    //     页面刷新会让 in-flight 请求被浏览器 abort，这类"假失败"如果被当作
+    //     退出登录，带 MFA 的账户每次刷新都要重新输动态码。
+    async info (retry = 1) {
+      for (let i = 0; i <= retry; i++) {
+        try {
+          const res = await current()
+          if (res && res.data) {
+            useAppStore().loadConfig()
+            const userData = res.data
+            // token 由后端通过 HttpOnly Cookie 下发，前端不再存储
+            this.$patch({
+              ...userData,
+            })
+            useRouteStore().addRoutes(userData.route_names)
+            return userData
+          }
+          return false
+        } catch (e) {
+          // 明确的会话失效：不重试，直接判定未登录
+          if (e && e.code === 401) return false
+          if (i === retry) return false
+          await new Promise(resolve => setTimeout(resolve, 300))
+        }
       }
       return false
     },
