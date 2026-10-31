@@ -140,6 +140,15 @@
   "Type": {
     "One": "Type"
   },
+  "StartTime": {
+    "One": "Start time"
+  },
+  "EndTime": {
+    "One": "End time"
+  },
+  "Today": {
+    "One": "Today"
+  },
   "Group": {
     "One": "Group"
   },

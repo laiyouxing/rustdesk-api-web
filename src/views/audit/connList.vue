@@ -2,14 +2,52 @@
   <div>
     <el-card class="list-query" shadow="hover">
       <el-form inline label-width="80px">
+        <el-form-item :label="T('Time')">
+          <el-date-picker
+            v-model="listQuery.dateRange"
+            type="datetimerange"
+            range-separator="-"
+            :start-placeholder="T('StartTime')"
+            :end-placeholder="T('EndTime')"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            :shortcuts="dateShortcuts"
+            style="width: 380px"
+          />
+        </el-form-item>
         <el-form-item :label="T('Peer')">
-          <el-input v-model="listQuery.peer_id" clearable></el-input>
+          <el-input v-model="listQuery.peer_id" clearable style="width: 140px"></el-input>
         </el-form-item>
         <el-form-item :label="T('FromPeer')">
-          <el-input v-model="listQuery.from_peer" clearable></el-input>
+          <el-input v-model="listQuery.from_peer" clearable style="width: 140px"></el-input>
+        </el-form-item>
+        <el-form-item :label="T('FromName')">
+          <el-input v-model="listQuery.from_name" clearable style="width: 140px"></el-input>
+        </el-form-item>
+        <el-form-item :label="T('Ip')">
+          <el-input v-model="listQuery.ip" clearable style="width: 140px"></el-input>
+        </el-form-item>
+        <el-form-item :label="T('Uuid')">
+          <el-input v-model="listQuery.uuid" clearable style="width: 140px"></el-input>
+        </el-form-item>
+        <el-form-item :label="T('Type')">
+          <el-select v-model="listQuery.type" clearable :placeholder="T('All')" style="width: 120px">
+            <el-option :label="T('Common')" :value="0"/>
+            <el-option :label="T('File')" :value="1"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="T('Action')">
+          <el-select v-model="listQuery.action" clearable :placeholder="T('All')" style="width: 120px">
+            <el-option label="new" value="new"/>
+            <el-option label="close" value="close"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="T('Keyword')">
+          <el-input v-model="listQuery.keyword" clearable style="width: 180px"
+                    placeholder="peer/ip/uuid"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handlerQuery">{{ T('Filter') }}</el-button>
+          <el-button @click="resetQuery">{{ T('Reset') }}</el-button>
           <el-button type="danger" @click="toBatchDelete">{{ T('BatchDelete') }}</el-button>
           <el-button type="success" @click="toExport">{{ T('Export') }}</el-button>
         </el-form-item>
@@ -61,10 +99,41 @@
     listQuery,
     getList,
     handlerQuery,
+    resetQuery,
     del,
     batchdel,
     toExport,
   } = useRepositories()
+
+  // 常用时间范围快捷项：审计排查多数是"最近一段时间"
+  const dateShortcuts = [
+    {
+      text: T('Today'),
+      value: () => {
+        const start = new Date()
+        start.setHours(0, 0, 0, 0)
+        return [start, new Date()]
+      },
+    },
+    {
+      text: '7d',
+      value: () => {
+        const end = new Date()
+        const start = new Date()
+        start.setDate(start.getDate() - 7)
+        return [start, end]
+      },
+    },
+    {
+      text: '30d',
+      value: () => {
+        const end = new Date()
+        const start = new Date()
+        start.setDate(start.getDate() - 30)
+        return [start, end]
+      },
+    },
+  ]
 
   onMounted(getList)
   onActivated(getList)

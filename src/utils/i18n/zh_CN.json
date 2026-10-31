@@ -140,6 +140,15 @@
   "Type": {
     "One": "类型"
   },
+  "StartTime": {
+    "One": "开始时间"
+  },
+  "EndTime": {
+    "One": "结束时间"
+  },
+  "Today": {
+    "One": "今天"
+  },
   "Group": {
     "One": "组"
   },
