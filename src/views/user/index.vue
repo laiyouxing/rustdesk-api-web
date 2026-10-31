@@ -73,7 +73,7 @@
   import { useRepositories, useDel, useToEditOrAdd, useChangePwd } from '@/views/user/composables'
   import { T } from '@/utils/i18n'
   import { DISABLE_STATUS, ENABLE_STATUS } from '@/utils/common_options'
-  import { update, mfaReset } from '@/api/user'
+  import { setStatus, mfaReset } from '@/api/user'
   import { ElMessageBox, ElMessage } from 'element-plus'
   import { onMounted, watch } from 'vue'
 
@@ -113,14 +113,10 @@
   }
 
   const changeStatus = async (row) => {
-    /*const confirm = await ElMessageBox.confirm(T('Confirm?', { param: T('Update') }), {
-      confirmButtonText: T('Confirm'),
-      cancelButtonText: T('Cancel'),
-    }).catch(_ => false)
-    if (!confirm) {
-      return false
-    }*/
-    const res = await update(row).catch(_ => false)
+    // 只提交 id + status：绝不把整行回传给 update，
+    // 否则会把 role/nickname/group 等一起覆盖（曾导致管理员被静默降级）。
+    const nextStatus = row.status === ENABLE_STATUS ? DISABLE_STATUS : ENABLE_STATUS
+    const res = await setStatus({ id: row.id, status: nextStatus }).catch(_ => false)
     if (res) {
       ElMessage.success(T('OperationSuccess'))
       getList(listQuery)

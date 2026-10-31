@@ -44,6 +44,17 @@ export function update (data) {
   })
 }
 
+// 仅修改启用/禁用状态。
+// 列表里的状态开关必须用这个，不能调 update——update 是整行覆盖，
+// 会把 role/nickname 等一并回写（曾导致管理员被静默降级）。
+export function setStatus (data) {
+  return request({
+    url: '/user/set_status',
+    method: 'post',
+    data,
+  })
+}
+
 export function remove (data) {
   return request({
     url: '/user/delete',
