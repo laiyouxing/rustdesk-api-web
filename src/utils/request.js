@@ -60,10 +60,11 @@ service.interceptors.response.use(
         duration: 5 * 1000,
       })
 
-      if (res.code === 403) {
+      // 401 = 会话无效（未登录 / Cookie 过期 / 指纹不匹配 / 账户被禁用或过期）。
+      // 只有这种情况才登出并跳转登录页。
+      if (res.code === 401) {
         removeToken()
-        // 会话失效（未登录 / Cookie 过期 / 指纹不匹配）：跳转登录页重新登录。
-        // 切勿 window.location.reload()：在受保护页会因持续 403 陷入 reload 死循环横跳，
+        // 切勿 window.location.reload()：在受保护页会因持续 401 陷入 reload 死循环横跳，
         // 表现为"登录界面反复刷新横跳"，且刷新瞬间未完成的请求被中止报 "Request aborted"。
         import('@/router').then(m => {
           const r = m.default
@@ -77,6 +78,10 @@ service.interceptors.response.use(
           }
         })
       }
+      // 403 = 无权限（已登录，但没有该接口的管理员权限）。
+      // 绝不能再当成掉线处理：否则普通用户 / 权限不足时会被反复踢回登录页；
+      // 若该账户还开了 MFA，就表现为"登录成功→立刻退出→又要输入一次动态码"。
+      // 这里只提示错误（上面 ElMessage 已提示），保持当前会话不动。
       return Promise.reject(res)
     } else {
       return res
