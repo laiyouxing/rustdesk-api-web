@@ -532,11 +532,9 @@ onActivated(() => {
     const reader = new FileReader()
     reader.onload = async (e) => {
       const data = e.target.result
-      console.log(data)
       //组装数据
       const rows = data.split('\n')
       const keys = rows[0].split(',')
-      console.log(keys, rows.slice(1).map(row => row.split(',')))
       const values = rows.slice(1).map(row => {
         const obj = {}
         row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).forEach((v, i) => {
@@ -545,7 +543,6 @@ onActivated(() => {
         })
         return obj
       }).filter(item => item.id)
-      // console.log(values)
       //移除不需要的key
       values.forEach(item => {
         item.group_id = parseInt(item.group_id)
@@ -555,7 +552,6 @@ onActivated(() => {
           }
         })
       })
-      console.log(values)
       const pa = []
       values.map(item => {
         pa.push(create(item))

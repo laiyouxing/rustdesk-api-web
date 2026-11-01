@@ -1,9 +1,196 @@
-﻿{
-  "Selected": "已选择",
-  "SetRegion": "批量设置地域",
-  "Peers": "台设备",
-  "SetRegionTip": "为选中的设备指定所属地区。仅作为中继就近调度的偏好，最终由客户端实测延迟决定；客户端在设置页自行选择时以客户端为准。",
-  "Region": "地域",
+{
+  "Selected": {
+    "One": "已选择"
+  },
+  "SetRegion": {
+    "One": "批量设置地域"
+  },
+  "Peers": {
+    "One": "台设备"
+  },
+  "SetRegionTip": {
+    "One": "为选中的设备指定所属地区。仅作为中继就近调度的偏好，最终由客户端实测延迟决定；客户端在设置页自行选择时以客户端为准。"
+  },
+  "Region": {
+    "One": "地域"
+  },
+  "NodeScoreWeights": {
+    "One": "调度权重"
+  },
+  "NodeRefreshNow": {
+    "One": "立即刷新"
+  },
+  "NodeRefreshList": {
+    "One": "刷新列表"
+  },
+  "NodeWeightsTip": {
+    "One": "所有因子统一为「成本」：归一化后加权求和，总分越低越优先被下发给 hbbs。人工权重语义是「越想用这台就调得越大」，内部会折算成更低的成本，方向与其他因子一致。注意：带宽 / CPU / 内存三项 agent 目前尚未上报数据，调整这三项权重暂不产生效果。"
+  },
+  "NodeSessions": {
+    "One": "会话数"
+  },
+  "NodeBandwidth": {
+    "One": "带宽"
+  },
+  "NodeCPU": {
+    "One": "CPU"
+  },
+  "NodeMem": {
+    "One": "内存"
+  },
+  "NodeRTT": {
+    "One": "延迟"
+  },
+  "NodeManualWeight": {
+    "One": "人工权重"
+  },
+  "NodeSaveWeights": {
+    "One": "保存权重"
+  },
+  "NodeListTitle": {
+    "One": "集群节点"
+  },
+  "NodeOfflineHint": {
+    "One": "离线判定：{sec} 秒无心跳"
+  },
+  "NodeKind": {
+    "One": "类型"
+  },
+  "NodeAddr": {
+    "One": "地址"
+  },
+  "NodeLan": {
+    "One": "内网"
+  },
+  "NodeNotSet": {
+    "One": "未设置"
+  },
+  "NodeStatus": {
+    "One": "状态"
+  },
+  "NodeDisabled": {
+    "One": "已下线"
+  },
+  "NodeOnline": {
+    "One": "在线"
+  },
+  "NodeOffline": {
+    "One": "离线"
+  },
+  "NodeSessionsShort": {
+    "One": "会话"
+  },
+  "NodePeers": {
+    "One": "设备"
+  },
+  "NodeScore": {
+    "One": "分数"
+  },
+  "NodeVersion": {
+    "One": "版本"
+  },
+  "NodeLastSeen": {
+    "One": "最后心跳"
+  },
+  "NodeEmptyTip": {
+    "One": "还没有节点上报（hbbs / hbbr 需配置 RD_API_SERVER 并启动）"
+  },
+  "NodeEditTitle": {
+    "One": "编辑节点"
+  },
+  "NodeName": {
+    "One": "备注名"
+  },
+  "NodeLanAddr": {
+    "One": "内网地址"
+  },
+  "NodeLanPlaceholder": {
+    "One": "如 10.126.126.5:21117（可选）"
+  },
+  "NodeRegionPlaceholder": {
+    "One": "选择省份（与客户端同一套代码）"
+  },
+  "NodeRegionTip": {
+    "One": "与客户端「所属地区」使用同一套省份代码，填错会导致地域偏好不生效"
+  },
+  "NodeConfig": {
+    "One": "平台配置"
+  },
+  "NodeConfigTip": {
+    "One": "可热更新（保存后约 30 秒内生效）：\n· relay_servers（hbbs，中继地址数组）\n· limit_speed_mbps / single_bandwidth_mbps / total_bandwidth_mbps（hbbr 限速，整数 Mbit/s）\n· downgrade_threshold（0~1 的比例）/ downgrade_start_check_sec（秒）\n仅展示、需重启才生效：key / port / mask / must_login\n注意：清空输入框不会删除已有配置；如需清除平台配置，请填入 {} 后保存。"
+  },
+  "NodeDisabledLabel": {
+    "One": "手动下线"
+  },
+  "NodeDisabledTip": {
+    "One": "下线后不再下发给 hbbs"
+  },
+  "NodeStaticRelays": {
+    "One": "静态中继"
+  },
+  "NodeStaticRelaysTip": {
+    "One": "调度列表之外的中继兜底地址（每行一个或逗号分隔）。全部中继都接入 agent 后可留空；若留空，hbbs 的 -r 会被调度结果替换，可能少于原有中继数量。"
+  },
+  "NodeStaticRelaysPlaceholder": {
+    "One": "120.236.237.39:21117\n183.24.70.210:21117"
+  },
+  "NodeSaveStaticRelays": {
+    "One": "保存静态中继"
+  },
+  "NodeStaticRelaysSaved": {
+    "One": "静态中继已保存"
+  },
+  "NodeSecret": {
+    "One": "节点接入密钥"
+  },
+  "NodeSecretTip": {
+    "One": "配置后 /api/node 的注册、心跳、配置拉取都会强制校验请求头 X-Node-Secret。密钥需同步到 hbbs / hbbr 的 RD_NODE_SECRET。留空表示未配置，仅靠（公开的）rustdesk key 校验，存在伪造节点风险。"
+  },
+  "NodeSecretPlaceholder": {
+    "One": "生成后显示在这里，也可手工填写（至少 16 位）"
+  },
+  "NodeSecretHint": {
+    "One": "保存后立即生效；已接入的节点必须同步该密钥，否则注册 / 心跳会被拒绝（401）。"
+  },
+  "NodeGenerateSecret": {
+    "One": "生成随机密钥"
+  },
+  "NodeSaveSecret": {
+    "One": "保存密钥"
+  },
+  "NodeSecretSaved": {
+    "One": "节点密钥已保存"
+  },
+  "NodeWeightsSaved": {
+    "One": "权重已保存，下次下发立即生效"
+  },
+  "NodeRefreshed": {
+    "One": "已重新探测节点"
+  },
+  "NodeSavedWithConfig": {
+    "One": "已保存并下发配置（约 30 秒内生效）"
+  },
+  "NodeSaved": {
+    "One": "已保存"
+  },
+  "NodeDeleted": {
+    "One": "已删除"
+  },
+  "NodeDeleteConfirm": {
+    "One": "确认删除节点 {addr}？在线节点会在 15 秒内自动重新注册，且平台配置与权重会丢失；如需临时摘除请用「手动下线」。"
+  },
+  "NodeAddrInvalid": {
+    "One": "地址格式不正确，应为 host:port（如 1.2.3.4:21117）"
+  },
+  "NodeSecondsAgo": {
+    "One": "{n} 秒前"
+  },
+  "NodeMinutesAgo": {
+    "One": "{n} 分钟前"
+  },
+  "NodeHoursAgo": {
+    "One": "{n} 小时前"
+  },
   "Login": {
     "One": "登录"
   },

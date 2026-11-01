@@ -17,6 +17,15 @@ export function nodeUpdate (data) {
   })
 }
 
+// 解除平台接管字段（fields 为空表示全部解除）
+export function nodeUnlock (id, fields = []) {
+  return request({
+    url: '/node/unlock',
+    method: 'post',
+    data: { id, fields },
+  })
+}
+
 // 删除节点
 export function nodeDelete (id) {
   return request({
@@ -69,5 +78,36 @@ export function nodeSaveConfig (data) {
     url: '/node/config',
     method: 'post',
     data,
+  })
+}
+
+// 静态中继兜底列表（未接入 agent 的中继，避免调度结果把 -r 缩水）
+export function nodeStaticRelays () {
+  return request({
+    url: '/node/static-relays',
+  })
+}
+
+export function nodeSaveStaticRelays (list) {
+  return request({
+    url: '/node/static-relays',
+    method: 'post',
+    data: { list },
+  })
+}
+
+// 节点专用密钥（请求头 X-Node-Secret）
+export function nodeSecret () {
+  return request({
+    url: '/node/secret',
+  })
+}
+
+// secret 传空串表示由服务端生成随机密钥
+export function nodeSaveSecret (secret) {
+  return request({
+    url: '/node/secret',
+    method: 'post',
+    data: { secret },
   })
 }

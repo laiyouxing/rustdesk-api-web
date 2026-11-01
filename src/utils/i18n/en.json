@@ -1,9 +1,196 @@
-﻿{
-  "Selected": "Selected",
-  "SetRegion": "Set Region",
-  "Peers": "device(s)",
-  "SetRegionTip": "Assign a region to selected devices. It only biases relay selection; the client still decides by measured latency, and a region chosen in the client settings takes precedence.",
-  "Region": "Region",
+{
+  "Selected": {
+    "One": "Selected"
+  },
+  "SetRegion": {
+    "One": "Set Region"
+  },
+  "Peers": {
+    "One": "device(s)"
+  },
+  "SetRegionTip": {
+    "One": "Assign a region to selected devices. It only biases relay selection; the client still decides by measured latency, and a region chosen in the client settings takes precedence."
+  },
+  "Region": {
+    "One": "Region"
+  },
+  "NodeScoreWeights": {
+    "One": "Scheduling Weights"
+  },
+  "NodeRefreshNow": {
+    "One": "Probe Now"
+  },
+  "NodeRefreshList": {
+    "One": "Refresh List"
+  },
+  "NodeWeightsTip": {
+    "One": "All factors are normalized costs: the lower the total, the higher the node is ranked when sent to hbbs. \"Manual weight\" means the larger the value the more preferred, converted into a lower cost. Note: bandwidth / CPU / memory are not reported by the agent yet, so their weights currently have no effect."
+  },
+  "NodeSessions": {
+    "One": "Sessions"
+  },
+  "NodeBandwidth": {
+    "One": "Bandwidth"
+  },
+  "NodeCPU": {
+    "One": "CPU"
+  },
+  "NodeMem": {
+    "One": "Memory"
+  },
+  "NodeRTT": {
+    "One": "Latency"
+  },
+  "NodeManualWeight": {
+    "One": "Manual weight"
+  },
+  "NodeSaveWeights": {
+    "One": "Save Weights"
+  },
+  "NodeListTitle": {
+    "One": "Cluster Nodes"
+  },
+  "NodeOfflineHint": {
+    "One": "Offline after {sec}s without heartbeat"
+  },
+  "NodeKind": {
+    "One": "Type"
+  },
+  "NodeAddr": {
+    "One": "Address"
+  },
+  "NodeLan": {
+    "One": "LAN"
+  },
+  "NodeNotSet": {
+    "One": "Not set"
+  },
+  "NodeStatus": {
+    "One": "Status"
+  },
+  "NodeDisabled": {
+    "One": "Disabled"
+  },
+  "NodeOnline": {
+    "One": "Online"
+  },
+  "NodeOffline": {
+    "One": "Offline"
+  },
+  "NodeSessionsShort": {
+    "One": "Sessions"
+  },
+  "NodePeers": {
+    "One": "Peers"
+  },
+  "NodeScore": {
+    "One": "Score"
+  },
+  "NodeVersion": {
+    "One": "Version"
+  },
+  "NodeLastSeen": {
+    "One": "Last seen"
+  },
+  "NodeEmptyTip": {
+    "One": "No nodes yet (hbbs / hbbr must set RD_API_SERVER and start)"
+  },
+  "NodeEditTitle": {
+    "One": "Edit Node"
+  },
+  "NodeName": {
+    "One": "Name"
+  },
+  "NodeLanAddr": {
+    "One": "LAN address"
+  },
+  "NodeLanPlaceholder": {
+    "One": "e.g. 10.126.126.5:21117 (optional)"
+  },
+  "NodeRegionPlaceholder": {
+    "One": "Select a province (same codes as client)"
+  },
+  "NodeRegionTip": {
+    "One": "Uses the same province codes as the client's region setting; a wrong value disables the region preference."
+  },
+  "NodeConfig": {
+    "One": "Platform Config"
+  },
+  "NodeConfigTip": {
+    "One": "Hot-applied (within ~30s):\n· relay_servers (hbbs, array of relay addresses)\n· limit_speed_mbps / single_bandwidth_mbps / total_bandwidth_mbps (hbbr limits, integer Mbit/s)\n· downgrade_threshold (0~1 ratio) / downgrade_start_check_sec (seconds)\nDisplay only, requires restart: key / port / mask / must_login\nNote: clearing the textarea does NOT delete the config; to clear it, enter {} and save."
+  },
+  "NodeDisabledLabel": {
+    "One": "Take offline"
+  },
+  "NodeDisabledTip": {
+    "One": "Disabled nodes are not sent to hbbs"
+  },
+  "NodeStaticRelays": {
+    "One": "Static Relays"
+  },
+  "NodeStaticRelaysTip": {
+    "One": "Fallback relay addresses beyond the scheduled list (one per line or comma separated). Can be empty once every relay has an agent; if empty, hbbs's -r is replaced by the scheduled list and may shrink."
+  },
+  "NodeStaticRelaysPlaceholder": {
+    "One": "120.236.237.39:21117\n183.24.70.210:21117"
+  },
+  "NodeSaveStaticRelays": {
+    "One": "Save Static Relays"
+  },
+  "NodeStaticRelaysSaved": {
+    "One": "Static relays saved"
+  },
+  "NodeSecret": {
+    "One": "Node Secret"
+  },
+  "NodeSecretTip": {
+    "One": "When configured, /api/node register, heartbeat and config require the X-Node-Secret header. Configure the same secret in hbbs / hbbr as RD_NODE_SECRET. Empty means not configured — only the (public) rustdesk key is checked, so nodes can be forged."
+  },
+  "NodeSecretPlaceholder": {
+    "One": "Shown here after generation, or enter manually (16+ chars)"
+  },
+  "NodeSecretHint": {
+    "One": "Takes effect immediately. Existing nodes must use the same secret or their register / heartbeat calls get 401."
+  },
+  "NodeGenerateSecret": {
+    "One": "Generate Random Secret"
+  },
+  "NodeSaveSecret": {
+    "One": "Save Secret"
+  },
+  "NodeSecretSaved": {
+    "One": "Node secret saved"
+  },
+  "NodeWeightsSaved": {
+    "One": "Weights saved; takes effect on the next scheduling round"
+  },
+  "NodeRefreshed": {
+    "One": "Nodes re-probed"
+  },
+  "NodeSavedWithConfig": {
+    "One": "Saved and config pushed (~30s to apply)"
+  },
+  "NodeSaved": {
+    "One": "Saved"
+  },
+  "NodeDeleted": {
+    "One": "Deleted"
+  },
+  "NodeDeleteConfirm": {
+    "One": "Delete node {addr}? An online node re-registers within 15s and loses platform config / weight. Use \"Take offline\" to remove it temporarily."
+  },
+  "NodeAddrInvalid": {
+    "One": "Invalid address, expected host:port (e.g. 1.2.3.4:21117)"
+  },
+  "NodeSecondsAgo": {
+    "One": "{n}s ago"
+  },
+  "NodeMinutesAgo": {
+    "One": "{n}m ago"
+  },
+  "NodeHoursAgo": {
+    "One": "{n}h ago"
+  },
   "Login": {
     "One": "Login"
   },
