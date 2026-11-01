@@ -61,7 +61,12 @@
             <div v-if="row.lan_addr" class="hint">内网: {{ row.lan_addr }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="region" label="地域" width="90"/>
+        <el-table-column label="地域" width="110" align="center">
+          <template #default="{ row }">
+            <el-tag v-if="row.region" size="small">{{ regionName(row.region) }} ({{ row.region }})</el-tag>
+            <span v-else class="hint">未设置</span>
+          </template>
+        </el-table-column>
         <el-table-column label="状态" width="90" align="center">
           <template #default="{ row }">
             <el-tag v-if="row.disabled === 1" size="small" type="info">已下线</el-tag>
@@ -103,7 +108,10 @@
           <el-input v-model="form.name"/>
         </el-form-item>
         <el-form-item label="地域">
-          <el-input v-model="form.region" placeholder="如 gz / hc，用于就近调度"/>
+          <el-select v-model="form.region" filterable clearable placeholder="选择省份（与客户端同一套代码）" style="width:100%">
+            <el-option v-for="r in regionList" :key="r.code" :label="r.name + ' (' + r.code + ')'" :value="r.code"/>
+          </el-select>
+          <div class="hint">与客户端「所属地区」使用同一套省份代码，填错会导致地域偏好不生效</div>
         </el-form-item>
         <el-form-item label="内网地址">
           <el-input v-model="form.lan_addr" placeholder="如 10.126.126.5:21117（可选）"/>
@@ -127,7 +135,7 @@
 <script setup>
   import { onActivated, onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
-  import { nodeDelete, nodeList, nodeRefresh, nodeSaveScoreConfig, nodeScoreConfig, nodeUpdate } from '@/api/node'
+  import { nodeDelete, nodeList, nodeRefresh, nodeRegions, nodeSaveScoreConfig, nodeScoreConfig, nodeUpdate } from '@/api/node'
 
   const loading = ref(false)
   const saving = ref(false)
@@ -135,6 +143,16 @@
   const nodes = ref([])
   const offlineSec = ref(60)
   const weights = reactive({ sessions: 0.35, bandwidth: 0.2, cpu: 0.15, mem: 0.1, rtt: 0.2, weight: 0 })
+
+  const regionList = ref([])
+  const regionName = (code) => {
+    const r = regionList.value.find(x => x.code === code)
+    return r ? r.name : code
+  }
+  const loadRegions = async () => {
+    const res = await nodeRegions().catch(_ => false)
+    if (res) regionList.value = res.data.regions || []
+  }
 
   const dialog = ref(false)
   const form = reactive({ id: 0, addr: '', name: '', region: '', lan_addr: '', weight: 100, disabledBool: false })
@@ -237,10 +255,12 @@
   onMounted(() => {
     load()
     loadWeights()
+    loadRegions()
   })
   onActivated(() => {
     load()
     loadWeights()
+    loadRegions()
   })
 </script>
 

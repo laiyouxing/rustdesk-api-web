@@ -48,3 +48,10 @@ export function nodeRefresh () {
     method: 'post',
   })
 }
+
+// 省份列表（与客户端「所属地区」同一套代码）
+export function nodeRegions () {
+  return request({
+    url: '/node/regions',
+  })
+}
