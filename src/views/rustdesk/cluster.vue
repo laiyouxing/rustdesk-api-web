@@ -13,7 +13,7 @@
       </template>
 
       <el-alert type="info" :closable="false" show-icon style="margin-bottom: 14px"
-                title="各因子归一化后按权重加权求和，分数越低越优先被下发给 hbbs。人工权重做负向调节（权重越大越优先）。"/>
+                title="所有因子统一为「成本」：归一化后加权求和，**总分越低越优先**被下发给 hbbs。其中人工权重语义是「越想用这台就调得越大」，内部会折算成更低的成本，方向与其他因子一致。"/>
 
       <el-form :inline="true" label-width="90px">
         <el-form-item label="会话数">
