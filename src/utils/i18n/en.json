@@ -194,6 +194,42 @@
   "NodeAddrInvalid": {
     "One": "Invalid address, expected host:port (e.g. 1.2.3.4:21117)"
   },
+  "NodeDetail": {
+    "One": "Details"
+  },
+  "NodeDetailTitle": {
+    "One": "Node Details"
+  },
+  "NodeDetailLoad": {
+    "One": "Load Metrics"
+  },
+  "NodeDetailInfo": {
+    "One": "Overview"
+  },
+  "NodeCpuUsage": {
+    "One": "CPU Usage"
+  },
+  "NodeMemUsage": {
+    "One": "Memory Usage"
+  },
+  "NodeBwIn": {
+    "One": "Bandwidth In"
+  },
+  "NodeBwOut": {
+    "One": "Bandwidth Out"
+  },
+  "NodeBwNoData": {
+    "One": "No data"
+  },
+  "NodeUptimeDHM": {
+    "One": "{d}d {h}h {m}m"
+  },
+  "NodeConfigVersion": {
+    "One": "Config version"
+  },
+  "NodeDetailRefreshed": {
+    "One": "Node data refreshed"
+  },
   "NodeSecondsAgo": {
     "One": "{n}s ago"
   },

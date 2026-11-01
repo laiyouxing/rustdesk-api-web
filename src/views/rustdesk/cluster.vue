@@ -86,8 +86,9 @@
         <el-table-column :label="T('NodeLastSeen')" width="110">
           <template #default="{ row }">{{ fmtAgo(row.last_seen) }}</template>
         </el-table-column>
-        <el-table-column :label="T('Actions')" width="160" align="center">
+        <el-table-column :label="T('Actions')" width="210" align="center">
           <template #default="{ row }">
+            <el-button link size="small" @click="showDetail(row)">{{ T('NodeDetail') }}</el-button>
             <el-button link size="small" @click="edit(row)">{{ T('Edit') }}</el-button>
             <el-button link size="small" type="danger" @click="remove(row)">{{ T('Delete') }}</el-button>
           </template>
@@ -133,6 +134,68 @@
         {{ T('NodeSecretPrevGrace', { time: fmtTime(prevExpiresAt) }) }}
       </div>
     </el-card>
+
+    <!-- 节点详情：CPU / 内存 / 带宽等负载指标只在这里展示，不占主表格列 -->
+    <el-dialog v-model="detailDialog" :title="T('NodeDetailTitle')" width="640px">
+      <template #header>
+        <div class="card-header">
+          <span>{{ T('NodeDetailTitle') }} — {{ detailRow.addr }}</span>
+          <el-button size="small" :loading="detailRefreshing" @click="refreshDetail">{{ T('Refresh') }}</el-button>
+        </div>
+      </template>
+      <div v-if="detailRow.id">
+        <div class="section-title">{{ T('NodeDetailLoad') }}</div>
+        <el-descriptions :column="1" border size="small">
+          <el-descriptions-item :label="T('NodeCpuUsage')">
+            <el-progress
+              :percentage="clampPct(detailRow.cpu_pct)"
+              :status="clampPct(detailRow.cpu_pct) >= 80 ? 'exception' : ''"
+              :stroke-width="12"
+              style="max-width:420px;"
+            />
+          </el-descriptions-item>
+          <el-descriptions-item :label="T('NodeMemUsage')">
+            <el-progress
+              :percentage="clampPct(detailRow.mem_pct)"
+              :status="clampPct(detailRow.mem_pct) >= 80 ? 'exception' : ''"
+              :stroke-width="12"
+              style="max-width:420px;"
+            />
+          </el-descriptions-item>
+          <el-descriptions-item :label="T('NodeBwIn')">
+            <span>{{ fmtMbit(detailRow.bw_in) }}</span>
+            <span v-if="!detailRow.bw_in" class="hint" style="margin-left:8px;">{{ T('NodeBwNoData') }}</span>
+          </el-descriptions-item>
+          <el-descriptions-item :label="T('NodeBwOut')">
+            <span>{{ fmtMbit(detailRow.bw_out) }}</span>
+            <span v-if="!detailRow.bw_out" class="hint" style="margin-left:8px;">{{ T('NodeBwNoData') }}</span>
+          </el-descriptions-item>
+        </el-descriptions>
+
+        <div class="section-title" style="margin-top:16px;">{{ T('NodeDetailInfo') }}</div>
+        <el-descriptions :column="2" border size="small">
+          <el-descriptions-item :label="T('NodeKind')">{{ detailRow.kind }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeStatus')">
+            <el-tag v-if="detailRow.disabled === 1" size="small" type="info">{{ T('NodeDisabled') }}</el-tag>
+            <el-tag v-else-if="detailRow.status === 1" size="small" type="success">{{ T('NodeOnline') }}</el-tag>
+            <el-tag v-else size="small" type="danger">{{ T('NodeOffline') }}</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item :label="T('NodeAddr')">{{ detailRow.addr }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeLanAddr')">{{ detailRow.lan_addr || '—' }}</el-descriptions-item>
+          <el-descriptions-item :label="T('Region')">{{ regionLabel(detailRow.region) }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodePeers')">{{ detailRow.peers ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeSessionsShort')">{{ detailRow.sessions ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item :label="T('Uptime')">{{ fmtUptime(detailRow.uptime_sec) }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeVersion')">{{ detailRow.version || '—' }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeRTT')">{{ fmtRtt(detailRow.rtt_ms) }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeScore')">{{ fmtScore(detailRow.score) }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeConfigVersion')">{{ detailRow.config_version ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeLastSeen')" :span="2">
+            {{ fmtAgo(detailRow.last_seen) }}<span class="hint"> · {{ fmtTime(detailRow.last_seen) }}</span>
+          </el-descriptions-item>
+        </el-descriptions>
+      </div>
+    </el-dialog>
 
     <!-- 编辑节点 -->
     <el-dialog v-model="dialog" :title="T('NodeEditTitle')" width="520px">
@@ -296,6 +359,51 @@
     return T('NodeHoursAgo', { n: String(Math.floor(d / 3600)) })
   }
 
+  // ===== 节点详情弹窗（CPU / 内存 / 带宽只在详情里展示，不占主表格列） =====
+  const detailDialog = ref(false)
+  const detailRow = ref({})
+  const detailRefreshing = ref(false)
+  const showDetail = (row) => {
+    // 复制一份：弹窗里的"刷新"只更新弹窗数据，不影响表格中正在编辑的行
+    detailRow.value = { ...row }
+    detailDialog.value = true
+  }
+  const refreshDetail = async () => {
+    const id = detailRow.value.id
+    detailRefreshing.value = true
+    const res = await nodeList().catch(_ => false)
+    detailRefreshing.value = false
+    if (!res) return
+    const list = res.data.nodes || []
+    nodes.value = list
+    offlineSec.value = res.data.offlineSec || 60
+    const fresh = list.find(n => n.id === id)
+    if (fresh) detailRow.value = { ...fresh }
+    ElMessage.success(T('NodeDetailRefreshed'))
+  }
+  // el-progress 只接受 0~100 的整数
+  const clampPct = (v) => {
+    const n = Number(v)
+    if (!Number.isFinite(n)) return 0
+    return Math.min(100, Math.max(0, Math.round(n)))
+  }
+  // bit/s → Mbit/s，保留 2 位小数（0 显示 0.00 Mbit/s）
+  const fmtMbit = (v) => {
+    const n = Number(v)
+    const mbit = Number.isFinite(n) ? n / 1e6 : 0
+    return mbit.toFixed(2) + ' Mbit/s'
+  }
+  // 秒 → X 天 X 小时 X 分；参数用字符串，避免 T() 把数字 0 当成未传值
+  const fmtUptime = (v) => {
+    const t = Math.max(0, Math.floor(Number(v) || 0))
+    const d = Math.floor(t / 86400)
+    const h = Math.floor((t % 86400) / 3600)
+    const m = Math.floor((t % 3600) / 60)
+    return T('NodeUptimeDHM', { d: String(d), h: String(h), m: String(m) })
+  }
+  const fmtScore = (v) => (v === undefined || v === null ? '—' : Number(v).toFixed(3))
+  const regionLabel = (code) => (code ? regionName(code) + ' (' + code + ')' : T('NodeNotSet'))
+
   // host:port 校验（IPv4 / 主机名 / [IPv6]）
   const isHostPort = (v) => {
     if (typeof v !== 'string') return false
@@ -426,5 +534,11 @@
   .hint {
     font-size: 12px;
     color: #909399;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--el-text-color-primary, #303133);
   }
 </style>

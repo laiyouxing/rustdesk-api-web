@@ -194,6 +194,42 @@
   "NodeAddrInvalid": {
     "One": "地址格式不正确，应为 host:port（如 1.2.3.4:21117）"
   },
+  "NodeDetail": {
+    "One": "详情"
+  },
+  "NodeDetailTitle": {
+    "One": "节点详情"
+  },
+  "NodeDetailLoad": {
+    "One": "负载指标"
+  },
+  "NodeDetailInfo": {
+    "One": "基础信息"
+  },
+  "NodeCpuUsage": {
+    "One": "CPU 使用率"
+  },
+  "NodeMemUsage": {
+    "One": "内存使用率"
+  },
+  "NodeBwIn": {
+    "One": "入向带宽"
+  },
+  "NodeBwOut": {
+    "One": "出向带宽"
+  },
+  "NodeBwNoData": {
+    "One": "暂无数据"
+  },
+  "NodeUptimeDHM": {
+    "One": "{d} 天 {h} 小时 {m} 分"
+  },
+  "NodeConfigVersion": {
+    "One": "配置版本"
+  },
+  "NodeDetailRefreshed": {
+    "One": "节点数据已刷新"
+  },
   "NodeSecondsAgo": {
     "One": "{n} 秒前"
   },
