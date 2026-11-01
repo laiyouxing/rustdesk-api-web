@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const constantRoutes = [
   {
@@ -252,6 +252,13 @@ export const asyncRoutes = [
         name: 'RetentionPolicy',
         meta: { title: 'RetentionPolicy', icon: 'Timer' },
         component: () => import('@/views/rustdesk/retention.vue'),
+      },
+      {
+        // 集群节点：hbbs/hbbr 注册与心跳、多因子加权调度、上下线与权重调整
+        path: '/cluster',
+        name: 'ClusterNode',
+        meta: { title: 'ClusterNode', icon: 'Connection' },
+        component: () => import('@/views/rustdesk/cluster.vue'),
       },
       {
         path: '/serverStatus',

@@ -643,6 +643,9 @@
   "ConfigFile": {
     "One": "Config File"
   },
+  "ClusterNode": {
+    "One": "Cluster Nodes"
+  },
   "RetentionPolicy": {
     "One": "Storage Management"
   },

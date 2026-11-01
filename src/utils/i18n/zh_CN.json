@@ -737,6 +737,9 @@
   "ConfigFile": {
     "One": "配置文件"
   },
+  "ClusterNode": {
+    "One": "集群节点"
+  },
   "RetentionPolicy": {
     "One": "存储管理"
   },
