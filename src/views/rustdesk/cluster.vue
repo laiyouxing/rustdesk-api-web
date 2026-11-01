@@ -124,7 +124,14 @@
       </template>
       <el-alert type="warning" :closable="false" show-icon style="margin-bottom: 12px" :title="T('NodeSecretTip')"/>
       <el-input v-model="nodeSecretValue" :placeholder="T('NodeSecretPlaceholder')"/>
-      <div class="hint" style="margin-top:6px;">{{ T('NodeSecretHint') }}</div>
+      <div class="hint" style="margin-top:6px;">{{ T('NodeSecretHint', { days: graceDays }) }}</div>
+      <div class="hint" style="margin-top:4px;">{{ T('NodeSecretSystemdTip') }}</div>
+      <div v-if="secretRotatedAt > 0" class="hint" style="margin-top:4px;">
+        {{ T('NodeSecretRotatedAt', { time: fmtTime(secretRotatedAt) }) }}
+      </div>
+      <div v-if="secretHasPrev" class="hint" style="margin-top:4px; color:#e6a23c;">
+        {{ T('NodeSecretPrevGrace', { time: fmtTime(prevExpiresAt) }) }}
+      </div>
     </el-card>
 
     <!-- 编辑节点 -->
@@ -172,7 +179,7 @@
 </template>
 
 <script setup>
-  import { onActivated, onMounted, reactive, ref } from 'vue'
+  import { computed, onActivated, onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import { T } from '@/utils/i18n'
   import {
@@ -218,9 +225,24 @@
   // 节点专用密钥（X-Node-Secret）
   const nodeSecretValue = ref('')
   const secretSaving = ref(false)
+  const secretRotatedAt = ref(0)
+  const secretHasPrev = ref(false)
+  const prevExpiresAt = ref(0)
+  const graceSeconds = ref(7 * 24 * 3600)
+  const graceDays = computed(() => Math.max(1, Math.round(graceSeconds.value / 86400)))
+  const fmtTime = (ts) => {
+    if (!ts) return '—'
+    const d = new Date(ts * 1000)
+    return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString()
+  }
   const loadSecret = async () => {
     const res = await nodeSecret().catch(_ => false)
-    if (res) nodeSecretValue.value = res.data.secret || ''
+    if (!res) return
+    nodeSecretValue.value = res.data.secret || ''
+    secretRotatedAt.value = res.data.rotated_at || 0
+    secretHasPrev.value = !!res.data.has_prev
+    prevExpiresAt.value = res.data.prev_expires_at || 0
+    if (res.data.grace_seconds) graceSeconds.value = res.data.grace_seconds
   }
   const generateSecret = () => {
     // 本地生成 24 字节随机数的 hex，点「保存密钥」后才真正下发
@@ -234,13 +256,23 @@
       ElMessage.warning(T('NodeSecretPlaceholder'))
       return
     }
+    const prevRotatedAt = secretRotatedAt.value
     secretSaving.value = true
-    // 传空串 = 由服务端生成随机密钥
+    // 传空串 = 由服务端生成随机密钥；非空 = 轮换为新值（旧密钥进入宽限期）
     const res = await nodeSaveSecret(v).catch(_ => false)
     secretSaving.value = false
     if (!res) return
+    const rotatedAt = res.data.rotated_at || 0
     nodeSecretValue.value = res.data.secret || v
-    ElMessage.success(T('NodeSecretSaved'))
+    secretRotatedAt.value = rotatedAt || prevRotatedAt
+    // rotated_at 没变 = 服务端判定密钥未变化（未真正轮换），不要误报"旧密钥保留 N 天"
+    if (rotatedAt && rotatedAt !== prevRotatedAt) {
+      ElMessage.success(T('NodeSecretRotated', { days: graceDays.value }))
+    } else {
+      ElMessage.success(T('NodeSaved'))
+    }
+    // 重新拉一次，刷新"上一把密钥宽限期"提示
+    loadSecret()
   }
 
   const dialog = ref(false)

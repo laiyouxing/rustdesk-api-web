@@ -144,13 +144,25 @@
     "One": "节点接入密钥"
   },
   "NodeSecretTip": {
-    "One": "配置后 /api/node 的注册、心跳、配置拉取都会强制校验请求头 X-Node-Secret。密钥需同步到 hbbs / hbbr 的 RD_NODE_SECRET。留空表示未配置，仅靠（公开的）rustdesk key 校验，存在伪造节点风险。"
+    "One": "配置后 /api/node 的注册、心跳、配置拉取都会强制校验请求头 X-Node-Secret。首次启用需把同一密钥写进 hbbs / hbbr 的 systemd 环境变量 RD_NODE_SECRET；之后轮换无需再登服务器，节点会自动拉取新密钥。留空表示未配置，仅靠（公开的）rustdesk key 校验，存在伪造节点风险。"
   },
   "NodeSecretPlaceholder": {
     "One": "生成后显示在这里，也可手工填写（至少 16 位）"
   },
   "NodeSecretHint": {
-    "One": "保存后立即生效；已接入的节点必须同步该密钥，否则注册 / 心跳会被拒绝（401）。"
+    "One": "保存新密钥后立即生效：在线节点每 60 秒自动拉取一次，旧密钥在 {days} 天宽限期内仍然有效，不会掉线。连续轮换请间隔至少 60 秒（只保留一把旧密钥）。"
+  },
+  "NodeSecretSystemdTip": {
+    "One": "手动改过密钥后，不要再依赖 systemd 里的旧 RD_NODE_SECRET：节点会以服务端下发的密钥为准（仅首次启用时需要先在 systemd 里配好）。"
+  },
+  "NodeSecretRotated": {
+    "One": "新密钥已生效，节点会在 60 秒内自动更新（旧密钥保留 {days} 天）"
+  },
+  "NodeSecretPrevGrace": {
+    "One": "上一把密钥仍在宽限期，到期时间 {time}（到期后旧密钥自动失效）"
+  },
+  "NodeSecretRotatedAt": {
+    "One": "上次轮换时间：{time}"
   },
   "NodeGenerateSecret": {
     "One": "生成随机密钥"

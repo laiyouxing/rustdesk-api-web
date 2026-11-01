@@ -144,13 +144,25 @@
     "One": "Node Secret"
   },
   "NodeSecretTip": {
-    "One": "When configured, /api/node register, heartbeat and config require the X-Node-Secret header. Configure the same secret in hbbs / hbbr as RD_NODE_SECRET. Empty means not configured — only the (public) rustdesk key is checked, so nodes can be forged."
+    "One": "When configured, /api/node register, heartbeat and config require the X-Node-Secret header. On first enablement put the same secret into hbbs / hbbr systemd env RD_NODE_SECRET; later rotations need no server access — nodes fetch the new secret automatically. Empty means not configured — only the (public) rustdesk key is checked, so nodes can be forged."
   },
   "NodeSecretPlaceholder": {
     "One": "Shown here after generation, or enter manually (16+ chars)"
   },
   "NodeSecretHint": {
-    "One": "Takes effect immediately. Existing nodes must use the same secret or their register / heartbeat calls get 401."
+    "One": "Takes effect immediately: online nodes fetch it every 60s, and the previous secret stays valid for a {days}-day grace period, so nothing drops offline. Wait at least 60s between rotations (only one previous secret is kept)."
+  },
+  "NodeSecretSystemdTip": {
+    "One": "After changing the secret manually, do not rely on the old RD_NODE_SECRET in systemd: nodes follow the server-pushed secret (only the first enablement needs it in systemd)."
+  },
+  "NodeSecretRotated": {
+    "One": "New secret is active; nodes update within 60s (previous secret kept for {days} days)"
+  },
+  "NodeSecretPrevGrace": {
+    "One": "Previous secret is still in the grace period, expires at {time} (it becomes invalid automatically)"
+  },
+  "NodeSecretRotatedAt": {
+    "One": "Last rotated at {time}"
   },
   "NodeGenerateSecret": {
     "One": "Generate Random Secret"
