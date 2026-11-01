@@ -72,10 +72,10 @@
         <el-table-column prop="sessions" label="会话" width="80" align="right"/>
         <el-table-column prop="peers" label="设备" width="80" align="right"/>
         <el-table-column label="延迟" width="90" align="right">
-          <template #default="{ row }">{{ row.rtt_ms ? row.rtt_ms + ' ms' : '—' }}</template>
+          <template #default="{ row }">{{ row.rtt_ms > 0 ? row.rtt_ms + ' ms' : '—' }}</template>
         </el-table-column>
         <el-table-column label="分数" width="90" align="right">
-          <template #default="{ row }">{{ row.score ? row.score.toFixed(3) : '—' }}</template>
+          <template #default="{ row }">{{ (row.score === undefined || row.score === null) ? '—' : Number(row.score).toFixed(3) }}</template>
         </el-table-column>
         <el-table-column prop="weight" label="人工权重" width="90" align="right"/>
         <el-table-column prop="version" label="版本" width="90"/>
