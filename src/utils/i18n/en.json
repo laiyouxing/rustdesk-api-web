@@ -1,4 +1,9 @@
 ﻿{
+  "Selected": "Selected",
+  "SetRegion": "Set Region",
+  "Peers": "device(s)",
+  "SetRegionTip": "Assign a region to selected devices. It only biases relay selection; the client still decides by measured latency, and a region chosen in the client settings takes precedence.",
+  "Region": "Region",
   "Login": {
     "One": "Login"
   },

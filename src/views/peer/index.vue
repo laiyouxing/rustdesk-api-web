@@ -66,6 +66,7 @@
           </el-popover>
           <el-button type="danger" @click="toBatchDelete">{{ T('BatchDelete') }}</el-button>
           <el-button type="primary" @click="toBatchAddToAB">{{ T('BatchAddToAB') }}</el-button>
+          <el-button type="warning" @click="regionDialog = true">{{ T('SetRegion') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -108,6 +109,13 @@
             <el-table-column v-if="c.name==='created_at'" prop="created_at" :label="T('CreatedAt')" align="center" width="150"/>
             <el-table-column v-if="c.name==='updated_at'" prop="updated_at" :label="T('UpdatedAt')" align="center" width="150"/>
           </template>
+
+          <el-table-column :label="T('Region')" align="center" width="100">
+            <template #default="{row}">
+              <el-tag v-if="row.region" size="small">{{ regionName(row.region) }}</el-tag>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
 
           <el-table-column :label="T('Actions')" align="center" width="500" class-name="table-actions" fixed="right">
             <template #default="{row}">
@@ -240,6 +248,26 @@
       </el-form>
     </el-dialog>
 
+    <!-- 批量设置地域 -->
+    <el-dialog v-model="regionDialog" :title="T('SetRegion')" width="420px">
+      <el-alert type="info" :closable="false" show-icon style="margin-bottom:12px"
+                :title="T('SetRegionTip')" />
+      <el-form label-width="90px">
+        <el-form-item :label="T('Region')">
+          <el-select v-model="regionForm.region" filterable :placeholder="T('Region')" style="width:100%">
+            <el-option v-for="r in regionList" :key="r.code" :label="r.name + ' (' + r.code + ')'" :value="r.code"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="T('Selected')">
+          <span>{{ multipleSelection.length }} {{ T('Peers') }}</span>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="regionDialog = false">{{ T('Cancel') }}</el-button>
+        <el-button type="primary" :loading="regionSaving" @click="submitBatchRegion">{{ T('Save') }}</el-button>
+      </template>
+    </el-dialog>
+
     <el-dialog v-model="columnSettingVisible" :title="T('ColumnSetting')">
       <div v-for="(row, key) in visibleColumns" :key="key" style="margin-bottom: 10px;display: flex;align-items: center">
         <div style="width: 200px">
@@ -267,7 +295,7 @@
 <script setup>
   import { computed, onActivated, onMounted, reactive, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
-  import { batchRemove, create, list, remove, update } from '@/api/peer'
+  import { batchRemove, create, list, remove, update, regions as regionsApi, batchSetRegion } from '@/api/peer'
   import { list as groupList } from '@/api/device_group'
   import { ElMessage, ElMessageBox } from 'element-plus'
   import { toWebClientLink } from '@/utils/webclient'
@@ -404,10 +432,12 @@
   }
 onMounted(() => {
   // query 过滤已在 setup 末尾的 applyTimeAgoQuery 中处理；无 query 时才在此加载全部
+  loadRegions()
   if (route.query.time_ago == null) getList()
 })
 onActivated(() => {
   applyTimeAgoQuery()
+  loadRegions()
   if (route.query.time_ago == null) getList()
 })
 
@@ -555,7 +585,44 @@ onActivated(() => {
   const handleSelectionChange = (val) => {
     multipleSelection.value = val
   }
-  const toBatchDelete = async () => {
+    // ===== 地域批量下发 =====
+  const regionDialog = ref(false)
+  const regionSaving = ref(false)
+  const regionList = ref([])
+  const regionForm = reactive({ region: '' })
+  const regionName = (code) => {
+    const r = regionList.value.find(x => x.code === code)
+    return r ? r.name : code
+  }
+  const loadRegions = async () => {
+    const res = await regionsApi().catch(_ => false)
+    if (res) regionList.value = res.data.regions || []
+  }
+  const submitBatchRegion = async () => {
+    if (!multipleSelection.value.length) {
+      ElMessage.warning(T('PleaseSelectData'))
+      return
+    }
+    if (!regionForm.region) {
+      ElMessage.warning(T('Region'))
+      return
+    }
+    regionSaving.value = true
+    const res = await batchSetRegion({
+      ids: multipleSelection.value.map(i => i.id),
+      region: regionForm.region,
+    }).catch(e => {
+      ElMessage.error((e && e.message) || '设置失败')
+      return false
+    })
+    regionSaving.value = false
+    if (res) {
+      ElMessage.success(T('OperationSuccess') + ': ' + (res.data.affected || 0))
+      regionDialog.value = false
+      getList()
+    }
+  }
+const toBatchDelete = async () => {
     if (!multipleSelection.value.length) {
       ElMessage.warning(T('PleaseSelectData'))
       return false

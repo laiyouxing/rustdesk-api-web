@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+﻿import request from '@/utils/request'
 
 export function list (params) {
   return request({
@@ -48,6 +48,22 @@ export function batchRemove (data) {
 export function simpleData (data) {
   return request({
     url: '/peer/simpleData',
+    method: 'post',
+    data,
+  })
+}
+
+// 地域：省份列表（下拉框数据源）
+export function regions () {
+  return request({
+    url: '/peer/regions',
+  })
+}
+
+// 地域：批量为设备设置所属地域（ids 为设备远端 ID）
+export function batchSetRegion (data) {
+  return request({
+    url: '/peer/batch-region',
     method: 'post',
     data,
   })
