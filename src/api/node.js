@@ -55,3 +55,19 @@ export function nodeRegions () {
     url: '/node/regions',
   })
 }
+// 读取节点平台配置（JSON 文本）
+export function nodeGetConfig (id) {
+  return request({
+    url: '/node/config',
+    params: { id },
+  })
+}
+
+// 下发节点平台配置
+export function nodeSaveConfig (data) {
+  return request({
+    url: '/node/config',
+    method: 'post',
+    data,
+  })
+}

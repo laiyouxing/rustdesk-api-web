@@ -119,6 +119,24 @@
         <el-form-item label="人工权重">
           <el-input-number v-model="form.weight" :min="0" :max="10000"/>
         </el-form-item>
+        <el-form-item label="平台配置">
+          <el-input
+            v-model="form.configText"
+            type="textarea"
+            :rows="8"
+            placeholder='{"relay_servers":["1.2.3.4:21117"],"limit_speed_mbps":32}'
+            style="font-family: monospace;"
+          />
+          <div class="hint" style="line-height:1.6;">
+            可热更新（保存后约 30 秒内生效）：<br>
+            · <code>relay_servers</code>（hbbs，中继地址数组）<br>
+            · <code>limit_speed_mbps</code> / <code>single_bandwidth_mbps</code> /
+            <code>total_bandwidth_mbps</code>（hbbr 限速，Mbit/s）<br>
+            · <code>downgrade_threshold</code>（0~1）/ <code>downgrade_start_check_sec</code><br>
+            仅展示、需重启才生效：<code>key</code> / <code>port</code> /
+            <code>mask</code> / <code>must_login</code>
+          </div>
+        </el-form-item>
         <el-form-item label="手动下线">
           <el-switch v-model="form.disabledBool"/>
           <span class="hint" style="margin-left:8px;">下线后不再下发给 hbbs</span>
@@ -135,7 +153,7 @@
 <script setup>
   import { onActivated, onMounted, reactive, ref } from 'vue'
   import { ElMessage, ElMessageBox } from 'element-plus'
-  import { nodeDelete, nodeList, nodeRefresh, nodeRegions, nodeSaveScoreConfig, nodeScoreConfig, nodeUpdate } from '@/api/node'
+  import { nodeDelete, nodeGetConfig, nodeList, nodeRefresh, nodeRegions, nodeSaveConfig, nodeSaveScoreConfig, nodeScoreConfig, nodeUpdate } from '@/api/node'
 
   const loading = ref(false)
   const saving = ref(false)
@@ -155,7 +173,7 @@
   }
 
   const dialog = ref(false)
-  const form = reactive({ id: 0, addr: '', name: '', region: '', lan_addr: '', weight: 100, disabledBool: false })
+  const form = reactive({ id: 0, addr: '', name: '', region: '', lan_addr: '', weight: 100, disabledBool: false, configText: '' })
 
   const fmtAgo = (ts) => {
     if (!ts) return '—'
@@ -202,6 +220,17 @@
     load()
   }
 
+  const loadNodeConfig = async (id) => {
+    const res = await nodeGetConfig(id).catch(_ => false)
+    if (res && res.data.config) {
+      try {
+        form.configText = JSON.stringify(JSON.parse(res.data.config), null, 2)
+      } catch (_) {
+        form.configText = res.data.config
+      }
+    }
+  }
+
   const edit = (row) => {
     Object.assign(form, {
       id: row.id,
@@ -211,8 +240,10 @@
       lan_addr: row.lan_addr || '',
       weight: row.weight || 100,
       disabledBool: row.disabled === 1,
+      configText: '',
     })
     dialog.value = true
+    loadNodeConfig(row.id)
   }
 
   const save = async () => {
@@ -229,7 +260,13 @@
       return false
     })
     saving.value = false
-    if (res) {
+    if (res && form.configText.trim()) {
+      await nodeSaveConfig({ id: form.id, config: form.configText }).catch(e => {
+        ElMessage.error('配置下发失败：' + ((e && e.message) || ''))
+        return false
+      })
+      ElMessage.success('已保存并下发配置（约 30 秒内生效）')
+    } else if (res) {
       ElMessage.success('已保存')
       dialog.value = false
       load()
