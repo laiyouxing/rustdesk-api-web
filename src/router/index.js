@@ -20,12 +20,17 @@ const constantRoutes = [
   },
   {
     path: '/oauth/:code',
+    // 必须显式 name：permission.js 用 router.resolve().name 判断路由是否已注册，
+    // 没有 name 会被当成"未注册"而直接重定向到 /home，
+    // 导致网页登录（webauth）握手页面从不执行、客户端一直等不到登录结果。
+    name: 'OauthLogin',
     meta: { title: 'OauthLogin' },
     component: () => import('@/views/oauth/login.vue'),
     hidden: true,
   },
   {
     path: '/oauth/bind/:code',
+    name: 'OauthBind',
     meta: { title: 'OauthBind' },
     component: () => import('@/views/oauth/bind.vue'),
     hidden: true,
