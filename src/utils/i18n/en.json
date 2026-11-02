@@ -105,7 +105,10 @@
     "One": "LAN address"
   },
   "NodeLanPlaceholder": {
-    "One": "e.g. 10.126.126.5:21117 (optional)"
+    "One": "One LAN address per line, with port (e.g. 10.126.126.5:21117), up to 8; leave empty to let the node auto-detect"
+  },
+  "NodeLanAddrsMax": {
+    "One": "At most {max} LAN addresses; extra entries were dropped"
   },
   "NodeRegionPlaceholder": {
     "One": "Select a province (same codes as client)"

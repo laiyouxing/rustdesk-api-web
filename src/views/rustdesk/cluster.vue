@@ -435,6 +435,9 @@
     return port > 0 && port <= 65535
   }
 
+  // 候选内网地址上限，与后端 maxLanAddrs 保持一致
+  const MAX_LAN_ADDRS = 8
+
   const load = async () => {
     loading.value = true
     const res = await nodeList().catch(_ => false)
@@ -485,16 +488,24 @@
     }
   }
 
-  // 把多行文本拆成候选地址数组（去空行/去前后空白/去重，保持顺序）
+  // 把多行文本拆成候选地址数组：
+  // 支持换行 / 逗号 / 分号混用（粘贴多行、逗号分隔都能用），
+  // 逐条 trim、去重、host:port 校验（非法项丢弃），并限死最多 MAX_LAN_ADDRS 条。
   const splitLanAddrsText = (text) => {
     const seen = new Set()
     const out = []
-    ;(text || '').split(/\r?\n/).forEach((line) => {
-      const a = line.trim()
-      if (!a || seen.has(a)) return
+    ;(text || '').split(/[\r\n,;]+/).forEach((part) => {
+      const a = part.trim()
+      // 与后端一致：只接受合法 host:port，避免把 "10.0.0.1"（缺端口）这类
+      // 半截输入提交上去，既探不通又占一条候选
+      if (!a || seen.has(a) || !isHostPort(a)) return
       seen.add(a)
       out.push(a)
     })
+    if (out.length > MAX_LAN_ADDRS) {
+      ElMessage.warning(T('NodeLanAddrsMax', { max: String(MAX_LAN_ADDRS) }))
+      return out.slice(0, MAX_LAN_ADDRS)
+    }
     return out
   }
   const edit = (row) => {
