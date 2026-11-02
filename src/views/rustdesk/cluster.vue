@@ -57,7 +57,10 @@
         <el-table-column prop="addr" :label="T('NodeAddr')" min-width="180">
           <template #default="{ row }">
             <div>{{ row.addr }}</div>
-            <div v-if="row.lan_addr" class="hint">{{ T('NodeLan') }}: {{ row.lan_addr }}</div>
+            <div v-if="row.lan_addr" class="hint">
+              {{ T('NodeLan') }}: {{ row.lan_addr }}
+              <span v-if="row.lan_addrs_list && row.lan_addrs_list.length > 1">(+{{ row.lan_addrs_list.length - 1 }})</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column :label="T('Region')" width="110" align="center">
@@ -181,7 +184,19 @@
             <el-tag v-else size="small" type="danger">{{ T('NodeOffline') }}</el-tag>
           </el-descriptions-item>
           <el-descriptions-item :label="T('NodeAddr')">{{ detailRow.addr }}</el-descriptions-item>
-          <el-descriptions-item :label="T('NodeLanAddr')">{{ detailRow.lan_addr || '—' }}</el-descriptions-item>
+          <el-descriptions-item :label="T('NodeLanAddr')">
+            <!-- 多网卡时节点会上报多个候选地址，全部列出；rtt 由 api-server 逐个探测后选最优 -->
+            <template v-if="detailRow.lan_addrs_list && detailRow.lan_addrs_list.length">
+              <el-tag
+                v-for="(a, i) in detailRow.lan_addrs_list"
+                :key="a"
+                size="small"
+                :type="i === 0 ? 'success' : 'info'"
+                style="margin: 2px 4px 2px 0"
+              >{{ a }}</el-tag>
+            </template>
+            <span v-else>—</span>
+          </el-descriptions-item>
           <el-descriptions-item :label="T('Region')">{{ regionLabel(detailRow.region) }}</el-descriptions-item>
           <el-descriptions-item :label="T('NodePeers')">{{ detailRow.peers ?? 0 }}</el-descriptions-item>
           <el-descriptions-item :label="T('NodeSessionsShort')">{{ detailRow.sessions ?? 0 }}</el-descriptions-item>
@@ -213,7 +228,13 @@
           <div class="hint">{{ T('NodeRegionTip') }}</div>
         </el-form-item>
         <el-form-item :label="T('NodeLanAddr')">
-          <el-input v-model="form.lan_addr" :placeholder="T('NodeLanPlaceholder')"/>
+          <!-- 每行一个候选内网地址，第一行为主地址；留空 = 交还给节点自动探测 -->
+          <el-input
+            v-model="form.lan_addrs_text"
+            type="textarea"
+            :rows="3"
+            :placeholder="T('NodeLanPlaceholder')"
+          />
         </el-form-item>
         <el-form-item :label="T('NodeManualWeight')">
           <el-input-number v-model="form.weight" :min="0" :max="10000"/>
@@ -339,7 +360,7 @@
   }
 
   const dialog = ref(false)
-  const form = reactive({ id: 0, addr: '', name: '', region: '', lan_addr: '', weight: 100, disabledBool: false, configText: '' })
+  const form = reactive({ id: 0, addr: '', name: '', region: '', lan_addrs_text: '', weight: 100, disabledBool: false, configText: '' })
   // 配置示例（放脚本里避免 HTML 属性里出现转义引号导致模板解析失败）
   const configPlaceholder = '{"relay_servers":["1.2.3.4:21117"],"limit_speed_mbps":32}'
 
@@ -464,13 +485,28 @@
     }
   }
 
+  // 把多行文本拆成候选地址数组（去空行/去前后空白/去重，保持顺序）
+  const splitLanAddrsText = (text) => {
+    const seen = new Set()
+    const out = []
+    ;(text || '').split(/\r?\n/).forEach((line) => {
+      const a = line.trim()
+      if (!a || seen.has(a)) return
+      seen.add(a)
+      out.push(a)
+    })
+    return out
+  }
   const edit = (row) => {
     Object.assign(form, {
       id: row.id,
       addr: row.addr,
       name: row.name || '',
       region: row.region || '',
-      lan_addr: row.lan_addr || '',
+      // 多网卡：优先用候选列表回填（每行一个），老数据只有单值时退回 lan_addr
+      lan_addrs_text: (row.lan_addrs_list && row.lan_addrs_list.length
+        ? row.lan_addrs_list.join('\n')
+        : (row.lan_addr || '')),
       // 0 是合法权重，不能用 || 100（会把 0 变成 100）
       weight: row.weight ?? 100,
       disabledBool: row.disabled === 1,
@@ -491,7 +527,7 @@
       addr: form.addr.trim(),
       name: form.name,
       region: form.region,
-      lan_addr: (form.lan_addr || '').trim(),
+      lan_addrs: splitLanAddrsText(form.lan_addrs_text),
       weight: form.weight ?? 100,
       disabled: form.disabledBool ? 1 : 0,
     }).catch(_ => false)
