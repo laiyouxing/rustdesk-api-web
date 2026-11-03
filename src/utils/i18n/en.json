@@ -380,6 +380,9 @@
   "Version": {
     "One": "Version"
   },
+  "FromVersion": {
+    "One": "Source Version"
+  },
   "Type": {
     "One": "Type"
   },

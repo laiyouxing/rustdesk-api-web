@@ -55,6 +55,16 @@
         <el-table-column :label="T('Peer')" prop="peer_id" align="center" width="120"/>
         <el-table-column :label="T('FromPeer')" prop="from_peer" align="center" width="120"/>
         <el-table-column :label="T('FromName')" prop="from_name" align="center" width="120"/>
+        <el-table-column :label="T('Version')" prop="version" align="center" width="110">
+          <template #default="{row}">
+            <span>{{ row.version || '-' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="T('FromVersion')" prop="from_version" align="center" width="120">
+          <template #default="{row}">
+            <span>{{ row.from_version || '-' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="T('Ip')" prop="ip" align="center" width="120"/>
         <el-table-column prop="type" :label="T('Type')" align="center" width="200">
           <template #default="{row}">

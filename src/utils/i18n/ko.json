@@ -128,6 +128,9 @@
   "Version": {
     "One": "버전"
   },
+  "FromVersion": {
+    "One": "원본 버전"
+  },
   "Type": {
     "One": "유형"
   },

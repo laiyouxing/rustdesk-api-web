@@ -128,6 +128,9 @@
   "Version": {
     "One": "版本"
   },
+  "FromVersion": {
+    "One": "來源版本"
+  },
   "Type": {
     "One": "型別"
   },
