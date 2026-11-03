@@ -707,6 +707,9 @@
   "FromName": {
     "One": "来源名称"
   },
+  "FromAlias": {
+    "One": "来源别名"
+  },
   "CloseTime": {
     "One": "关闭时间"
   },

@@ -58,8 +58,23 @@
         <el-table-column type="selection" align="center" width="50"/>
         <el-table-column prop="id" :label="T('ID')" align="center" width="100"/>
         <el-table-column :label="T('Peer')" prop="peer_id" align="center" width="120"/>
+        <el-table-column :label="T('Hostname')" prop="peer_hostname" align="center" width="150" show-overflow-tooltip>
+          <template #default="{row}">
+            <span>{{ row.peer_hostname || '-' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="T('Alias')" prop="peer_alias" align="center" width="120" show-overflow-tooltip>
+          <template #default="{row}">
+            <span>{{ row.peer_alias || '-' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="T('FromPeer')" prop="from_peer" align="center" width="120"/>
         <el-table-column :label="T('FromName')" prop="from_name" align="center" width="120"/>
+        <el-table-column :label="T('FromAlias')" prop="from_alias" align="center" width="120" show-overflow-tooltip>
+          <template #default="{row}">
+            <span>{{ row.from_alias || '-' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="T('Version')" prop="version" align="center" width="110">
           <template #default="{row}">
             <span>{{ row.version || '-' }}</span>

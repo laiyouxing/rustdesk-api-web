@@ -367,6 +367,9 @@
   "FromName": {
     "One": "Desde el nombre"
   },
+  "FromAlias": {
+    "One": "Alias de origen"
+  },
   "CloseTime": {
     "One": "Hora de cierre"
   },

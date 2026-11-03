@@ -721,6 +721,9 @@
   "FromName": {
     "One": "From Name"
   },
+  "FromAlias": {
+    "One": "From Alias"
+  },
   "CloseTime": {
     "One": "Close Time"
   },

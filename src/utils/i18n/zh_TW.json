@@ -353,6 +353,9 @@
   "FromName": {
     "One": "來源名稱"
   },
+  "FromAlias": {
+    "One": "來源別名"
+  },
   "CloseTime": {
     "One": "關閉時間"
   },

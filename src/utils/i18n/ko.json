@@ -353,6 +353,9 @@
   "FromName": {
     "One": "출처 이름"
   },
+  "FromAlias": {
+    "One": "원본 별칭"
+  },
   "CloseTime": {
     "One": "닫는 시간"
   },
