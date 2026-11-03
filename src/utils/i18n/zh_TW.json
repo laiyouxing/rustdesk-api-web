@@ -131,6 +131,12 @@
   "FromVersion": {
     "One": "來源版本"
   },
+  "AttemptCount": {
+    "One": "嘗試次數"
+  },
+  "AttemptCountTip": {
+    "One": "同一次操作裡用戶端重試了幾次（打洞失敗/網路抖動），已合併成一條記錄"
+  },
   "Type": {
     "One": "型別"
   },

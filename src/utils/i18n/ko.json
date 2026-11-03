@@ -131,6 +131,12 @@
   "FromVersion": {
     "One": "원본 버전"
   },
+  "AttemptCount": {
+    "One": "시도 횟수"
+  },
+  "AttemptCountTip": {
+    "One": "동일 작업에 대해 클라이언트가 재시도한 횟수(홀 펀칭/네트워크 지터), 하나의 기록으로 병합됨"
+  },
   "Type": {
     "One": "유형"
   },

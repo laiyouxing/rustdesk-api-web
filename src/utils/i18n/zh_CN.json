@@ -383,6 +383,12 @@
   "FromVersion": {
     "One": "来源版本"
   },
+  "AttemptCount": {
+    "One": "尝试次数"
+  },
+  "AttemptCountTip": {
+    "One": "同一次操作里客户端重试了几次（打洞失败/网络抖动），已合并成一条记录"
+  },
   "Type": {
     "One": "类型"
   },

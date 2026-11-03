@@ -131,6 +131,12 @@
   "FromVersion": {
     "One": "Version source"
   },
+  "AttemptCount": {
+    "One": "Tentatives"
+  },
+  "AttemptCountTip": {
+    "One": "Nombre de tentatives du client pour la même action ; fusionnées en un seul enregistrement"
+  },
   "Type": {
     "One": "Type"
   },

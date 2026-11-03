@@ -383,6 +383,12 @@
   "FromVersion": {
     "One": "Source Version"
   },
+  "AttemptCount": {
+    "One": "Attempts"
+  },
+  "AttemptCountTip": {
+    "One": "How many times the client retried for the same action (hole punching / network jitter); merged into one record"
+  },
   "Type": {
     "One": "Type"
   },

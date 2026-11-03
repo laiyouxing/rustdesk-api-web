@@ -85,6 +85,15 @@
             <span>{{ row.from_version || '-' }}</span>
           </template>
         </el-table-column>
+        <!-- 尝试次数：同一次操作里客户端重试了几次（打洞失败 / 网络抖动），服务端已合并成一条记录 -->
+        <el-table-column :label="T('AttemptCount')" prop="attempt_count" align="center" width="110">
+          <template #default="{row}">
+            <el-tooltip v-if="(row.attempt_count || 1) > 1" :content="T('AttemptCountTip')" placement="top">
+              <el-tag type="warning">{{ row.attempt_count }}</el-tag>
+            </el-tooltip>
+            <span v-else>{{ row.attempt_count || 1 }}</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="T('Ip')" prop="ip" align="center" width="120"/>
         <el-table-column pop="type" :label="T('Type')" align="center" width="120">
           <template #default="{row}">
