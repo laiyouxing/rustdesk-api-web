@@ -24,7 +24,7 @@
     "One": "Refresh List"
   },
   "NodeWeightsTip": {
-    "One": "All factors are normalized costs: the lower the total, the higher the node is ranked when sent to hbbs. \"Manual weight\" means the larger the value the more preferred, converted into a lower cost. Note: bandwidth / CPU / memory are not reported by the agent yet, so their weights currently have no effect."
+    "One": "All factors are normalized costs: the lower the total, the higher the node is ranked when sent to hbbs. \"Manual weight\" means the larger the value the more preferred, converted into a lower cost (range 0-100; above 100 is equivalent to 100). Note: these weights only decide the **order**; hbbs takes the first non-overloaded relay in that order, and the client still re-ranks by its own measured RTT, so the order matters only when latencies are close."
   },
   "NodeSessions": {
     "One": "Sessions"
@@ -126,7 +126,7 @@
     "One": "Take offline"
   },
   "NodeDisabledTip": {
-    "One": "Disabled nodes are not sent to hbbs"
+    "One": "Disabled relays are removed from the hbbs relay list immediately, static fallbacks included"
   },
   "NodeStaticRelays": {
     "One": "Static Relays"

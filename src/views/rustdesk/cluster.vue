@@ -237,7 +237,7 @@
           />
         </el-form-item>
         <el-form-item :label="T('NodeManualWeight')">
-          <el-input-number v-model="form.weight" :min="0" :max="10000"/>
+          <el-input-number v-model="form.weight" :min="0" :max="100"/>
         </el-form-item>
         <el-form-item :label="T('NodeConfig')">
           <el-input
@@ -277,7 +277,9 @@
   const refreshing = ref(false)
   const nodes = ref([])
   const offlineSec = ref(60)
-  const weights = reactive({ sessions: 0.35, bandwidth: 0.2, cpu: 0.15, mem: 0.1, rtt: 0.2, weight: 0 })
+  // 与 api-server 的 DefaultNodeScoreWeights() 保持一致（总和为 1）。
+  // 人工权重系数不能为 0，否则调「人工权重」对排序毫无影响。
+  const weights = reactive({ sessions: 0.3, bandwidth: 0.18, cpu: 0.14, mem: 0.1, rtt: 0.18, weight: 0.1 })
 
   const regionList = ref([])
   const regionName = (code) => {
